@@ -92,14 +92,12 @@ export const FormH1 = styled.h1`
     font-size: 20px;
     font-weight: 600;
     text-align: center;
-    font-family: 'Century Gothic';
     letter-spacing: 1.5px;
 `
 export const FormLabel = styled.label`
     margin-bottom: 8px;
     font-size: 14px;
     color: #fff;
-    font-family: 'Century Gothic';
 `
 
 export const FormInput = styled.input`
@@ -107,7 +105,7 @@ export const FormInput = styled.input`
     margin-bottom: 32px;
     border: none;
     border-radius: 4px;
-    font-family: 'Century Gothic';
+    font-size: 16px;
 `
 
 export const FormButton = styled.button`
@@ -119,22 +117,22 @@ export const FormButton = styled.button`
     font-size: 18px;
     cursor: pointer;
     transition: all 0.2s ease-in-out;
-    font-family: 'Century Gothic';
 
     &:hover{
         background: #2676d1;
         border-radius: 50px;
+        font-weight: bold;
         transition: all 0.2s ease-in-out;
+        
     }
 `
 
 export const Text = styled.span`
     text-align: center;
-    margin-top: 24px;
+    margin-top: 30px;
     color: #fff;
-    font-size: 14px;
+    font-size: 16px;
     cursor: pointer;
-    font-family: 'Century Gothic';
 
     &:hover {
         color: #1565c0;
