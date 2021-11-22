@@ -7,11 +7,11 @@ import Navbar from './components/ClientPage/Navbar';
 import ClientProfile from './components/ClientPage/Profile';
 import ClientMyPets from './components/ClientPage/MyPets';
 import ClientConsult from './components/ClientPage/Consult';
-import 'bootstrap/dist/css/bootstrap.min.css';
+
 function App() {
   return (
     <Router>
-       <Navbar/>
+      <Navbar/>
       <Routes>
           <Route path="/" element={<Home/>} exact />
           <Route path="/signinvet" element={<SignInVet/>} exact />
