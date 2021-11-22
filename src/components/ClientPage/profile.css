@@ -1,0 +1,64 @@
+.grid-container {
+   position: absolute;
+   top: 25%;
+   left: 15%;
+}
+.box{
+    margin-left: 20px;
+    margin-right: 20px;
+    border: 2px solid #00b8d4;
+    border-radius: 20px;
+    padding: 16px 32px 20px;
+    background-color: #00b8d4;
+    transition: 500ms;
+}
+
+ 
+@media (max-width: 780px) {
+    .box{
+        padding: 16px 32px 20px;
+        width: 110%;
+        margin: 0;
+        transition: 500ms;
+    }   
+}
+.headerText{
+    font-size: 22px;
+    text-align: center;
+    font-weight: bold;
+    color: #fff;
+}
+.inputWrapper {
+    margin-top: 10px;
+}
+.input{
+    width: 100%;
+    padding: 16px 12px;
+    margin-bottom: 20px;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+}
+.buttonSave{
+    border-radius: 50px;
+    background: #1569C7;
+    white-space: nowrap;
+    padding: 10px 22px;
+    color: #fff;
+    font-weight: bold;
+    font-size: 16px;
+    outline: none;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    text-decoration: none;
+    transition: 450ms;
+    
+}
+
+.buttonSave:hover {
+    background: #fff;
+    padding: 10px 30px;
+    transition: 450ms;
+    color: #00b8d4;
+}

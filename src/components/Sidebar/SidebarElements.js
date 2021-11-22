@@ -78,7 +78,7 @@ export const SideBtnWrap = styled.div`
     justify-content: center;
 `
 
-export const SidebarRoute = styled(LinkR)`
+export const Button = styled.button`
     border-radius: 50px;
     background: #1569C7;
     white-space: nowrap;
@@ -95,5 +95,58 @@ export const SidebarRoute = styled(LinkR)`
         transition: all 0.3s ease-in-out;
         background: #D1D4D5;
         color: #1569C7;
+    }
+`
+
+//Style for modal
+
+export const ImgLink = styled(LinkR)`
+    
+`
+
+export const Style = styled.div`
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 1000px;
+    background-color: #fff;
+    box-shadow: 24;
+    padding-top: 20px;
+    border-radius: 7px;
+    transition: all 0.2s ease-in-out;
+    @media screen and (max-width: 1100px) {
+        width: 800px;
+        transition: all 0.2s ease-in-out;
+    }
+    @media screen and (max-width: 900px) {
+        width: 600px;
+        height: 300px;
+        transition: all 0.2s ease-in-out;
+    }
+    @media screen and (max-width: 700px) {
+        width: 400px;
+        height: 250px;
+        transition: all 0.2s ease-in-out;
+    }
+`
+
+export const Img = styled.img`
+    height: auto;
+    width: 100%;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    margin-top: 15px;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    
+    &:hover{
+        padding: 20px;
+        transition: all 0.2s ease-in-out;
+    }
+
+    @media screen and (max-width: 900px) {
+        width: 90%;
+        transition: all 0.2s ease-in-out;
     }
 `

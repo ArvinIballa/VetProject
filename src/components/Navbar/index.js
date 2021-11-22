@@ -20,13 +20,12 @@ import {
 import Client from '../../images/client.png'
 import Vet from '../../images/vet.png'
 
-import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import Backdrop from '@mui/material/Backdrop'
 import Grid from '@mui/material/Grid';
 import Tooltip from '@mui/material/Tooltip';
-import Divider from '@mui/material/Divider';
+
 
 const Navbar = ({ toggle }) => {
     
@@ -72,14 +71,14 @@ const Navbar = ({ toggle }) => {
                 <Grid container spacing={2}>
                     <Grid item xs={6}>
                         <Tooltip title="Client" placement="bottom">
-                            <ImgLink to={'/signin'}>
-                                <Img src={Client} onClick={'/signin'}></Img>
+                            <ImgLink to={'/signinclient'}>
+                                <Img src={Client}></Img>
                             </ImgLink>
                         </Tooltip>
                     </Grid>
                     <Grid item xs={6}>
                         <Tooltip title="Veterinarian" placement="bottom">
-                            <ImgLink to={'/signin'}>
+                            <ImgLink to={'/signinvet'}>
                                 <Img src={Vet}></Img>
                             </ImgLink>
                         </Tooltip>
@@ -139,7 +138,7 @@ const Navbar = ({ toggle }) => {
                         </NavItem>
                     </NavMenu>
                     <NavBtn>
-                        <Button to="/signin" onClick={toggleModal}>Log In</Button>
+                        <Button onClick={toggleModal}>Log In</Button>
                     </NavBtn>
                 </NavbarContainer>
             </Nav>

@@ -1,5 +1,6 @@
-import React from 'react'
-import ClientIcon from '../../images/vet.png'
+import React, { useState } from 'react'
+import ClientIcon from '../../images/client.png'
+import {Link, Navigate} from "react-router-dom";
 import { 
     Container, 
     FormWrap, 
@@ -16,6 +17,17 @@ import {
 } from './SigninElements'
 
 const Signin = () => {
+
+    const [redirect, SetRedirect]= useState(0)
+
+    const handleLogin = () => {
+        SetRedirect(1)
+    }
+
+    if(redirect == true){
+        return <Navigate to= "/Client/Profile"/>
+      }
+
     return (
         <>
             <Container>
@@ -31,7 +43,7 @@ const Signin = () => {
                                 <FormInput type='email' required></FormInput>
                                 <FormLabel htmlFor='for'>Password</FormLabel>
                                 <FormInput type='password' required></FormInput>
-                                <FormButton type='submit'>Log In</FormButton>
+                                <FormButton type='submit' onClick={handleLogin}>Log In</FormButton>
                                 <Text>Forgot Password?</Text>
                             </FormRow>
                         </Form>

@@ -1,0 +1,157 @@
+
+.content-table{
+    border-collapse: collapse;
+    margin: 25px 0;
+    font-size: 1em;
+    width: 90%;
+    border-radius: 5px 5px 0 0;
+    overflow: hidden;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.20);
+}   
+.content-table thead tr {
+    background-color: #00b8d4;
+    color: #fff;
+    text-align: left;
+    font-weight: bold;
+}
+
+.content-table th, .content-table td{
+    padding: 12px 15px;
+}
+
+.content-table tbody tr {
+    border-bottom: 1px solid #ddd;
+    transition: 250ms;
+}
+
+.content-table tbody tr:hover {
+    color: #00b8d4;
+    transition: 250ms;
+}
+
+.content-table tbody tr:nth-of-type(even) {
+    background-color: #c9c9c98e;
+}
+
+.content-table tbody tr:last-of-type {
+    border-bottom: 2px solid #00b8d4;
+}
+
+.btnAdd {
+    float: right;
+    margin-right: 120px;
+    border-radius: 15px;
+    background: #1569C7;
+    white-space: nowrap;
+    padding: 10px 22px;
+    color: #fff;
+    font-weight: bold;
+    font-size: 16px;
+    outline: none;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    text-decoration: none;
+    transition: 450ms;
+}
+
+.btnAdd:hover {
+    background: #27ad27;
+    padding: 10px 30px;
+    transition: 450ms;
+    color: #FFF;
+}
+
+
+.btnView{
+    margin-right: 5px;
+    border-radius: 15px;
+    background: #6c75f5;
+    white-space: nowrap;
+    padding: 8px 16px;
+    color: #fff;
+    font-weight: bold;
+    font-size: 16px;
+    outline: none;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    text-decoration: none;
+    transition: 450ms;
+}
+
+.btnView:hover {
+    background: #572cf1;
+    transition: 450ms;
+    color: #FFF;
+}
+
+.tableImg{
+    border-radius: 100%;
+    width: 80px;
+    height: 80px;
+}
+
+ 
+@media (max-width: 1200px) {
+    .btnAdd{
+        margin-right: 90px;
+        transition: 250ms;
+    }   
+}
+@media (max-width: 880px) {
+    .btnAdd{
+        margin-right: 55px;
+        transition: 250ms;
+    }   
+}
+
+@media (max-width: 555px) {
+    .btnAdd{
+        margin-right: -10px;
+        transition: 250ms;
+    }   
+}
+
+.input{
+    width: 90%;
+    display: flex;
+    justify-content: center;
+}
+
+.Box{
+    position: relative;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 1000px;
+    background-color: #fff;
+    box-shadow: 24;
+    padding: 20px 20px 20px 20px;
+    border-radius: 7px;
+    transition: all 0.2s ease-in-out;
+}
+
+@media (max-width: 1100px) {
+    .Box{
+        width: 800px;
+        transition: all 0.2s ease-in-out;
+    }
+   
+}
+@media (max-width: 900px) {
+    .Box{
+        width: 600px;
+        height: 300px;
+        transition: all 0.2s ease-in-out;
+    }
+   
+}
+@media (max-width: 700px) {
+    .Box{
+        width: 400px;
+        height: 250px;
+        transition: all 0.2s ease-in-out;
+    }
+}
+

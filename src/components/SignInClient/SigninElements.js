@@ -35,7 +35,7 @@ export const Icon = styled(Link)`
 
     @media screen and (max-width: 480px) {
         margin-left: 16px;
-        margin-top: 8px;
+        margin-top: 40px;
     }
 `
 
@@ -52,19 +52,32 @@ export const FormContent = styled.div`
 
 export const Form = styled.form`
     background: #00b8d4;
-    max-width: 600px;
+    max-width: 500px;
     height: auto;
-    width: 90%;
     z-index: 1;
     display: grid;
-    margin: 0 auto;
-    padding: 110px 50px;
+    margin: 0 auto 50px;
+    padding: 35px 50px 30px;
     border-radius: 50px;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.9);
-
+    transition: all 0.2s ease-in-out;
+    
+    @media screen and (max-width: 780px) {
+        padding: 35px 50px 30px;
+        width: 70%;
+        transition: all 0.2s ease-in-out;
+    }
     @media screen and (max-width: 480px) {
-        padding: 10px 10px;
-        width: 80%;
+        margin-top: 600px;
+        padding: 15px 25px 15px 25px;
+        width: 90%;
+        transition: all 0.2s ease-in-out;
+    }
+    @media screen and (max-width: 380px) {
+        margin-top: 570px;
+        padding: 25px 25px 25px 25px;
+        width: 95%;
+        transition: all 0.2s ease-in-out;
     }
 `
 export const FormRow = styled.div`
