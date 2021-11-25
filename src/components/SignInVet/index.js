@@ -1,4 +1,5 @@
-import React from 'react'
+import React, { useState } from 'react'
+import { Navigate } from 'react-router-dom'
 import VetIcon from '../../images/vet.png'
 import { 
     Container, 
@@ -16,6 +17,16 @@ import {
 } from './SigninElements'
 
 const Signin = () => {
+    const [redirect, SetRedirect]= useState(0)
+
+    const handleLogin = () => {
+        SetRedirect(1)
+        sessionStorage.setItem('isClient', 0)
+    }
+
+    if(redirect == 1){
+        return <Navigate to= "/Vet/Profile"/>
+      }
     return (
         <>
             <Container>
@@ -31,7 +42,7 @@ const Signin = () => {
                                 <FormInput type='email' required></FormInput>
                                 <FormLabel htmlFor='for'>Password</FormLabel>
                                 <FormInput type='password' required></FormInput>
-                                <FormButton type='submit'>Log In</FormButton>
+                                <FormButton type='submit' onClick={handleLogin}>Log In</FormButton>
                                 <Text>Forgot Password?</Text>
                             </FormRow>
                         </Form>

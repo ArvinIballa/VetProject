@@ -24,7 +24,7 @@ const Signin = () => {
         SetRedirect(1)
     }
 
-    if(redirect == true){
+    if(redirect == 1){
         return <Navigate to= "/Client/Profile"/>
       }
 

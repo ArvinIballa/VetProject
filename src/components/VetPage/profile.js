@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
-import docpic from '../../images/doctor2.jpg'
+import docpic from '../../images/doctor3.jpg'
 import VetNavbar from './Navbar'
-import './profile.css'
+import './Profile.css'
 
 import{
     Modal,
@@ -75,7 +75,7 @@ const Profile = () => {
                         <div className="col-md-6">
                             <div className='profile-head'>
                                 <h5>Arvin Iballa</h5>
-                                <h6>Patient</h6>
+                                <h6>Veterinarian Doctor</h6>
                                 <div className="col -md-8 pl-5">
                             <div className="tab-content profile-tab">
                                 <div className="tab-panel">
