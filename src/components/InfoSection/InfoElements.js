@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { Link as LinkR } from 'react-router-dom'
 
 export const InfoContainer = styled.div`
     color: #fff;
@@ -102,4 +103,36 @@ export const Img = styled.img`
     width: 100%;
     margin: 0 0 10px 0;
     padding-right: 0;
+`
+
+export const Style = styled.div`
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 1000px;
+    background-color: #fff;
+    box-shadow: 24;
+    padding-top: 20px;
+    border-radius: 7px;
+    transition: all 0.2s ease-in-out;
+    @media screen and (max-width: 1100px) {
+        width: 800px;
+        transition: all 0.2s ease-in-out;
+    }
+    @media screen and (max-width: 900px) {
+        width: 600px;
+        height: 300px;
+        transition: all 0.2s ease-in-out;
+    }
+    @media screen and (max-width: 700px) {
+        width: 400px;
+        height: 250px;
+        transition: all 0.2s ease-in-out;
+    }
+`
+
+
+export const ImgLink = styled(LinkR)`
+    
 `

@@ -16,6 +16,7 @@ export const homeObjOne = {
     alt: 'Medicine',
     dark: true,
     primary: true,
+    onclick: true,
     darkText: false
 }
 
@@ -33,7 +34,8 @@ export const homeObjTwo = {
     alt: 'Medicine',
     dark: false,
     primary: false,
-    darkText: true
+    darkText: true,
+    onclick: true,
 }
 
 export const homeObjThree = {
@@ -45,6 +47,7 @@ export const homeObjThree = {
     headLine: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor',
     description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,',
     buttonLabel: "Yes, I'm In",
+    onclick: false,
     imgStart: false,
     img: register,
     alt: 'Medicine',

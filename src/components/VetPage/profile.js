@@ -42,7 +42,7 @@ const Profile = () => {
                         style={{ width: "90%", justifyContent: "center", display: "flex", margin: "auto" }}
                     />
                     <br/>
-                     <TextField
+                    <TextField
                         label='Confirm Password'
                         variant='outlined'
                         style={{ width: "90%", justifyContent: "center", display: "flex", margin: "auto" }}
@@ -54,12 +54,12 @@ const Profile = () => {
                 </ModalFooter>
             </Modal>
              {/** MODAL CHANGE PROFILE PICTURE */}
-             <Modal centered backdrop='static' size='md' isOpen={modalChangePic}>
+            <Modal centered backdrop='static' size='md' isOpen={modalChangePic}>
                 <ModalHeader>
                     Change Profile Picture
                 </ModalHeader>
                 <ModalBody>
-                   <input type='file'></input>
+                    <input type='file'></input>
                 </ModalBody>
                 <ModalFooter>
                     <button className="btnClose" onClick={toggleModalChangePic}>Cancel</button>

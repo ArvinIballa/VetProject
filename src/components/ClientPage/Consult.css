@@ -41,7 +41,6 @@ h2{
 
 .btnBook {
     float: right;
-    margin-right: 120px;
     border-radius: 15px;
     background: #1569C7;
     white-space: nowrap;
@@ -67,6 +66,7 @@ h2{
 
 .btnView{
     margin-right: 5px;
+    margin-bottom: 10px;
     border-radius: 15px;
     background: #6c75f5;
     white-space: nowrap;
@@ -163,21 +163,6 @@ h2{
     height: 80px;
 }
 
- 
-@media (max-width: 1200px) {
-    .btnBook{
-        margin-right: 50px;
-        transition: 250ms;
-    }   
-}
-
-
-@media (max-width: 555px) {
-    .btnBook{
-        margin-right: -100px;
-        transition: 250ms;
-    }   
-}
 
 .input{
     width: 90%;
@@ -199,6 +184,8 @@ h2{
     transition: all 0.2s ease-in-out;
 }
 
-@media (max-width: 580px) {
-
+@media (max-width: 1000px) {
+    .action{
+        width: 500px;
+    }
 }

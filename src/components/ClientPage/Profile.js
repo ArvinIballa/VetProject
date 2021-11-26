@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import docpic from '../../images/doctor2.jpg'
 import VetNavbar from './Navbar'
 import './profile.css'
@@ -10,10 +10,15 @@ import{
     ModalBody,
 } from 'reactstrap'
 
-import { TextField } from '@mui/material'
+import api from '../../api/api'
+
+import { TextField, Skeleton } from '@mui/material'
+import { Navigate } from 'react-router-dom'
 
 
 const Profile = () => {
+
+    const getToken = sessionStorage.getItem('token')
 
     const [modalChangePass, setModalChangePass] = useState(false)
 
@@ -22,9 +27,57 @@ const Profile = () => {
     }
 
     const [modalChangePic, setModalChangePic] = useState(false)
+    const [isLoading, setIsLoading] = useState(true)
 
     const toggleModalChangePic = () => {
         setModalChangePic(!modalChangePic)
+    }
+
+    const loading = () => {
+        setIsLoading(false)
+        setTimeout( ()=>
+            doneLoading(), 
+            10000
+        );
+    }
+
+    const doneLoading = () => {
+        getProfile()
+        setIsLoading(true)
+        sessionStorage.setItem('void-wlcm-loading', true)
+    }
+
+    const [profileData, setProfileData] = useState([])
+
+    const getProfile = () => {
+        setIsLoading(false)
+        api.get('Owners/profile', {headers: {Authorization: `Bearer ${getToken}`}})
+        .then(res => {
+            console.log(res)
+            if(res.body){
+                setProfileData(res.body[0])
+                setIsLoading(true)
+            }
+            else{
+                return null
+            }
+        })
+        .catch(err => {
+            console.log(err.response)
+        })
+    }
+
+    useEffect(() => {
+        if(!sessionStorage.getItem('void-wlcm-loading')){
+            loading()
+        }
+        else{
+            getProfile()
+        }
+    }, [])
+
+    if(getToken == null){
+        return <Navigate to = "/"/>
     }
 
     return (
@@ -42,7 +95,7 @@ const Profile = () => {
                         style={{ width: "90%", justifyContent: "center", display: "flex", margin: "auto" }}
                     />
                     <br/>
-                     <TextField
+                    <TextField
                         label='Confirm Password'
                         variant='outlined'
                         style={{ width: "90%", justifyContent: "center", display: "flex", margin: "auto" }}
@@ -54,12 +107,12 @@ const Profile = () => {
                 </ModalFooter>
             </Modal>
              {/** MODAL CHANGE PROFILE PICTURE */}
-             <Modal centered backdrop='static' size='md' isOpen={modalChangePic}>
+            <Modal centered backdrop='static' size='md' isOpen={modalChangePic}>
                 <ModalHeader>
                     Change Profile Picture
                 </ModalHeader>
                 <ModalBody>
-                   <input type='file'></input>
+                <input type='file'></input>
                 </ModalBody>
                 <ModalFooter>
                     <button className="btnClose" onClick={toggleModalChangePic}>Cancel</button>
@@ -70,58 +123,63 @@ const Profile = () => {
             <div className="container emp-profile">
                     <div className="row">
                         <div className="col-md-4">
-                            <img className="profilePic" src={docpic}/>
+                        <Skeleton hidden={isLoading} sx={{ height: 490, width: 350, borderRadius: 20 }} animation="wave" variant="rectangular" />
+                            <img hidden={!isLoading} className="profilePic" src={docpic}/>
                         </div>
                         <div className="col-md-6">
                             <div className='profile-head'>
-                                <h5>Arvin Iballa</h5>
-                                <h6>Patient</h6>
+                            <Skeleton hidden={isLoading} animation="wave" height={10} width="40%" />
+                                <h5 hidden={!isLoading}>{profileData.FirstName} {profileData.LastName}</h5>
+                                <br hidden={isLoading}/>
+                            <Skeleton hidden={isLoading} animation="wave" height={10} width="15%" />  
+                                <h6 hidden ={!isLoading}>Owner</h6>
                                 <div className="col -md-8 pl-5">
                             <div className="tab-content profile-tab">
                                 <div className="tab-panel">
                                 <ul className="nav nav-tabs mt-5 mb-5" role="tablist">
                                     <li className="nav-item">
-                                        <a className="nav-link active" href="#">Profile</a>
+                                    <Skeleton hidden={isLoading} animation="wave" height={50} width="600%" />
+                                        <a hidden={!isLoading} className="nav-link active" href="#">Profile</a>
                                     </li>
                                 </ul>
                                     <div className="row">
                                         <div className = "col-md-6">
-                                            <label className="labelTitle">First Name</label>
+                                        <Skeleton hidden={isLoading} animation="wave" height={10} width="25%" /> 
+                                            <label hidden={!isLoading} className="labelTitle">First Name</label>
                                         </div>
                                         <div className = "col-md-6">
-                                            <label className="labelContext">Arvin</label>
-                                        </div>
-                                    </div>
-                                    <div className="row">
-                                        <div className = "col-md-6">
-                                            <label className="labelTitle">Last Name</label>
-                                        </div>
-                                        <div className = "col-md-6">
-                                            <label className="labelContext">Iballa</label>
+                                        <Skeleton hidden={isLoading} animation="wave" height={10} width="25%" />
+                                            <label hidden={!isLoading} className="labelContext">{profileData.FirstName}</label>
                                         </div>
                                     </div>
                                     <div className="row">
                                         <div className = "col-md-6">
-                                            <label className="labelTitle">Email</label>
+                                        <Skeleton hidden={isLoading} animation="wave" height={10} width="25%" />
+                                            <label hidden={!isLoading} className="labelTitle">Last Name</label>
                                         </div>
                                         <div className = "col-md-6">
-                                            <label className="labelContext">arviniballa6@gmail.com</label>
-                                        </div>
-                                    </div>
-                                    <div className="row">
-                                        <div className = "col-md-6">
-                                            <label className="labelTitle">Contact Number</label>
-                                        </div>
-                                        <div className = "col-md-6">
-                                            <label className="labelContext">02222222222</label>
+                                        <Skeleton hidden={isLoading} animation="wave" height={10} width="25%" />
+                                            <label hidden={!isLoading} className="labelContext">{profileData.LastName}</label>
                                         </div>
                                     </div>
                                     <div className="row">
                                         <div className = "col-md-6">
-                                            <label className="labelTitle">Description</label>
+                                        <Skeleton hidden={isLoading} animation="wave" height={10} width="25%" />
+                                            <label hidden={!isLoading} className="labelTitle">Email</label>
                                         </div>
                                         <div className = "col-md-6">
-                                            <label className="labelContext">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</label>
+                                        <Skeleton hidden={isLoading} animation="wave" height={10} width="25%" />
+                                            <label hidden={!isLoading} className="labelContext">{profileData.EmailAddress}</label>
+                                        </div>
+                                    </div>
+                                    <div className="row">
+                                        <div className = "col-md-6">
+                                        <Skeleton hidden={isLoading} animation="wave" height={10} width="25%" />
+                                            <label hidden={!isLoading} className="labelTitle">Contact Number</label>
+                                        </div>
+                                        <div className = "col-md-6">
+                                        <Skeleton hidden={isLoading} animation="wave" height={10} width="25%" />
+                                            <label hidden={!isLoading} className="labelContext">{profileData.ContactNumber}</label>
                                         </div>
                                     </div>
                                 </div>
@@ -130,12 +188,14 @@ const Profile = () => {
                             </div>
                         </div>
                         <div className="col-md-2">
-                           <button className='btnChangePass' onClick={toggleModalChangePass}>
-                               Change Password
-                           </button>
-                           <button className='btnUpdate' onClick={toggleModalChangePic}>
-                               Edit Profile Picture
-                           </button>
+                            <Skeleton hidden={isLoading} animation="wave" height={50} width="70%" />
+                            <button hidden={!isLoading} className='btnChangePass' onClick={toggleModalChangePass}>
+                                Change Password
+                            </button>
+                            <Skeleton hidden={isLoading} animation="wave" height={50} width="70%" />
+                            <button hidden={!isLoading} className='btnUpdate' onClick={toggleModalChangePic}>
+                                Edit Profile Picture
+                            </button>
                         </div>
                     </div>
             </div>

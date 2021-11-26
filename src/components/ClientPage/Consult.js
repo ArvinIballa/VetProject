@@ -50,40 +50,42 @@ const Consult = () => {
                 />
                 </ModalBody>
                 <ModalFooter>
-                    <button onClick={toggleModalConsult} className='btnClose'>Close</button>
+                    <button onClick={toggleModalConsult} className='btnCancel'>Close</button>
                 </ModalFooter>
             </Modal>
-            <Container fixed>      
-                <br/>
+            <Container>
+            <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" />
+            <div className='h2-wrapper'>  
                 <h2>Consultation Records <button onClick={toggleModalConsult} className="btnBook">Book a Consultation</button> </h2>
-                    <table className="table-responsive-md content-table">
-                        <thead>
-                            <tr>
-                                <th>Date</th>
-                                <th>Doctor</th>
-                                <th>Pet</th>
-                                <th>Concern</th>
-                                <th>Meet Link</th>
-                                <th>Status</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td data-heading="Date">Jan 01, 2021</td>
-                                <td data-heading="Doctor">Dr. Pedro</td>
-                                <td data-heading="Pet">Dog</td>
-                                <td data-heading="Concern">Vaccine</td>
-                                <td data-heading="Meet Link"><a target='_blank' href={'https://meet.google.com/?pli=1'}>https://meet.google.com/?pli=1</a></td>
-                                <td data-heading="Status">Ongoing</td>
-                                <td data-heading="Action">
-                                    <button className='btnView'>Settle Balance</button>
-                                    <button className='btnCancel'>Cancel</button>
-                                </td>
-                            </tr>
-                        </tbody>
+            </div>
+            <div className="containerTable">             
+                <div className="tableWrapper">
+                    <table>
+                        <tr>
+                            <th>Date</th>
+                            <th>Doctor</th>
+                            <th>Pet</th>
+                            <th>Concern</th>
+                            <th>Meet Link</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                        <tr>
+                            <td data-heading="Date">Jan 01, 2021</td>
+                            <td data-heading="Doctor">Dr. Pedro</td>
+                            <td data-heading="Pet">Dog</td>
+                            <td data-heading="Concern">Vaccine</td>
+                            <td data-heading="Meet Link"><a target='_blank' href={'https://meet.google.com/?pli=1'}>https://meet.google.com/?pli=1</a></td>
+                            <td data-heading="Status">Ongoing</td>
+                            <td data-heading="Action">
+                                <button className='btnView'>Settle Balance</button>
+                                <button className='btnCancel'>Cancel</button>
+                            </td>
+                        </tr>
                     </table>
-                    </Container>
+                </div>
+            </div>
+            </Container>
         </>
     )
 }

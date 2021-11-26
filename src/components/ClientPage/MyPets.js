@@ -120,120 +120,32 @@ const MyPets = () => {
                 <button onClick={toggleModalMedicalRecords} className='btnClose'>CLOSE</button>
                 </ModalFooter>
             </Modal>
-                <Container fixed>
-                    
-                <br/>
-                <h2>My Pets<button className="btnAdd" onClick={toggleModalAddPet}>+ ADD</button> </h2>
-                
-                    <table class="table-responsive-md content-table">
-                        <thead>
-                            <tr>
+            <Container>
+            <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" />
+            <div className='h2-wrapper'>  
+            <h2>My Pets<button className="btnAdd" onClick={toggleModalAddPet}>+ ADD</button> </h2>
+            </div>
+            <div className="containerTable">             
+                <div className="tableWrapper">
+                    <table>
+                        <tr>
                             <th scope="col">Name</th>
                             <th scope="col">Type</th>
                             <th scope="col">Picture</th>
                             <th scope="col">Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <th scope="row">Arvin</th>
-                                    <td>Canine Dog</td>
-                                    <td><img className="tableImg" src={Dog}></img></td>
-                                    <td>
-                                        <button className="btnView">View Medical Records</button>
-                                    </td>
-                            </tr>
-                            <tr>
-                                <th scope="row">Arvin</th>
-                                    <td>Canine Dog</td>
-                                    <td><img className="tableImg" src={Dog}></img></td>
-                                    <td>
-                                        <button className="btnView">View Medical Records</button>
-                                    </td>
-                            </tr>
-                            <tr>
-                                <th scope="row">Arvin</th>
-                                    <td>Canine Dog</td>
-                                    <td><img className="tableImg" src={Dog}></img></td>
-                                    <td>
-                                        <button className="btnView">View Medical Records</button>
-                                    </td>
-                            </tr>
-                            <tr>
-                                <th scope="row">Arvin</th>
-                                    <td>Canine Dog</td>
-                                    <td><img className="tableImg" src={Dog}></img></td>
-                                    <td>
-                                        <button className="btnView">View Medical Records</button>
-                                    </td>
-                            </tr>
-                            <tr>
-                                <th scope="row">Arvin</th>
-                                    <td>Canine Dog</td>
-                                    <td><img className="tableImg" src={Dog}></img></td>
-                                    <td>
-                                        <button className="btnView">View Medical Records</button>
-                                    </td>
-                            </tr>
-                            <tr>
-                                <th scope="row">Arvin</th>
-                                    <td>Canine Dog</td>
-                                    <td><img className="tableImg" src={Dog}></img></td>
-                                    <td>
-                                        <button className="btnView">View Medical Records</button>
-                                    </td>
-                            </tr>
-                            <tr>
-                                <th scope="row">Arvin</th>
-                                    <td>Canine Dog</td>
-                                    <td><img className="tableImg" src={Dog}></img></td>
-                                    <td>
-                                        <button className="btnView">View Medical Records</button>
-                                    </td>
-                            </tr>
-                            <tr>
-                                <th scope="row">Arvin</th>
-                                    <td>Canine Dog</td>
-                                    <td><img className="tableImg" src={Dog}></img></td>
-                                    <td>
-                                        <button className="btnView">View Medical Records</button>
-                                    </td>
-                            </tr>
-                            <tr>
-                                <th scope="row">Arvin</th>
-                                    <td>Canine Dog</td>
-                                    <td><img className="tableImg" src={Dog}></img></td>
-                                    <td>
-                                        <button className="btnView">View Medical Records</button>
-                                    </td>
-                            </tr>
-                            <tr>
-                                <th scope="row">Arvin</th>
-                                    <td>Canine Dog</td>
-                                    <td><img className="tableImg" src={Dog}></img></td>
-                                    <td>
-                                        <button className="btnView">View Medical Records</button>
-                                    </td>
-                            </tr>
-                            <tr>
-                                <th scope="row">Arvin</th>
-                                    <td>Canine Dog</td>
-                                    <td><img className="tableImg" src={Dog}></img></td>
-                                    <td>
-                                        <button className="btnView">View Medical Records</button>
-                                    </td>
-                            </tr>
-                            <tr>
-                                <th scope="row">Arvin</th>
-                                    <td>Canine Dog</td>
-                                    <td><img className="tableImg" src={Dog}></img></td>
-                                    <td>
-                                        <button className="btnView">View Medical Records</button>
-                                    </td>
-                            </tr>
-                        </tbody>
+                        </tr>
+                        <tr>
+                            <td scope="row">Arvin</td>
+                            <td>Canine Dog</td>
+                            <td><img className="tableImg" src={Dog}></img></td>
+                            <td>
+                                <button className="btnView">View Medical Records</button>
+                            </td>
+                        </tr>
                     </table>
-                </Container>
+                </div>
+            </div>
+            </Container>
         </>
     )
 }

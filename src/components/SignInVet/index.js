@@ -31,7 +31,7 @@ const Signin = () => {
         <>
             <Container>
                 <FormWrap>
-                    <Icon to="/">Vetra</Icon>
+                    <Icon to="/">Petra</Icon>
                     <FormContent>
                         <Form action="#">
                             <FormRow>

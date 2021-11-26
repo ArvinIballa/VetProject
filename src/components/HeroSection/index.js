@@ -27,7 +27,7 @@ const HeroSection = () => {
                     <PictureBg src={bg}></PictureBg>
                 </HeroBg>
                 <HeroContent>
-                    <HeroH1>Welcome to Vetra</HeroH1>
+                    <HeroH1>Welcome to Petra</HeroH1>
                     <HeroP>
                     Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
                     </HeroP>

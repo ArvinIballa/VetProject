@@ -12,6 +12,7 @@ import VetProfile from './components/VetPage/profile';
 import VetBooking from './components/VetPage/booking';
 import VetPatient from './components/VetPage/patients';
 import VetCalendar from './components/VetPage/calendar';
+import 'bootstrap/dist/css/bootstrap.min.css';
 function App() {
   const isClient = sessionStorage.getItem('isClient')
   console.log(isClient)

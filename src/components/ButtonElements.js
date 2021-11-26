@@ -14,9 +14,10 @@ export const Button = styled(Link)`
     justify-content: center;
     align-items: center;
     transition: all 0.2s ease-in-out;
+    text-decoration: none;
 
     &:hover {
-        padding: 25px;
+        padding: 20px 25px;
         transition: all 0.3s ease-in-out;
         color: #00b8d4;
         background: ${({primary}) => (primary ? '#D1D4D5' : '#fff')};  

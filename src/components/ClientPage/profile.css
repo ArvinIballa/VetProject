@@ -9,12 +9,12 @@ h6{
 }
 
 @media (max-width: 768px) {
-    .img{
+    .profilePic{
         width: 150px;
         height: 150px;
     }
-   
 }
+
 
 .btnChangePass{
     margin-bottom: 10px;

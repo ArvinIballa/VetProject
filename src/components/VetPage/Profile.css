@@ -4,16 +4,34 @@ h6{
 
 .profilePic{
     width: 350px;
-    height: 350px;
+    height: 500px;
     border-radius: 50px;
+    transition: 250ms;
+}
+
+@media (max-width: 1200px) {
+    .profilePic{
+        width: 300px;
+        height: 400px;
+        transition: 250ms;
+    }
+}
+
+@media (max-width: 1000px) {
+    .profilePic{
+        width: 200px;
+        height: 300px;
+        transition: 250ms;
+    }
 }
 
 @media (max-width: 768px) {
-    .img{
-        width: 150px;
-        height: 150px;
+    .profilePic{
+        width: 350px;
+        height: 450px;
+        transition: 250ms;
+        margin-bottom: 20px;
     }
-   
 }
 
 .btnChangePass{
@@ -113,7 +131,7 @@ h6{
     overflow: hidden;
 }
 .emp-profile{
-    margin-top: 20px;
+    margin-top: 40px;
 }
 
 .profile-tab{

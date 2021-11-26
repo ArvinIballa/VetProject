@@ -39,21 +39,6 @@ const Navbar = ({ toggle }) => {
         setModal(!modal)
     }
 
-    {/** 
-        const style = {
-        position: 'absolute',
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%, -50%)',
-        width: 800,
-        bgcolor: 'background.paper',
-        boxShadow: 24,
-        p: 4,
-        borderRadius: 7,
-        
-    };
-*/}
-
     return (
         <>
         <Modal open={modal} onClose={toggleModal} aria-labelledby="modal-modal-title"
@@ -90,7 +75,7 @@ const Navbar = ({ toggle }) => {
             <Nav>
                 <NavbarContainer>
                     <NavLogo to='/' onClick={toggleHome}>
-                        Vetra
+                        Petra
                     </NavLogo>
                     <MobileIcon onClick={toggle}>
                         <FaBars/>
@@ -100,7 +85,7 @@ const Navbar = ({ toggle }) => {
                             <NavLinks 
                                 to="about"
                                 smooth={true}
-                                duration={500}
+                                duration={100}
                                 spy={true}
                                 exact='true'
                                 offset={-80}
@@ -110,7 +95,7 @@ const Navbar = ({ toggle }) => {
                             <NavLinks 
                                 to="book"
                                 smooth={true}
-                                duration={500}
+                                duration={100}
                                 spy={true}
                                 exact='true'
                                 offset={-80}
@@ -120,7 +105,7 @@ const Navbar = ({ toggle }) => {
                             <NavLinks 
                                 to="doctors"
                                 smooth={true}
-                                duration={500}
+                                duration={100}
                                 spy={true}
                                 exact='true'
                                 offset={-80}
@@ -130,7 +115,7 @@ const Navbar = ({ toggle }) => {
                             <NavLinks 
                                 to="register"
                                 smooth={true}
-                                duration={500}
+                                duration={100}
                                 spy={true}
                                 exact='true'
                                 offset={-80}

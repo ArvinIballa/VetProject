@@ -19,7 +19,7 @@ const Navbar = () => {
           <Link to='#' className='menu-bars'>
             <FaBars onClick={toggleSidebar} />
           </Link>
-          <label className='icon'>Vetra</label>
+          <label className='icon'>Petra</label>
           
         </div>
         <nav className={sidebar ? 'nav-menu active' : 'nav-menu'}>
