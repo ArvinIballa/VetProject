@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
-import { Navigate } from 'react-router-dom'
-import VetIcon from '../../images/vet.png'
+import ClientIcon from '../../images/vet.png'
+import {Link, Navigate} from "react-router-dom";
+import api from '../../api/api'
 import { 
     Container, 
     FormWrap, 
@@ -16,33 +17,106 @@ import {
     Img
 } from './SigninElements'
 
+import {
+    Modal,
+    ModalHeader,
+    ModalFooter,
+    ModalBody,
+    Input
+} from 'reactstrap'
+
+import {CircularProgress} from '@mui/material'
+
+
 const Signin = () => {
-    const [redirect, SetRedirect]= useState(0)
+
+    const [redirect, setRedirect]= useState(0)
+
+    const [email, setEmail] = useState("")
+    const [password, setPassword] = useState("")
+
+    const [errorModal, setErrorModal] = useState(false)
+    const [errorMessage, setErrorMessage] = useState("")
+    const [isLoading, setIsLoading] = useState(true)
+
+    const toggleErrorModal = () => {
+        setErrorModal(!errorModal)
+    }
+
+    const resetState = () => {
+        setEmail("")
+        setPassword("")
+    }
 
     const handleLogin = () => {
-        SetRedirect(1)
-        sessionStorage.setItem('isClient', 0)
+        setIsLoading(false)
+        const loginPayload = {
+            email,
+            password
+        }
+        api.post('Vets/login', loginPayload)
+        .then(res => {
+            console.log(res)
+            if(res.token){
+                sessionStorage.setItem('token', res.token)
+                setRedirect(1)
+                setIsLoading(true)
+                resetState()
+            }
+            else{
+                setErrorModal(true)
+                setIsLoading(true)
+                setErrorMessage(res.message)
+                return false
+            }
+        })
+        .catch(err => {
+            console.log(err.response)
+        })
     }
 
     if(redirect == 1){
         return <Navigate to= "/Vet/Profile"/>
-      }
+    }
+
     return (
         <>
+         {/** ERROR MODAL */}
+            <Modal centered backdrop="static" size="md" isOpen={errorModal}>
+                <ModalHeader>
+                    Notice!
+                </ModalHeader>
+                <ModalBody>
+                    {errorMessage}
+                </ModalBody>
+                <ModalFooter>
+                <button className="btnCancel" onClick={toggleErrorModal}>OK</button>
+                </ModalFooter>
+            </Modal>
             <Container>
                 <FormWrap>
                     <Icon to="/">Petra</Icon>
                     <FormContent>
-                        <Form action="#">
+                        <Form>
                             <FormRow>
-                                
                                 <FormH1>Sign in to your account</FormH1>
-                                <Img src={VetIcon}></Img>
+                                <Img src={ClientIcon}></Img>
                                 <FormLabel htmlFor='for'>Email</FormLabel>
-                                <FormInput type='email' required></FormInput>
+                                <FormInput 
+                                    onChange={e=> setEmail(e.target.value)} 
+                                    type='email' 
+                                    required>                      
+                                </FormInput>
                                 <FormLabel htmlFor='for'>Password</FormLabel>
-                                <FormInput type='password' required></FormInput>
-                                <FormButton type='submit' onClick={handleLogin}>Log In</FormButton>
+                                <FormInput 
+                                    type='password' 
+                                    onChange={e=> setPassword(e.target.value)}
+                                    required>
+                                </FormInput>
+                                <div hidden={isLoading} style={{display:'flex', justifyContent:'center', alignItems:'center'}}>
+                                <CircularProgress />
+                                </div>
+                                <FormButton hidden={!isLoading} type='submit' onClick={handleLogin}>Log In</FormButton>
                                 <Text>Forgot Password?</Text>
                             </FormRow>
                         </Form>

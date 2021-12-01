@@ -25,6 +25,8 @@ import {
     Input
 } from 'reactstrap'
 
+import {CircularProgress} from '@mui/material'
+
 
 const Signin = () => {
 
@@ -35,6 +37,7 @@ const Signin = () => {
 
     const [errorModal, setErrorModal] = useState(false)
     const [errorMessage, setErrorMessage] = useState("")
+    const [isLoading, setIsLoading] = useState(true)
 
     const toggleErrorModal = () => {
         setErrorModal(!errorModal)
@@ -46,6 +49,7 @@ const Signin = () => {
     }
 
     const handleLogin = () => {
+        setIsLoading(false)
         const loginPayload = {
             email,
             password
@@ -56,10 +60,12 @@ const Signin = () => {
             if(res.token){
                 sessionStorage.setItem('token', res.token)
                 setRedirect(1)
+                setIsLoading(true)
                 resetState()
             }
             else{
                 setErrorModal(true)
+                setIsLoading(true)
                 setErrorMessage(res.message)
                 return false
             }
@@ -107,7 +113,10 @@ const Signin = () => {
                                     onChange={e=> setPassword(e.target.value)}
                                     required>
                                 </FormInput>
-                                <FormButton type='submit' onClick={handleLogin}>Log In</FormButton>
+                                <div hidden={isLoading} style={{display:'flex', justifyContent:'center', alignItems:'center'}}>
+                                <CircularProgress />
+                                </div>
+                                <FormButton hidden={!isLoading} type='submit' onClick={handleLogin}>Log In</FormButton>
                                 <Text>Forgot Password?</Text>
                             </FormRow>
                         </Form>

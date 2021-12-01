@@ -26,10 +26,4 @@ export const SidebarData = [
         className: 'nav-text'
     },
 
-    {
-        title: 'Logout',
-        path: '/',
-        icon: <CgIcons.CgLogOut/>,
-        className: 'nav-text'
-    }
 ]

@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom'
 import { SidebarData } from '../ClientPage/SidebarData' 
 import './Navbar.css'
 import { IconContext } from 'react-icons/lib'
+import * as CgIcons from 'react-icons/cg'
 const Navbar = () => {
 
     const [sidebar, setSidebar] = useState(false)
@@ -12,6 +13,12 @@ const Navbar = () => {
     const toggleSidebar = () => {
         setSidebar(!sidebar)
     }
+
+    const forLogout = () => {
+      console.log('logout')
+      sessionStorage.clear()
+    }
+
     return (
         <>
         <IconContext.Provider value={{ color: '#fff' }}>
@@ -39,6 +46,12 @@ const Navbar = () => {
                 </li>
               );
             })}
+            <li onClick={forLogout} className='nav-text'>
+              <Link to='/'>
+                  <CgIcons.CgLogOut/>
+                  <span>Logout</span>
+              </Link>
+            </li>
           </ul>
         </nav>
       </IconContext.Provider>

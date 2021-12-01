@@ -100,26 +100,6 @@
     height: 80px;
 }
 
- 
-@media (max-width: 1200px) {
-    .btnAdd{
-        margin-right: 90px;
-        transition: 250ms;
-    }   
-}
-@media (max-width: 880px) {
-    .btnAdd{
-        margin-right: 55px;
-        transition: 250ms;
-    }   
-}
-
-@media (max-width: 555px) {
-    .btnAdd{
-        margin-right: -10px;
-        transition: 250ms;
-    }   
-}
 
 .input{
     width: 90%;
