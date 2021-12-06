@@ -27,21 +27,7 @@ import * as IoIcons from 'react-icons/io5'
 import QR from '../../images/QR-Gcash.PNG'
 import Moment from 'moment'
 
-const timeData = [
-    "8:00 AM",
-    "9:00 AM",
-    "10:00 AM",
-    "11:00 AM",
-    "12:00 NN",
-    "1:00 PM",
-    "2:00 PM",
-    "3:00 PM",
-    "4:00 PM",
-    "5:00 PM",
-    "6:00 PM",
-    "7:00 PM",
-    "8:00 PM",
-]
+
 const Consult = () => {
     
     const getToken = sessionStorage.getItem('token')
@@ -65,6 +51,8 @@ const Consult = () => {
     const [error, setError] = useState(0)
     const [consultData, setConsultData] = useState([])
     const [fullpayment_reference, setFullpaymentReference] = useState('')
+    const [timeData, setTimeData] = useState([])
+    const [invalidTime, setInvalidTime] = useState('')
 
     const [errorModal, setErrorModal] = useState(false)
     const [successModal, setSuccessModal] = useState(false)
@@ -72,8 +60,6 @@ const Consult = () => {
     const [successMessage, setSuccessMessage] = useState("")
     const [settleModal, setSettleModal] = useState(false)
     const [consultationID, setConsultationID] = useState('')
-
-
 
     const resetState = () => {
         setDoctorID('')
@@ -118,10 +104,34 @@ const Consult = () => {
         setError(0)
         setModalBook(!modalBook)
         setModalViewProfile(!modalViewProfile)
+        setDate("")
+        setInvalidTime("")
     }
 
-    const getTime = () => {
-        api.get('')
+    const handleDate = (e) => {
+        setDate("")
+        setInvalidTime("")
+        let selectedDate = e.target.value
+        setDate(selectedDate)
+        const datePayload = {
+            date: selectedDate
+        }
+        console.log(selectedDate)
+        api.post(`Consultations/get_available_time/${doctor_id}`, datePayload, {headers: {Authorization: `Bearer ${getToken}`}})
+        .then(res => {
+            console.log(res)
+            if(res.body){
+                setTimeData(res.body)
+            }
+            else if(res.message){
+                setInvalidTime('Fullybooked')
+            }
+            else
+                return null
+        })
+        .catch(err => {
+            console.log(err.response)
+        })
     }
 
     const handleViewProfile = (firstname) => {
@@ -204,6 +214,22 @@ const Consult = () => {
 
         if(date == '' || time == '' || reservation_fee == '' || reservation_reference == ''){
             setErrorMessage('All fields are required!')
+            setErrorModal(true)
+            setIsLoading(true)
+            setError(1)
+            return false
+        }
+
+        else if(parseInt(consultation_fee) < parseInt(reservation_fee)){
+            setErrorMessage('Reservation fee must not be greater than consulation fee!')
+            setErrorModal(true)
+            setIsLoading(true)
+            setError(1)
+            return false
+        }
+
+        else if(parseInt(reservation_fee) < 150){
+            setErrorMessage('Reservation fee must not be less than 150 Pesos!')
             setErrorModal(true)
             setIsLoading(true)
             setError(1)
@@ -524,19 +550,20 @@ const Consult = () => {
                             disabled
                         />
                         <br/>
-                        <TextField
-                            error={error == 1 && date == ""}
+                        <Input
+                            invalid={error == 1 && date == ""}
                             label='Date'
-                            variant='outlined'
-                            style={{ width: "90%", justifyContent: "center", display: "flex", margin: "auto" }}
+                            //variant='outlined'
+                            style={{padding:'15px',width: "90%", justifyContent: "center", display: "flex", margin: "auto" }}
                             type='date'
-                            onChange={e=> setDate(e.target.value)}
-                            InputLabelProps={{
-                                shrink: true,
-                            }}
+                            onChange={handleDate}
+                            //InputLabelProps={{
+                                //shrink: true,
+                            //}}
+                            min={new Date().toISOString().split('T')[0]}     
                         />
                         <br/>
-                        <FormControl error={error == 1 && time == ""} variant="outlined" style={{width: '100%', height: '10%'}}>
+                        <FormControl disabled={date == ""} error={error == 1 && time == ""} variant="outlined" style={{width: '100%', height: '10%'}}>
                             <InputLabel style={{marginLeft: '30px'}} >Time</InputLabel>
                             <Select                              
                                 native
@@ -544,10 +571,10 @@ const Consult = () => {
                                 label="MyPet"
                                 onChange={e=> setTime(e.target.value)}
                             >
-                            <option selected disabled>Select</option>
+                            <option selected disabled>{invalidTime ? invalidTime : "Select"}</option>
                             {timeData.map((item)=> {
                                 return(
-                                    <option value={item}>{item}</option>
+                                    <option hidden={invalidTime} value={invalidTime ? invalidTime : item.Time}>{invalidTime ? invalidTime : item.Time}</option>
                                 )
                             })}                          
                             </Select>
@@ -568,7 +595,7 @@ const Consult = () => {
                         <br/>
                         <label style={{marginLeft:'22px'}}>Upload Screenshot</label>
                         <Input 
-                            invalid={error == 1 && reservation_fee == ""}
+                            invalid={error == 1 && reservation_reference == ""}
                             type='file'
                             style={{ width: "90%", justifyContent: "center", display: "flex", margin: "auto" }}
                             onChange={e=> setReservationReference(e.target.files[0])}
@@ -606,7 +633,7 @@ const Consult = () => {
                         {consultData.map((item)=> {
                             return(
                                 <tr>
-                                    <td className='date'>{Moment(item.date).format('LL')}</td>
+                                    <td className='date'>{Moment(item.Date).format('LL')}</td>
                                     <td>{item.Time}</td>
                                     <td>{item.DoctorName}</td>
                                     <td>{item.OwnerName}</td>

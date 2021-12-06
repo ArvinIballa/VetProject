@@ -69,6 +69,12 @@ const Profile = () => {
     const [message, setMessage] = useState('')
     const [modalAddDays, setModalAddDays] = useState(false)
     const [schedId, setSchedID] = useState('')
+    const [isLoadingModal, setIsLoadingModal] = useState(true)
+    const [description, setDescription] = useState('')
+    const [cons_fee, setConsFee] = useState('')
+    const [available_days, setAvailableDays] = useState('')
+    
+    
 
     const toggleAddTime = () => {
         setModalAddDays(!modalAddDays)
@@ -90,6 +96,7 @@ const Profile = () => {
         setModalChangeProfile(false)
         setModalChangePass(false)
         setModalAddDays(false)
+        setConfirmationModal(false)
     }
 
 
@@ -135,6 +142,9 @@ const Profile = () => {
                 setPhoneNumber(res.body[0].ContactNumber)
                 setFirstName(res.body[0].FirstName)
                 setLastName(res.body[0].LastName)
+                setDescription(res.body[0].Description)
+                setConsFee(res.body[0].ConsultationFee)
+                setConsFee(res.body[0].AvailableDays)
                 setIsLoading(true)
                 setOldEmail(res.body[0].EmailAddress)
                 sessionStorage.setItem('ID', res.body[0].DoctorID)
@@ -155,14 +165,14 @@ const Profile = () => {
     }
 
     const handleDelete = () => {
-        setIsLoading(false)
-        api.get(`Schedules/delete/55`, {headers: {Authorization: `Bearer ${getToken}`}})
+        setIsLoadingModal(false)
+        api.get(`Schedules/delete/${schedId}`, {headers: {Authorization: `Bearer ${getToken}`}})
         .then(res=> {
             console.log(res)
             if(res.message){
                 setSuccessMessage(res.message)
                 setSuccessModal(true)
-                setIsLoading(true)
+                setIsLoadingModal(true)
                 getAvailableTime()
             }
             else{
@@ -177,7 +187,7 @@ const Profile = () => {
     const [availableTimeData, setAvailableTimeData] = useState([])
 
     const getAvailableTime = () => {
-        api.get('Schedules/list/55', {headers: {Authorization: `Bearer ${getToken}`}})
+        api.get(`Schedules/list`, {headers: {Authorization: `Bearer ${getToken}`}})
         .then(res => {
             console.log(res)
             if(res.body){
@@ -195,20 +205,26 @@ const Profile = () => {
     }
 
     const handleAddTime = () => {
-        setIsLoading(false)
+        setIsLoadingModal(false)
         const timePayload = {
             time
         }
         api.post('Schedules', timePayload, {headers: {Authorization: `Bearer ${getToken}`}})
         .then(res=> {
             console.log(res)
-            if(res.message){
+            if(res.message == 'An error occured.'){
+                setErrorModal(true)
+                setErrorMessage(res.message)
+                setIsLoadingModal(true)
+                return false
+            }
+            else if(res.message){
                 setSuccessMessage(res.message)
                 setSuccessModal(true)
                 setTime('')
                 setMessage('')
                 getAvailableTime()
-                setIsLoading(true)
+                setIsLoadingModal(true)
             }
             else
                 return null
@@ -224,6 +240,9 @@ const Profile = () => {
         formdata.append('last_name', last_name)
         formdata.append('phonenumber', phonenumber)
         formdata.append('email', email)
+        formdata.append('description', description)
+        formdata.append('cons_fee', cons_fee)
+        formdata.append('available_days', available_days)
         formdata.append('profile_picture', profile_picture ? profile_picture : "")
         
         if(first_name == "" || last_name == "" || phonenumber == "" || email == ""){
@@ -339,8 +358,9 @@ const Profile = () => {
                     {confirmationMessage}
                 </ModalBody>
                 <ModalFooter>
-                <button className="btnView" onClick={toggleConfirmationModal}>Cancel</button>
-                <button className="btnCancel" onClick={handleDelete}>Delete</button>
+                <CircularProgress hidden={isLoadingModal}/>
+                <button hidden={!isLoadingModal} className="btnView" onClick={toggleConfirmationModal}>Cancel</button>
+                <button hidden={!isLoadingModal} className="btnCancel" onClick={handleDelete}>Delete</button>
                 </ModalFooter>
             </Modal>
             {/** RELOGIN MODAL */}
@@ -433,17 +453,44 @@ const Profile = () => {
                         onChange={e=> setPhoneNumber(e.target.value)}
                     />
                     <br/>
+                    <TextField
+                        label='Consultation Fee'
+                        value={cons_fee}
+                        variant='outlined'
+                        style={{ width: "90%", justifyContent: "center", display: "flex", margin: "auto" }}
+                        onChange={e=> setConsFee(e.target.value)}
+                    />
+                    <br/>
+                    <TextField
+                        label='Available Days'
+                        helperText={'(e.g Tuesday, Friday, Saturday)'}
+                        value={available_days}
+                        variant='outlined'
+                        style={{ width: "90%", justifyContent: "center", display: "flex", margin: "auto" }}
+                        onChange={e=> setAvailableDays(e.target.value)}
+                    />
+                    <br/>
+                    <TextField
+                        label='Description'
+                        value={description}
+                        multiline
+                        rows={3}
+                        variant='outlined'
+                        style={{ width: "90%", justifyContent: "center", display: "flex", margin: "auto" }}
+                        onChange={e=> setDescription(e.target.value)}
+                    />
+                    <br/>
                     <input 
                         style={{marginLeft: '22px'}} 
                         type='file'
                         onChange={e=> setProfilePicture(e.target.value)}
-                    >              
-                    </input>
+                    >       
+                    </input> 
                 </ModalBody>
                 <ModalFooter>
                     <CircularProgress hidden={confirmLoading}/>
-                    <button hidden={!confirmLoading} className="btnClose" onClick={toggleModalChangeProfile}>Cancel</button>
-                    <button hidden={!confirmLoading} onClick={handleUpdateProfile} className="btnSave">Save</button>
+                    <button hidden={!confirmLoading} className="btnCancel" onClick={toggleModalChangeProfile}>Cancel</button>
+                    <button hidden={!confirmLoading} onClick={handleUpdateProfile} className="btnAdd">Save</button>
                 </ModalFooter>
             </Modal>
             {/** ADD AVAILABLE TIME MODAL */}
@@ -470,8 +517,9 @@ const Profile = () => {
                         </FormControl>
                 </ModalBody>
                 <ModalFooter>
-                <button className="btnCancel" onClick={toggleAddTime}>Cancel</button>
-                <button className="btnAdd" onClick={handleAddTime}>OK</button>
+                <CircularProgress hidden={isLoadingModal}/>
+                <button hidden={!isLoadingModal} className="btnCancel" onClick={toggleAddTime}>Cancel</button>
+                <button hidden={!isLoadingModal} className="btnAdd" onClick={handleAddTime}>OK</button>
                 </ModalFooter>
             </Modal>
             <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" />
@@ -535,6 +583,36 @@ const Profile = () => {
                                         <div className = "col-md-6">
                                         <Skeleton hidden={isLoading} animation="wave" height={10} width="25%" />
                                             <label hidden={!isLoading} className="labelContext">{profileData.ContactNumber}</label>
+                                        </div>
+                                    </div>
+                                    <div className="row">
+                                        <div className = "col-md-6">
+                                            <Skeleton hidden={isLoading} animation="wave" height={10} width="25%" />
+                                            <label hidden={!isLoading} className="labelTitle">Description</label>
+                                        </div>
+                                        <div className = "col-md-6">
+                                            <Skeleton hidden={isLoading} animation="wave" height={10} width="25%" />
+                                            <label hidden={!isLoading} className="labelContext">{profileData.Description ? profileData.Description : ""}</label>
+                                        </div>
+                                    </div>
+                                    <div className="row">
+                                        <div className = "col-md-6">
+                                            <Skeleton hidden={isLoading} animation="wave" height={10} width="25%" />
+                                            <label hidden={!isLoading} className="labelTitle">Available Days</label>
+                                        </div>
+                                        <div className = "col-md-6">
+                                            <Skeleton hidden={isLoading} animation="wave" height={10} width="25%" />
+                                            <label hidden={!isLoading} className="labelContext">{profileData.AvailableDays ? profileData.AvailableDays : ""}</label>
+                                        </div>
+                                    </div>
+                                    <div className="row">
+                                        <div className = "col-md-6">
+                                            <Skeleton hidden={isLoading} animation="wave" height={10} width="25%" />
+                                            <label hidden={!isLoading} className="labelTitle">Consultation Fee</label>
+                                        </div>
+                                        <div className = "col-md-6">
+                                            <Skeleton hidden={isLoading} animation="wave" height={10} width="25%" />
+                                            <label hidden={!isLoading} className="labelContext">{profileData.ConsultationFee ? profileData.ConsultationFee : ""}</label>
                                         </div>
                                     </div>
                                 </div>
