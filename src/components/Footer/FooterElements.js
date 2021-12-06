@@ -80,6 +80,7 @@ export const SocialMediaWrap = styled.div`
     max-width: 1100px;
     margin: 40px auto 0 auto;
     flex-direction: column;
+    margin-bottom: 30px;
     
 `
 

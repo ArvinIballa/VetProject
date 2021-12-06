@@ -114,6 +114,25 @@ const MyPets = () => {
         })
     }
 
+    const getMedicalRecords = (pet_id) => {
+
+        const medicalPayload = {
+            pet_id
+        }
+        api.post('MedRecords/list', medicalPayload ,{headers: {Authorization: `Bearer ${getToken}`}})
+        .then(res => {
+            console.log(res)
+            if(res.message == 'No pet medical records yet.'){
+                setErrorModal(true)
+                setErrorMessage(res.message)
+                return false
+            }
+        })
+        .catch(err => {
+            console.log(err.response)
+        })
+    }
+
     useEffect(() => {
         getMyPets()
     }, [])
@@ -279,12 +298,11 @@ const MyPets = () => {
                                     <td>{item.Gender}</td>
                                     <td>{item.Age}</td>
                                     <td>
-                                        <button className="btnView">View Medical Records</button>
+                                        <button onClick={()=> getMedicalRecords(item.PetID)} className="btnView">View Medical Records</button>
                                     </td>
                                 </tr>
                             )
-                        })}
-                      
+                        })}                   
                     </table>
                 </div>
             </div>

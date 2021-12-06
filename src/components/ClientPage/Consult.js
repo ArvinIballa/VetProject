@@ -25,8 +25,10 @@ import './Consult.css'
 import api from '../../api/api'
 import * as IoIcons from 'react-icons/io5'
 import QR from '../../images/QR-Gcash.PNG'
+import Moment from 'moment'
 
 const timeData = [
+    "8:00 AM",
     "9:00 AM",
     "10:00 AM",
     "11:00 AM",
@@ -39,7 +41,6 @@ const timeData = [
     "6:00 PM",
     "7:00 PM",
     "8:00 PM",
-    "9:00 PM",
 ]
 const Consult = () => {
     
@@ -63,11 +64,16 @@ const Consult = () => {
     const [reservation_reference, setReservationReference] = useState('')
     const [error, setError] = useState(0)
     const [consultData, setConsultData] = useState([])
+    const [fullpayment_reference, setFullpaymentReference] = useState('')
 
     const [errorModal, setErrorModal] = useState(false)
     const [successModal, setSuccessModal] = useState(false)
     const [errorMessage, setErrorMessage] = useState("")
     const [successMessage, setSuccessMessage] = useState("")
+    const [settleModal, setSettleModal] = useState(false)
+    const [consultationID, setConsultationID] = useState('')
+
+
 
     const resetState = () => {
         setDoctorID('')
@@ -83,6 +89,7 @@ const Consult = () => {
     const handleOk = () => {
         setSuccessModal(false)
         setModalBook(false)
+        setSettleModal(false)
     }
 
     const toggleErrorModal = () => {
@@ -90,7 +97,13 @@ const Consult = () => {
         
     }
 
-    console.log(time)
+    const toggleSettleModal = (id) => {
+        setSettleModal(!settleModal)
+        setConsultationID(id)
+        
+    }
+
+    console.log(pet_id)
 
     const toggleModalConsult = () => {
         setModalConsult(!modalConsult)
@@ -105,6 +118,10 @@ const Consult = () => {
         setError(0)
         setModalBook(!modalBook)
         setModalViewProfile(!modalViewProfile)
+    }
+
+    const getTime = () => {
+        api.get('')
     }
 
     const handleViewProfile = (firstname) => {
@@ -200,6 +217,7 @@ const Consult = () => {
                 setSuccessMessage(res.message)
                 setSuccessModal(true)
                 setIsLoading(true)
+                getConsult()
                 resetState()
             }
             else{
@@ -213,6 +231,28 @@ const Consult = () => {
             setErrorModal(true)
             setErrorMessage('Something went wrong. Please try again.')
             setIsLoading(true)
+        })
+    }
+
+    const handleSettle = () => {
+        setIsLoading(false)
+        let formdata = new FormData()
+        formdata.append('fullpayment_reference', fullpayment_reference)
+        api.post(`Consultations/settle_balance/${consultationID}`, formdata, {headers: {Authorization: `Bearer ${getToken}`}})
+        .then(res => {
+            console.log(res)
+            if(res.message){
+                setSuccessMessage(res.message)
+                setSuccessModal(true)
+                setIsLoading(true)
+                setFullpaymentReference('')
+                getConsult()
+            }
+            else
+                return null
+        })
+        .catch(err => {
+            console.log(err.response)
         })
     }
 
@@ -249,6 +289,23 @@ const Consult = () => {
                 </ModalBody>
                 <ModalFooter>
                 <button className="btnCancel" onClick={toggleErrorModal}>OK</button>
+                </ModalFooter>
+            </Modal>
+
+            {/** SETTLE PAYMENT MODAL */}
+            <Modal centered backdrop="static" size="md" isOpen={settleModal}>
+                <ModalHeader>
+                    Settle your remaining balance
+                </ModalHeader>
+                <ModalBody>
+                    <Input 
+                        type='file'
+                        onChange={e=> setFullpaymentReference(e.target.files[0])}
+                    />
+                </ModalBody>
+                <ModalFooter>
+                    <button className="btnCancel" onClick={handleOk}>Close</button>
+                    <button className="btnAdd" onClick={handleSettle}>Send Payment</button>
                 </ModalFooter>
             </Modal>
             
@@ -532,28 +589,45 @@ const Consult = () => {
                 <div className="tableWrapper">
                     <table>
                         <tr>
-                            <th>Date</th>
-                            <th>Doctor</th>
-                            <th>Pet</th>
-                            <th>Concern</th>
+                            <th>Date</th>   
+                            <th>Time</th>                          
+                            <th>Doctor's Name</th>
+                            <th>Owner's Name</th>
+                            <th>Pet Name</th>
                             <th>Meet Link</th>
+                            <th>Consultation Fee</th>
+                            <th>Reservation Fee</th>
+                            <th>Reservation Reference</th>
+                            <th>Balance</th>
+                            <th>Balance Reference</th>
                             <th>Status</th>
                             <th>Action</th>
                         </tr>
                         {consultData.map((item)=> {
                             return(
                                 <tr>
-                                    <td>Jan 01, 2021</td>
-                                    <td>Dr. Pedro</td>
-                                    <td>Dog</td>
-                                    <td>Vaccine</td>
-                                    <td><a target='_blank' href={'https://meet.google.com/?pli=1'}>https://meet.google.com/?pli=1</a></td>
-                                    <td>Ongoing</td>
-                                    <td>
-                                        <button className='btnView'>Settle Balance</button>
-                                        <button className='btnCancel'>Cancel</button>
+                                    <td className='date'>{Moment(item.date).format('LL')}</td>
+                                    <td>{item.Time}</td>
+                                    <td>{item.DoctorName}</td>
+                                    <td>{item.OwnerName}</td>
+                                    <td>{item.PetName}</td>
+                                    <td><a href={item.GoogleMeetLink}>{item.GoogleMeetLink}</a></td>
+                                    <td>{item.ConsultationFee}</td>
+                                    <td>{item.ReservationFee}</td>
+                                    <td style={{textAlign:'center'}}>
+                                        <a target='_blank' href={item.ReservationReference}><img className='tableImg' src={item.ReservationReference}/></a>
                                     </td>
-                            </tr>
+                                    <td>{item.Balance}</td>   
+                                    <td style={{textAlign:'center'}}>
+                                        <a hidden={item.BalanceReference == null} target='_blank' href={item.BalanceReference}><img className='tableImg' src={item.BalanceReference}/></a>
+                                    </td> 
+                                    <td>
+                                        <label>{item.Status}</label>
+                                    </td>                         
+                                    <td>
+                                        <button hidden={item.Status != "DONE, FOR FULL PAYMENT"} onClick={()=>toggleSettleModal(item.ConsultationFee)} className="btnView">{item.Status == "DONE, FOR FULL PAYMENT" ? "Settle Remaining Balance" : " "}</button>
+                                    </td>
+                                </tr>
                             )
                         })}             
                     </table>

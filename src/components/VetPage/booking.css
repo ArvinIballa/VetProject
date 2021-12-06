@@ -18,3 +18,7 @@
 .btnMessage:hover{
     background: #f87e2c;
 }
+
+.status{
+    cursor: pointer;
+}

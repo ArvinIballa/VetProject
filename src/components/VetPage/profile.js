@@ -12,11 +12,28 @@ import{
 
 import api from '../../api/api'
 
-import { TextField, Skeleton, CircularProgress } from '@mui/material'
+import { TextField, Skeleton, CircularProgress, FormControl, InputLabel, Select } from '@mui/material'
 import { Navigate } from 'react-router-dom'
 
 
 const Profile = () => {
+
+    const timeData = [
+        "8:00 AM",
+        "9:00 AM",
+        "10:00 AM",
+        "11:00 AM",
+        "12:00 NN",
+        "1:00 PM",
+        "2:00 PM",
+        "3:00 PM",
+        "4:00 PM",
+        "5:00 PM",
+        "6:00 PM",
+        "7:00 PM",
+        "8:00 PM",
+        
+    ]
 
     const getToken = sessionStorage.getItem('token')
 
@@ -25,9 +42,12 @@ const Profile = () => {
     const [errorModal, setErrorModal] = useState(false)
     const [successModal, setSuccessModal] = useState(false)
     const [reloginModal, setReloginModal] = useState(false)
+    const [confirmationModal, setConfirmationModal] = useState(false)
     const [reloginMessage, setReloginMessage] = useState("")
     const [errorMessage, setErrorMessage] = useState("")
     const [successMessage, setSuccessMessage] = useState("")
+    const [confirmationMessage, setConfirmationMessage] = useState("")
+    const [error, setError] = useState(0)
 
     const toggleModalChangePass = () => {
         setModalChangePass(!modalChangePass)
@@ -35,6 +55,7 @@ const Profile = () => {
 
     
     const [isLoading, setIsLoading] = useState(true)
+    const [time, setTime] = useState('')
     const [confirmLoading, setConfirmLoading] = useState(true)
     const [profile_picture, setProfilePicture] = useState("")
     const [first_name, setFirstName] = useState("")
@@ -45,15 +66,30 @@ const Profile = () => {
     const [password, setPassword] = useState("")
     const [confirm_password, setConfirmPassword] = useState("")
     const [redirect, setRedirect] = useState(false)
+    const [message, setMessage] = useState('')
+    const [modalAddDays, setModalAddDays] = useState(false)
+    const [schedId, setSchedID] = useState('')
+
+    const toggleAddTime = () => {
+        setModalAddDays(!modalAddDays)
+    }
 
     const toggleErrorModal = () => {
         setErrorModal(!errorModal)
     }
 
+    const toggleConfirmationModal = (id) => {
+        setConfirmationModal(!confirmationModal)
+        setConfirmationMessage('Are you sure you want to delete this?')
+        setSchedID(id)
+    }
+
+
     const handleOk = () => {
         setSuccessModal(false)
         setModalChangeProfile(false)
         setModalChangePass(false)
+        setModalAddDays(false)
     }
 
 
@@ -81,6 +117,7 @@ const Profile = () => {
 
     const doneLoading = () => {
         getProfile()
+        getAvailableTime()
         setIsLoading(true)
         sessionStorage.setItem('void-wlcm-loading', true)
     }
@@ -117,6 +154,69 @@ const Profile = () => {
         setRedirect(true)
     }
 
+    const handleDelete = () => {
+        setIsLoading(false)
+        api.get(`Schedules/delete/55`, {headers: {Authorization: `Bearer ${getToken}`}})
+        .then(res=> {
+            console.log(res)
+            if(res.message){
+                setSuccessMessage(res.message)
+                setSuccessModal(true)
+                setIsLoading(true)
+                getAvailableTime()
+            }
+            else{
+                return null
+            }
+        })
+        .catch(err => {
+            console.log(err.response)
+        })
+    }
+
+    const [availableTimeData, setAvailableTimeData] = useState([])
+
+    const getAvailableTime = () => {
+        api.get('Schedules/list/55', {headers: {Authorization: `Bearer ${getToken}`}})
+        .then(res => {
+            console.log(res)
+            if(res.body){
+                setAvailableTimeData(res.body)
+            }
+            else{
+                setMessage(res.message)
+                return false
+            }
+                
+        })
+        .catch(err => {
+            console.log(err.response)
+        })
+    }
+
+    const handleAddTime = () => {
+        setIsLoading(false)
+        const timePayload = {
+            time
+        }
+        api.post('Schedules', timePayload, {headers: {Authorization: `Bearer ${getToken}`}})
+        .then(res=> {
+            console.log(res)
+            if(res.message){
+                setSuccessMessage(res.message)
+                setSuccessModal(true)
+                setTime('')
+                setMessage('')
+                getAvailableTime()
+                setIsLoading(true)
+            }
+            else
+                return null
+        })
+        .catch(err => {
+            console.log(err.response)
+        })
+    } 
     const handleUpdateProfile = () => {
         setConfirmLoading(false)
         let formdata = new FormData()
@@ -170,6 +270,7 @@ const Profile = () => {
         }
     }
 
+
     const handleChangePassword = () => {
         setConfirmLoading(false)
         const changePassPayload = {
@@ -203,6 +304,7 @@ const Profile = () => {
         }
         else{
             getProfile()
+            getAvailableTime()
         }
     }, [])
 
@@ -226,6 +328,19 @@ const Profile = () => {
                 </ModalBody>
                 <ModalFooter>
                 <button className="btnAdd" onClick={handleOk}>OK</button>
+                </ModalFooter>
+            </Modal>
+            {/** DELETE MODAL */}
+            <Modal centered backdrop="static" size="md" isOpen={confirmationModal}>
+                <ModalHeader>
+                    Notice!
+                </ModalHeader>
+                <ModalBody>
+                    {confirmationMessage}
+                </ModalBody>
+                <ModalFooter>
+                <button className="btnView" onClick={toggleConfirmationModal}>Cancel</button>
+                <button className="btnCancel" onClick={handleDelete}>Delete</button>
                 </ModalFooter>
             </Modal>
             {/** RELOGIN MODAL */}
@@ -331,6 +446,34 @@ const Profile = () => {
                     <button hidden={!confirmLoading} onClick={handleUpdateProfile} className="btnSave">Save</button>
                 </ModalFooter>
             </Modal>
+            {/** ADD AVAILABLE TIME MODAL */}
+            <Modal centered backdrop="static" size="md" isOpen={modalAddDays}>
+                <ModalHeader>
+                    Add Available Days
+                </ModalHeader>
+                <ModalBody>
+                <FormControl error={error == 1 && time == ""} variant="outlined" style={{width: '100%', height: '10%'}}>
+                            <InputLabel style={{marginLeft: '30px'}} >Time</InputLabel>
+                            <Select                              
+                                native
+                                style={{ width: "90%", justifyContent: "center", display: "flex", margin: "auto" }}
+                                label="MyPet"
+                                onChange={e=> setTime(e.target.value)}
+                            >
+                            <option selected disabled>Select</option>
+                            {timeData.map((item)=> {
+                                return(
+                                    <option value={item}>{item}</option>
+                                )
+                            })}                          
+                            </Select>
+                        </FormControl>
+                </ModalBody>
+                <ModalFooter>
+                <button className="btnCancel" onClick={toggleAddTime}>Cancel</button>
+                <button className="btnAdd" onClick={handleAddTime}>OK</button>
+                </ModalFooter>
+            </Modal>
             <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" />
             <div className="container emp-profile">
                     <div className="row">
@@ -403,13 +546,61 @@ const Profile = () => {
                             <Skeleton hidden={isLoading} animation="wave" height={50} width="70%" />
                             <button hidden={!isLoading} className='btnChangePass' onClick={toggleModalChangePass}>
                                 Change Password
-                            </button>
+                            </button>                
                             <Skeleton hidden={isLoading} animation="wave" height={50} width="70%" />
                             <button hidden={!isLoading} className='btnUpdate' onClick={toggleModalChangeProfile}>
                                 Edit Profile 
                             </button>
+                            
+                            
+                            
                         </div>
                     </div>
+
+                    <div className='h2-wrapper'> 
+                        <Skeleton hidden={isLoading} animation="wave" height={50} width="20%" /> 
+                        <h2 hidden={!isLoading}>My Available Days <button hidden={!isLoading} className='btnAdd' onClick={toggleAddTime}>
+                                + Add Time
+                            </button></h2>
+                    </div>
+                <div className="containerTable">  
+                <Skeleton hidden={isLoading} animation="wave" height={200} width="100%" />           
+                    <div hidden={!isLoading} className="tableWrapper">
+                        <table>
+                            <tr>
+                                <th></th>               
+                                <th scope="col">Time</th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th scope="col">Action</th>
+                            </tr>
+                            <h5 hidden={message == ''} className='info'>{message}</h5>
+                            {availableTimeData.map((item)=> {
+                                return (
+                                    <tr>
+                                        <td></td>    
+                                        <td scope="row">{item.Time}</td> 
+                                        <td></td>   
+                                        <td></td>     
+                                        <td></td>     
+                                        <td></td>      
+                                        <td></td>     
+                                        <td></td>     
+                                        <td></td>                                  
+                                        <td>
+                                            <button onClick={()=>toggleConfirmationModal(item.ScheduleID)} className="btnCancel">Delete</button>
+                                        </td>
+                                </tr>       
+                                )
+                            })}                                               
+                        </table>
+                    </div>
+                </div>
             </div>
         </>
     )

@@ -16,7 +16,7 @@ const doctors = () => {
     return (
         <>
             <DoctorsContainer id="doctors">
-                <DoctorH1>Meet our Doctors</DoctorH1>
+                <DoctorH1>Meet the Team</DoctorH1>
                 <DoctorWrapper>
                     <DoctorCard>
                         <DoctorsIcon src={Icon1}/>

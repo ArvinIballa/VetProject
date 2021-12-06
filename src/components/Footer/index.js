@@ -27,44 +27,6 @@ const Footer = () => {
         <>
             <FooterContainer>
                 <FooterWrap>
-                    <FooterLinksContainer>
-                        <FooterLinksWrapper>
-                            <FooterLinkItems>
-                                <FooterLinkTitle> About Us </FooterLinkTitle>
-                                    <FooterLink to="book">How it works</FooterLink>
-                                    <FooterLink to="about">Testimonials</FooterLink>
-                                    <FooterLink to="about">Careers</FooterLink>
-                                    <FooterLink to="about">Investors</FooterLink>
-                                    <FooterLink to="about">Terms of Service</FooterLink>
-                            </FooterLinkItems>
-                            <FooterLinkItems>
-                                <FooterLinkTitle> Contact Us </FooterLinkTitle>
-                                    <FooterLink to="book">How it works</FooterLink>
-                                    <FooterLink to="about">Testimonials</FooterLink>
-                                    <FooterLink to="about">Careers</FooterLink>
-                                    <FooterLink to="about">Investors</FooterLink>
-                                    <FooterLink to="about">Terms of Service</FooterLink>
-                            </FooterLinkItems>
-                        </FooterLinksWrapper>
-                        <FooterLinksWrapper>
-                            <FooterLinkItems>
-                                <FooterLinkTitle> About Us </FooterLinkTitle>
-                                    <FooterLink to="book">How it works</FooterLink>
-                                    <FooterLink to="about">Testimonials</FooterLink>
-                                    <FooterLink to="about">Careers</FooterLink>
-                                    <FooterLink to="about">Investors</FooterLink>
-                                    <FooterLink to="about">Terms of Service</FooterLink>
-                            </FooterLinkItems>
-                            <FooterLinkItems>
-                                <FooterLinkTitle> About Us </FooterLinkTitle>
-                                    <FooterLink to="book">How it works</FooterLink>
-                                    <FooterLink to="about">Testimonials</FooterLink>
-                                    <FooterLink to="about">Careers</FooterLink>
-                                    <FooterLink to="about">Investors</FooterLink>
-                                    <FooterLink to="about">Terms of Service</FooterLink>
-                            </FooterLinkItems>
-                        </FooterLinksWrapper>
-                    </FooterLinksContainer>
                     <SocialMedia>
                         <SocialMediaWrap>
                             <SocialLogo to='/' onClick={toggleHome}>

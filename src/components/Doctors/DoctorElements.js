@@ -12,7 +12,6 @@ export const DoctorsContainer = styled.div`
         height: 1100px;
     }
 
-   
     @media screen and (max-width: 480px) {
         height: 1300px;
     }
@@ -32,7 +31,6 @@ export const DoctorWrapper = styled.div`
         max-width: 500px;
     }
 
-   
 `
 
 export const DoctorCard = styled.div`
@@ -78,6 +76,7 @@ export const DoctorH1 = styled.h1`
     font-size: 2.5rem;
     color: #00b8d4;
     margin-bottom: 64px;
+    font-weight: bold;
 
     @media screen and (max-width: 480px) {
         font-size: 2rem;
