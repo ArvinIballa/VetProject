@@ -2,9 +2,8 @@ import './App.css';
 import { Routes, Route, BrowserRouter as Router } from 'react-router-dom'
 import Home from './pages/index';
 import SignInVet from './components/SignInVet/index'
+import SignInAdmin from './components/SignInAdmin/index'
 import SignInClient from './components/SignInClient/index'
-import NavbarClient from './components/ClientPage/Navbar';
-import NavbarVet from './components/VetPage/Navbar';
 import ClientProfile from './components/ClientPage/Profile';
 import ClientMyPets from './components/ClientPage/MyPets';
 import ClientConsult from './components/ClientPage/Consult';
@@ -12,6 +11,11 @@ import VetProfile from './components/VetPage/profile';
 import VetBooking from './components/VetPage/booking';
 import VetPatient from './components/VetPage/patients';
 import VetCalendar from './components/VetPage/calendar';
+import AdminProfile from './components/AdminPage/Profile';
+import AdminAccount from './components/AdminPage/AdminAccount'
+import AdminConsultation from './components/AdminPage/Consultations'
+import AdminPetOwner from './components/AdminPage/PetOwner'
+import AdminVets from './components/AdminPage/Vets'
 import 'bootstrap/dist/css/bootstrap.min.css';
 function App() {
   const isClient = sessionStorage.getItem('isClient')
@@ -21,6 +25,7 @@ function App() {
       <Routes>
           <Route path="/" element={<Home/>} exact />
           <Route path="/signinvet" element={<SignInVet/>} exact />
+          <Route path="/signinadmin" element={<SignInAdmin/>} exact />
           <Route path="/signinclient" element={<SignInClient/>} exact/>
           <Route path='/Client/Profile' element={<ClientProfile/>} />
           <Route path='/Client/MyPets' element={<ClientMyPets/>} />
@@ -29,10 +34,12 @@ function App() {
           <Route path='/Vet/Calendar' element={<VetCalendar/>} />
           <Route path='/Vet/Patients' element={<VetPatient/>} />
           <Route path='/Vet/Bookings' element={<VetBooking/>} />
+          <Route path='/Admin/Profile' element={<AdminProfile/>} />
+          <Route path='/Admin/Accounts' element={<AdminAccount/>} />
+          <Route path='/Admin/Consult' element={<AdminConsultation/>} />
+          <Route path='/Admin/MyPets' element={<AdminPetOwner/>} />
+          <Route path='/Admin/Vets' element={<AdminVets/>} />
       </Routes>
-      
-      
-      
     </Router>
   );
 }

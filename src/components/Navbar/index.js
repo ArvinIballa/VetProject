@@ -19,6 +19,7 @@ import {
 
 import Client from '../../images/client.png'
 import Vet from '../../images/vet.png'
+import Admin from '../../images/admin.png'
 
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
@@ -54,17 +55,24 @@ const Navbar = ({ toggle }) => {
                 </Typography>
                 <br/>
                 <Grid container spacing={2}>
-                    <Grid item xs={6}>
+                    <Grid item xs={4}>
                         <Tooltip title="Client" placement="bottom">
                             <ImgLink to={'/signinclient'}>
                                 <Img src={Client}></Img>
                             </ImgLink>
                         </Tooltip>
                     </Grid>
-                    <Grid item xs={6}>
+                    <Grid item xs={4}>
                         <Tooltip title="Veterinarian" placement="bottom">
                             <ImgLink to={'/signinvet'}>
                                 <Img src={Vet}></Img>
+                            </ImgLink>
+                        </Tooltip>
+                    </Grid>
+                    <Grid item xs={4}>
+                        <Tooltip title="Admin" placement="bottom">
+                            <ImgLink to={'/signinadmin'}>
+                                <Img src={Admin}></Img>
                             </ImgLink>
                         </Tooltip>
                     </Grid>

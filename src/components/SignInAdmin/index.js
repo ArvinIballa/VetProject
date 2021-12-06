@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import ClientIcon from '../../images/vet.png'
+import AdminIcon from '../../images/admin.png'
 import {Link, Navigate} from "react-router-dom";
 import api from '../../api/api'
 import { 
@@ -36,22 +36,8 @@ const Signin = () => {
     const [password, setPassword] = useState("")
 
     const [errorModal, setErrorModal] = useState(false)
-    const [forgotModal, setForgotModal] = useState(false)
     const [errorMessage, setErrorMessage] = useState("")
     const [isLoading, setIsLoading] = useState(true)
-
-    const toggleErrorModal = () => {
-        setErrorModal(!errorModal)
-    }
-
-    const toggleForgotModal = () => {
-        setForgotModal(!forgotModal)
-    }
-
-    const resetState = () => {
-        setEmail("")
-        setPassword("")
-    }
 
     const handleEnter = (e) => {
         if (e.keyCode === 13) {
@@ -59,13 +45,22 @@ const Signin = () => {
         }
     }
 
-    const handleLogin = (e) => {
+    const toggleErrorModal = () => {
+        setErrorModal(!errorModal)
+    }
+
+    const resetState = () => {
+        setEmail("")
+        setPassword("")
+    }
+
+    const handleLogin = () => {
         setIsLoading(false)
         const loginPayload = {
             email,
             password
         }
-        api.post('Vets/login', loginPayload)
+        api.post('Admins/login', loginPayload)
         .then(res => {
             console.log(res)
             if(res.token){
@@ -87,7 +82,7 @@ const Signin = () => {
     }
 
     if(redirect == 1){
-        return <Navigate to= "/Vet/Profile"/>
+        return <Navigate to= "/Admin/Profile"/>
     }
 
     return (
@@ -104,48 +99,33 @@ const Signin = () => {
                 <button className="btnCancel" onClick={toggleErrorModal}>OK</button>
                 </ModalFooter>
             </Modal>
-            {/** FORGOT MODAL */}
-            <Modal centered backdrop="static" size="md" isOpen={forgotModal}>
-                <ModalHeader>
-                    Forgot Password?
-                </ModalHeader>
-                <ModalBody>
-                    Relax!!! Try to remember and try again. :)
-                </ModalBody>
-                <ModalFooter>
-                <button className="btnCancel" onClick={toggleForgotModal}>OK</button>
-                </ModalFooter>
-            </Modal>
             <Container>
                 <FormWrap>
                     <Icon to="/">Petra</Icon>
                     <FormContent>
-                        <Form role="form">
+                        <Form>
                             <FormRow>
                                 <FormH1>Sign in to your account</FormH1>
-                                <Img src={ClientIcon}></Img>
+                                <Img src={AdminIcon}></Img>
                                 <FormLabel htmlFor='for'>Email</FormLabel>
                                 <FormInput 
                                     onChange={e=> setEmail(e.target.value)} 
                                     type='email' 
-                                    onKeyPress={handleEnter}
                                     required>                      
                                 </FormInput>
                                 <FormLabel htmlFor='for'>Password</FormLabel>
                                 <FormInput 
                                     type='password' 
                                     onChange={e=> setPassword(e.target.value)}
-                                    required
-                                    onKeyPress={handleEnter}>
+                                    required>
                                 </FormInput>
                                 <div hidden={isLoading} style={{display:'flex', justifyContent:'center', alignItems:'center'}}>
                                 <CircularProgress />
                                 </div>
-                                <FormButton  hidden={!isLoading} type='submit' onClick={handleLogin}>Log In</FormButton>
-                                <Text onClick={toggleForgotModal}>Forgot Password?</Text>
+                                <FormButton hidden={!isLoading} type='submit' onClick={handleLogin} onKeyPress={handleEnter} >Log In</FormButton>
+                                <Text>Forgot Password?</Text>
                             </FormRow>
                         </Form>
-                        
                     </FormContent>
                 </FormWrap>
             </Container>

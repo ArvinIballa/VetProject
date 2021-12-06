@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
-import docpic from '../../images/doctor3.jpg'
-import VetNavbar from './Navbar'
-import './Profile.css'
+import docpic from '../../images/doctor2.jpg'
+import AdminNavbar from './Navbar'
 
 import{
     Modal,
@@ -89,7 +88,7 @@ const Profile = () => {
 
     const getProfile = () => {
         setIsLoading(false)
-        api.get('Vets/profile', {headers: {Authorization: `Bearer ${getToken}`}})
+        api.get('Admins/profile', {headers: {Authorization: `Bearer ${getToken}`}})
         .then(res => {
             console.log(res)
             if(res.body){
@@ -100,8 +99,6 @@ const Profile = () => {
                 setLastName(res.body[0].LastName)
                 setIsLoading(true)
                 setOldEmail(res.body[0].EmailAddress)
-                sessionStorage.setItem('ID', res.body[0].DoctorID)
-                sessionStorage.setItem('email', res.body[0].EmailAddress)
             }
             else{
                 return null
@@ -119,12 +116,13 @@ const Profile = () => {
 
     const handleUpdateProfile = () => {
         setConfirmLoading(false)
-        let formdata = new FormData()
-        formdata.append('first_name', first_name)
-        formdata.append('last_name', last_name)
-        formdata.append('phonenumber', phonenumber)
-        formdata.append('email', email)
-        formdata.append('profile_picture', profile_picture ? profile_picture : "")
+        const profilePayload={
+            first_name,
+            last_name,
+            phonenumber,
+            email,
+            admin_id : profileData.adminID
+        }
         
         if(first_name == "" || last_name == "" || phonenumber == "" || email == ""){
             setErrorMessage('All fields are required')
@@ -134,7 +132,7 @@ const Profile = () => {
         }
         
         if(oldEmail != email){
-            api.post('Vets/update', formdata, {headers: {Authorization: `Bearer ${getToken}`}})
+            api.post('Admins/update', profilePayload, {headers: {Authorization: `Bearer ${getToken}`}})
             .then(res => {
                 console.log(res, 'redirect')
                 if(res.message){
@@ -151,7 +149,7 @@ const Profile = () => {
         }
 
         else {
-            api.post('Vets/update', formdata, {headers: {Authorization: `Bearer ${getToken}`}})
+            api.post('Admins/update', profilePayload, {headers: {Authorization: `Bearer ${getToken}`}})
             .then(res => {
                 console.log(res)
                 if(res.message){
@@ -181,7 +179,7 @@ const Profile = () => {
             setConfirmLoading(true)
             return false
         }
-        api.post('Vets/update_password', changePassPayload, {headers: {Authorization: `Bearer ${getToken}`}})
+        api.post('Admins/update_password', changePassPayload, {headers: {Authorization: `Bearer ${getToken}`}})
         .then(res => {
             console.log(res)
             if(res.message){
@@ -207,7 +205,7 @@ const Profile = () => {
     }, [])
 
     if(redirect == true){
-        return <Navigate to = "/signinvet"/>
+        return <Navigate to = "/signinadmin"/>
     }
     else if(getToken == null){
         return <Navigate to = "/"/>
@@ -215,7 +213,7 @@ const Profile = () => {
 
     return (
         <>
-            <VetNavbar/>
+            <AdminNavbar/>
             {/** SUCCESS MODAL */}
             <Modal centered backdrop="static" size="md" isOpen={successModal}>
                 <ModalHeader>
@@ -344,7 +342,7 @@ const Profile = () => {
                                 <h5 hidden={!isLoading}>{profileData.FirstName} {profileData.LastName}</h5>
                                 <br hidden={isLoading}/>
                             <Skeleton hidden={isLoading} animation="wave" height={10} width="15%" />  
-                                <h6 hidden ={!isLoading}>Veterinarian Doctor</h6>
+                                <h6 hidden ={!isLoading}>Administrator</h6>
                                 <div className="col -md-8 pl-5">
                             <div className="tab-content profile-tab">
                                 <div className="tab-panel">

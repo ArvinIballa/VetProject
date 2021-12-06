@@ -100,6 +100,7 @@ const MyPets = () => {
                 setSuccessMessage(res.message)
                 setSuccessModal(true)
                 setIsLoading(true)
+                getMyPets()
                 resetState()
             }
             else{
@@ -114,15 +115,15 @@ const MyPets = () => {
     }
 
     useEffect(() => {
-       getMyPets()
+        getMyPets()
     }, [])
     return (
         <>  
         <ClientNavbar/>
-         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" />
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" />
             <br/>
              {/** SUCCESS MODAL */}
-             <Modal centered backdrop="static" size="md" isOpen={successModal}>
+            <Modal centered backdrop="static" size="md" isOpen={successModal}>
                 <ModalHeader>
                     Success!
                 </ModalHeader>

@@ -12,7 +12,7 @@ import{
 
 import api from '../../api/api'
 
-import { TextField, Skeleton } from '@mui/material'
+import { TextField, Skeleton, CircularProgress } from '@mui/material'
 import { Navigate } from 'react-router-dom'
 
 
@@ -21,16 +21,44 @@ const Profile = () => {
     const getToken = sessionStorage.getItem('token')
 
     const [modalChangePass, setModalChangePass] = useState(false)
+    const [modalChangeProfile, setModalChangeProfile] = useState(false)
+    const [errorModal, setErrorModal] = useState(false)
+    const [successModal, setSuccessModal] = useState(false)
+    const [reloginModal, setReloginModal] = useState(false)
+    const [reloginMessage, setReloginMessage] = useState("")
+    const [errorMessage, setErrorMessage] = useState("")
+    const [successMessage, setSuccessMessage] = useState("")
 
     const toggleModalChangePass = () => {
         setModalChangePass(!modalChangePass)
     }
 
-    const [modalChangePic, setModalChangePic] = useState(false)
+    
     const [isLoading, setIsLoading] = useState(true)
+    const [confirmLoading, setConfirmLoading] = useState(true)
+    const [profile_picture, setProfilePicture] = useState("")
+    const [first_name, setFirstName] = useState("")
+    const [last_name, setLastName] = useState("")
+    const [phonenumber, setPhoneNumber] = useState("")
+    const [email, setEmail] = useState("")
+    const [oldEmail, setOldEmail] = useState("")
+    const [password, setPassword] = useState("")
+    const [confirm_password, setConfirmPassword] = useState("")
+    const [redirect, setRedirect] = useState(false)
 
-    const toggleModalChangePic = () => {
-        setModalChangePic(!modalChangePic)
+    const toggleErrorModal = () => {
+        setErrorModal(!errorModal)
+    }
+
+    const handleOk = () => {
+        setSuccessModal(false)
+        setModalChangeProfile(false)
+        setModalChangePass(false)
+    }
+
+
+    const toggleModalChangeProfile = () => {
+        setModalChangeProfile(!modalChangeProfile)
     }
 
     const loading = () => {
@@ -39,6 +67,16 @@ const Profile = () => {
             doneLoading(), 
             10000
         );
+    }
+
+    const resetState = () => {
+        setProfilePicture("")
+        setFirstName("")
+        setLastName("")
+        setPhoneNumber("")
+        setEmail("")
+        setPassword("")
+        setConfirmPassword("")
     }
 
     const doneLoading = () => {
@@ -56,10 +94,100 @@ const Profile = () => {
             console.log(res)
             if(res.body){
                 setProfileData(res.body[0])
+                setEmail(res.body[0].EmailAddress)
+                setPhoneNumber(res.body[0].ContactNumber)
+                setFirstName(res.body[0].FirstName)
+                setLastName(res.body[0].LastName)
                 setIsLoading(true)
+                setOldEmail(res.body[0].EmailAddress)
             }
             else{
                 return null
+            }
+        })
+        .catch(err => {
+            console.log(err.response)
+        })
+    }
+
+    const handleRelogin = () => {
+        sessionStorage.clear()
+        setRedirect(true)
+    }
+
+    const handleUpdateProfile = () => {
+        setConfirmLoading(false)
+        let formdata = new FormData()
+        formdata.append('first_name', first_name)
+        formdata.append('last_name', last_name)
+        formdata.append('phonenumber', phonenumber)
+        formdata.append('email', email)
+        formdata.append('profile_picture', profile_picture ? profile_picture : "")
+        
+        if(first_name == "" || last_name == "" || phonenumber == "" || email == ""){
+            setErrorMessage('All fields are required')
+            setErrorModal(true)
+            setConfirmLoading(true)
+            return false
+        }
+        
+        if(oldEmail != email){
+            api.post('Owners/update', formdata, {headers: {Authorization: `Bearer ${getToken}`}})
+            .then(res => {
+                console.log(res, 'redirect')
+                if(res.message){
+                    setReloginModal(true)
+                    setReloginMessage(res.message)
+                    setConfirmLoading(true)
+                }
+                else
+                    return null
+            })
+            .catch(err => {
+                console.log(err.response)
+            })
+        }
+
+        else {
+            api.post('Owners/update', formdata, {headers: {Authorization: `Bearer ${getToken}`}})
+            .then(res => {
+                console.log(res)
+                if(res.message){
+                    setSuccessModal(true)
+                    setSuccessMessage(res.message)
+                    setConfirmLoading(true)
+                    resetState()
+                    getProfile()
+                }
+                else
+                    return null
+            })
+            .catch(err => {
+                console.log(err.response)
+            })
+        }
+    }
+
+    const handleChangePassword = () => {
+        setConfirmLoading(false)
+        const changePassPayload = {
+            password
+        }
+        if(password != confirm_password){
+            setErrorModal(true)
+            setErrorMessage('Password does not match. Please try again!')
+            setConfirmLoading(true)
+            return false
+        }
+        api.post('Owners/update_password', changePassPayload, {headers: {Authorization: `Bearer ${getToken}`}})
+        .then(res => {
+            console.log(res)
+            if(res.message){
+                setIsLoading(true)
+                setReloginMessage(res.message + " Please relogin. Thank you!")
+                setReloginModal(true)
+                setConfirmLoading(true)
+                resetState()
             }
         })
         .catch(err => {
@@ -76,13 +204,52 @@ const Profile = () => {
         }
     }, [])
 
-    if(getToken == null){
+    if(redirect == true){
+        return <Navigate to = "/signinclient"/>
+    }
+    else if(getToken == null){
         return <Navigate to = "/"/>
     }
 
     return (
         <>
             <VetNavbar/>
+            {/** SUCCESS MODAL */}
+            <Modal centered backdrop="static" size="md" isOpen={successModal}>
+                <ModalHeader>
+                    Success!
+                </ModalHeader>
+                <ModalBody>
+                    {successMessage}
+                </ModalBody>
+                <ModalFooter>
+                <button className="btnAdd" onClick={handleOk}>OK</button>
+                </ModalFooter>
+            </Modal>
+            {/** RELOGIN MODAL */}
+            <Modal centered backdrop="static" size="md" isOpen={reloginModal}>
+                <ModalHeader>
+                    Success!
+                </ModalHeader>
+                <ModalBody>
+                    {reloginMessage}
+                </ModalBody>
+                <ModalFooter>
+                <button className="btnAdd" onClick={handleRelogin}>OK</button>
+                </ModalFooter>
+            </Modal>
+             {/** ERROR MODAL */}
+            <Modal centered backdrop="static" size="md" isOpen={errorModal}>
+                <ModalHeader>
+                    Notice!
+                </ModalHeader>
+                <ModalBody>
+                    {errorMessage}
+                </ModalBody>
+                <ModalFooter>
+                <button className="btnCancel" onClick={toggleErrorModal}>OK</button>
+                </ModalFooter>
+            </Modal>
             {/** MODAL CHANGE PASSWORD */}
             <Modal centered backdrop='static' size='md' isOpen={modalChangePass}>
                 <ModalHeader>
@@ -90,33 +257,76 @@ const Profile = () => {
                 </ModalHeader>
                 <ModalBody>
                     <TextField
-                        label='Current Password'
+                        label='New Password'
+                        type='password'
                         variant='outlined'
                         style={{ width: "90%", justifyContent: "center", display: "flex", margin: "auto" }}
+                        onChange={e=> setPassword(e.target.value)}
                     />
                     <br/>
                     <TextField
                         label='Confirm Password'
+                        type='password'
                         variant='outlined'
                         style={{ width: "90%", justifyContent: "center", display: "flex", margin: "auto" }}
+                        onChange={e=> setConfirmPassword(e.target.value)}
                     />
                 </ModalBody>
                 <ModalFooter>
-                    <button className="btnClose" onClick={toggleModalChangePass}>Cancel</button>
-                    <button className="btnSave">Save</button>
+                    <CircularProgress hidden={confirmLoading} />
+                    <button hidden={!confirmLoading} className="btnClose" onClick={toggleModalChangePass}>Cancel</button>
+                    <button hidden={!confirmLoading} onClick={handleChangePassword} className="btnSave">Save</button>
                 </ModalFooter>
             </Modal>
              {/** MODAL CHANGE PROFILE PICTURE */}
-            <Modal centered backdrop='static' size='md' isOpen={modalChangePic}>
+            <Modal centered backdrop='static' size='md' isOpen={modalChangeProfile}>
                 <ModalHeader>
                     Change Profile Picture
                 </ModalHeader>
                 <ModalBody>
-                <input type='file'></input>
+                    <TextField
+                        label='First Name'
+                        value={first_name}
+                        variant='outlined'
+                        style={{ width: "90%", justifyContent: "center", display: "flex", margin: "auto" }}
+                        onChange={e=> setFirstName(e.target.value)}
+                    />
+                    <br/>
+                    <TextField
+                        label='Last Name'
+                        value={last_name}
+                        variant='outlined'
+                        style={{ width: "90%", justifyContent: "center", display: "flex", margin: "auto" }}
+                        onChange={e=> setLastName(e.target.value)}
+                    />
+                    <br/>
+                    <TextField
+                        label='Email'
+                        value={email}
+                        variant='outlined'
+                        style={{ width: "90%", justifyContent: "center", display: "flex", margin: "auto" }}
+                        onChange={e=> setEmail(e.target.value)}
+                    />
+                    <br/>
+                    <TextField
+                        label='Phone Number'
+                        value={phonenumber}
+                        variant='outlined'
+                        style={{ width: "90%", justifyContent: "center", display: "flex", margin: "auto" }}
+                        onChange={e=> setPhoneNumber(e.target.value)}
+                    />
+                    <br/>
+                    <input 
+                        style={{marginLeft: '22px'}} 
+                        type='file'
+                        onChange={e=> setProfilePicture(e.target.value)}
+                    >              
+                    </input>
                 </ModalBody>
                 <ModalFooter>
-                    <button className="btnClose" onClick={toggleModalChangePic}>Cancel</button>
-                    <button className="btnSave">Save</button>
+                    <CircularProgress hidden={confirmLoading}/>
+                    <button hidden={!confirmLoading} className="btnClose" onClick={toggleModalChangeProfile}>Cancel</button>
+                    <button hidden={!confirmLoading} onClick={handleUpdateProfile} className="btnSave">Save</button>
                 </ModalFooter>
             </Modal>
             <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" />
@@ -193,8 +403,8 @@ const Profile = () => {
                                 Change Password
                             </button>
                             <Skeleton hidden={isLoading} animation="wave" height={50} width="70%" />
-                            <button hidden={!isLoading} className='btnUpdate' onClick={toggleModalChangePic}>
-                                Edit Profile Picture
+                            <button hidden={!isLoading} className='btnUpdate' onClick={toggleModalChangeProfile}>
+                                Edit Profile 
                             </button>
                         </div>
                     </div>

@@ -15,6 +15,10 @@ h6{
     }
 }
 
+.textField{
+    font-family: "Quicksand", sans-serif;
+}
+
 
 .btnChangePass{
     margin-bottom: 10px;
@@ -46,7 +50,7 @@ h6{
     border-radius: 15px;
     background: #00b8d4;
     white-space: nowrap;
-    padding: 8px 16px;
+    padding: 8px 22px;
     color: #fff;
     font-weight: bold;
     font-size: 14px;
