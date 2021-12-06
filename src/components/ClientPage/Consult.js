@@ -540,18 +540,22 @@ const Consult = () => {
                             <th>Status</th>
                             <th>Action</th>
                         </tr>
-                        <tr>
-                            <td data-heading="Date">Jan 01, 2021</td>
-                            <td data-heading="Doctor">Dr. Pedro</td>
-                            <td data-heading="Pet">Dog</td>
-                            <td data-heading="Concern">Vaccine</td>
-                            <td data-heading="Meet Link"><a target='_blank' href={'https://meet.google.com/?pli=1'}>https://meet.google.com/?pli=1</a></td>
-                            <td data-heading="Status">Ongoing</td>
-                            <td data-heading="Action">
-                                <button className='btnView'>Settle Balance</button>
-                                <button className='btnCancel'>Cancel</button>
-                            </td>
-                        </tr>
+                        {consultData.map((item)=> {
+                            return(
+                                <tr>
+                                    <td>Jan 01, 2021</td>
+                                    <td>Dr. Pedro</td>
+                                    <td>Dog</td>
+                                    <td>Vaccine</td>
+                                    <td><a target='_blank' href={'https://meet.google.com/?pli=1'}>https://meet.google.com/?pli=1</a></td>
+                                    <td>Ongoing</td>
+                                    <td>
+                                        <button className='btnView'>Settle Balance</button>
+                                        <button className='btnCancel'>Cancel</button>
+                                    </td>
+                            </tr>
+                            )
+                        })}             
                     </table>
                 </div>
             </div>
