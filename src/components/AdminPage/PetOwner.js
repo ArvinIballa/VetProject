@@ -55,9 +55,10 @@ const PetOwner = () => {
             console.log(err.response)
         })
     }
-
-    const getSpecificOwner = (owner_id) => {
+    const [firstname, setFirstName] = useState('')
+    const getSpecificOwner = (owner_id, firstname) => {
         console.log(owner_id)
+        setFirstName(firstname)
         api.get(`Pets/list_pet_owner/${owner_id}`, {headers: {Authorization: `Bearer ${getToken}`}})
         .then(res => {
             console.log(res)
@@ -118,7 +119,7 @@ const PetOwner = () => {
             {/** OWNER MODAL */}
             <Modal centered backdrop="static" size="xl" isOpen={ownerModal}>
                 <ModalBody>   
-                        <h2>Pet List</h2>
+                        <h2>{firstname}'s Pet List</h2>
                     <div className="containerTable">             
                         <div className="tableWrapper">
                             <table>
@@ -185,7 +186,7 @@ const PetOwner = () => {
                                         <td>{item.ContactNumber}</td>
                                         <td>{item.EmailAddress}</td>                                
                                         <td>
-                                            <button className="btnView" onClick={()=>getSpecificOwner(item.OwnerID)}>View Pet</button>
+                                            <button className="btnView" onClick={()=>getSpecificOwner(item.OwnerID, item.FirstName)}>View Pet</button>
                                         </td>
                                     </tr>
                                 )
