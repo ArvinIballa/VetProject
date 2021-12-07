@@ -17,7 +17,7 @@ import { Navigate } from 'react-router-dom'
 
 const Profile = () => {
 
-    const getToken = localStorage.getItem('token')
+    const getToken = sessionStorage.getItem('token')
 
     const [modalChangePass, setModalChangePass] = useState(false)
     const [modalChangeProfile, setModalChangeProfile] = useState(false)
@@ -81,7 +81,7 @@ const Profile = () => {
     const doneLoading = () => {
         getProfile()
         setIsLoading(true)
-        localStorage.setItem('void-wlcm-loading', true)
+        sessionStorage.setItem('void-wlcm-loading', true)
     }
 
     const [profileData, setProfileData] = useState([])
@@ -110,7 +110,7 @@ const Profile = () => {
     }
 
     const handleRelogin = () => {
-        localStorage.clear()
+        sessionStorage.clear()
         setRedirect(true)
     }
 
@@ -196,7 +196,7 @@ const Profile = () => {
     }
 
     useEffect(() => {
-        if(!localStorage.getItem('void-wlcm-loading')){
+        if(!sessionStorage.getItem('void-wlcm-loading')){
             loading()
         }
         else{

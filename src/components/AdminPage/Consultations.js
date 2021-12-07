@@ -13,8 +13,8 @@ import {
 import { CircularProgress, TextField } from '@mui/material'
 
 const Consultations = () => {
-
-    const getToken = localStorage.getItem('token')
+   
+    const getToken = sessionStorage.getItem('token')
 
     const [consultData, setConsultData] = useState([])
     const [message, setMessage] = useState('')
@@ -36,7 +36,8 @@ const Consultations = () => {
     const [isLoading, setIsLoading] = useState(true)
     const [modalMessage, setModalMessage] = useState(false)
     const [id, setID] = useState('')
-    const [confirming, setConfirming] = useState(0)
+    const [confirming, setConfirming] = useState(true)
+    const [confirmMessage, setConfirmMessage] = useState("")
 
     const toggleMessageModal = (id) => {
         setModalMessage(!modalMessage)
@@ -50,6 +51,7 @@ const Consultations = () => {
         
     }
 
+
     const toggleFullyPaidModal = (id) => {
         setFullyPaidModal(!fullyPaidModal)
         setConsultationID(id)
@@ -57,7 +59,6 @@ const Consultations = () => {
 
     const toggleConfirmationModal = () => {
         setConfirmationModal(!confirmationModal)
-        setAdviseModal(!adviseModal)
     }
 
     const handleOk = () => {
@@ -65,15 +66,22 @@ const Consultations = () => {
         setConfirmationModal(false)
         setFullyPaidModal(false)
         setModalMessage(false)
+        setAdviseModal(false)
     }
 
     const toggleAdviseModal = () => {
+        setConfirming(true)
+        setConfirmMessage('Confirming Payment ....')
         setAdviseModal(!adviseModal)
+        setConfirmationModal(!confirmationModal)
+        setTimeout(() => {
+            setConfirming(false)
+            setConfirmMessage('Successfully paid!')
+        }, 10000);
     }
 
     const handleOkNewTab = () => {
-        console.log(confirming)
-        window.close()
+        window.close() 
     }
 
     const handleMessage = () => {
@@ -156,7 +164,7 @@ const Consultations = () => {
     }
 
     const handleConfirm = () => {
-        toggleConfirmationModal()
+        toggleAdviseModal()
     }
 
     useEffect(() => {
@@ -164,7 +172,6 @@ const Consultations = () => {
         if(window.location.href.split('/')[5]== '?success#'){
             console.log(window.location.href)
             getConsultations()
-            setConfirming(1)
             setNoticeTitle('Success!')
             setNoticeMessage('Successfully marked consultation appointment as paid.')
             setNoticeModal(true)
@@ -174,6 +181,7 @@ const Consultations = () => {
             setNoticeMessage('Failed to mark as paid')
             setNoticeModal(true)
         }
+        console.log(confirming)
 
     }, [])
 
@@ -224,10 +232,10 @@ const Consultations = () => {
                     Notice!
                 </ModalHeader>
                 <ModalBody>
-                    Confirming Payment .....
+                    {confirmMessage}
                 </ModalBody>
                 <ModalFooter>
-                    <button className="btnAdd" hidden={confirming == 0} onClick={toggleAdviseModal}>Confirm</button>
+                    <button className="btnAdd" hidden={confirming} onClick={handleOk}>Confirm</button>
                 </ModalFooter>
             </Modal>
              {/** CONFIRMATION MODAL */}
@@ -241,7 +249,7 @@ const Consultations = () => {
                 <ModalFooter>
                     <CircularProgress hidden={isLoading}/>
                     <button hidden={!isLoading} className="btnCancel" onClick={toggleConfirmationModal}>Cancel</button>
-                    <a href={authUrl} target='_blank'><button hidden={!isLoading} onClick={handleConfirm} className="btnAdd">OK</button></a>
+                    <a href={'http://localhost:3000/Admin/Consult/?success#'} target='_blank'><button hidden={!isLoading} onClick={handleConfirm} className="btnAdd">OK</button></a>
                 </ModalFooter>
             </Modal> 
              {/** CONFIRMATION MODAL FOR FULLY PAID */}

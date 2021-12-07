@@ -16,14 +16,14 @@ const Navbar = () => {
 
     const forLogout = () => {
       console.log('logout')
-      localStorage.clear()
+      sessionStorage.clear()
     }
 
     return (
         <>
         <IconContext.Provider value={{ color: '#fff' }}>
         <div className='navbar'>
-          <Link hidden={!localStorage.getItem('void-wlcm-loading')} to='#' className='menu-bars'>
+          <Link hidden={!sessionStorage.getItem('void-wlcm-loading')} to='#' className='menu-bars'>
             <FaBars onClick={toggleSidebar} />
           </Link>
           <label className='icon'>Petra</label>

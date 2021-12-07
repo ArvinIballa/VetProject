@@ -14,7 +14,7 @@ import { TextField, CircularProgress } from '@mui/material'
 
 const AdminAccount = () => {
 
-    const getToken = localStorage.getItem('token')
+    const getToken = sessionStorage.getItem('token')
 
     const [errorModal, setErrorModal] = useState(false)
     const [successModal, setSuccessModal] = useState(false)

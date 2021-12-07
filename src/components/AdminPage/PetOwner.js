@@ -18,7 +18,7 @@ const PetOwner = () => {
 
     
 
-    const getToken = localStorage.getItem('token')
+    const getToken = sessionStorage.getItem('token')
 
     const [ownerData, setOwnerData] = useState([])
     const [specificOwnerData, setSpecificOwnerData] = useState([])

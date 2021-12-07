@@ -7,7 +7,7 @@ import Profile from '../../images/profile.png'
 
 const Vets = () => {
 
-    const getToken = localStorage.getItem('token')
+    const getToken = sessionStorage.getItem('token')
 
     const [vetData, setVetData] = useState([])
 
