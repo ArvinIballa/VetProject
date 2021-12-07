@@ -14,16 +14,21 @@ import { CircularProgress, TextField } from '@mui/material'
 
 const Consultations = () => {
 
-    const getToken = sessionStorage.getItem('token')
+    const getToken = localStorage.getItem('token')
 
     const [consultData, setConsultData] = useState([])
     const [message, setMessage] = useState('')
     const [errorModal, setErrorModal] = useState(false)
     const [successModal, setSuccessModal] = useState(false)
+    const [noticeModal, setNoticeModal] = useState(false)
+    const [adviseModal, setAdviseModal] = useState(false)
     const [confirmationModal, setConfirmationModal] = useState(false)
     const [confirmationMessage, setConfirmationMessage] = useState("")
     const [errorMessage, setErrorMessage] = useState("")
     const [successMessage, setSuccessMessage] = useState("")
+    const [noticeMessage, setNoticeMessage] = useState("")
+    const [adviseMessage, setAdviseMessage] = useState("")
+    const [noticeTitle, setNoticeTitle] = useState("")
     const [authUrl, setAuthUrl] = useState("")
     const [status, setStatus] = useState('')
     const [consultationID, setConsultationID] = useState('')
@@ -31,13 +36,13 @@ const Consultations = () => {
     const [isLoading, setIsLoading] = useState(true)
     const [modalMessage, setModalMessage] = useState(false)
     const [id, setID] = useState('')
+    const [confirming, setConfirming] = useState(0)
 
     const toggleMessageModal = (id) => {
         setModalMessage(!modalMessage)
         setID(id)
         
     }
-    
 
 
     const toggleErrorModal = () => {
@@ -52,6 +57,7 @@ const Consultations = () => {
 
     const toggleConfirmationModal = () => {
         setConfirmationModal(!confirmationModal)
+        setAdviseModal(!adviseModal)
     }
 
     const handleOk = () => {
@@ -59,6 +65,15 @@ const Consultations = () => {
         setConfirmationModal(false)
         setFullyPaidModal(false)
         setModalMessage(false)
+    }
+
+    const toggleAdviseModal = () => {
+        setAdviseModal(!adviseModal)
+    }
+
+    const handleOkNewTab = () => {
+        setConfirming(1)
+        window.close()
     }
 
     const handleMessage = () => {
@@ -141,15 +156,7 @@ const Consultations = () => {
     }
 
     const handleConfirm = () => {
-        if(window.location.href == window.location.href + '?success'){
-            getConsultations()
-            setSuccessMessage('Successfully marked consultation appointment as paid.')
-            setSuccessModal(true)
-        }
-        else if(window.location.href == window.location.href + '?error'){
-            setErrorMessage('Failed to mark as paid')
-            setErrorModal(true)
-        }
+        toggleConfirmationModal()
     }
 
     useEffect(() => {
@@ -157,12 +164,14 @@ const Consultations = () => {
         if(window.location.href.split('/')[5]== '?success#'){
             console.log(window.location.href)
             getConsultations()
-            setSuccessMessage('Successfully marked consultation appointment as paid.')
-            setSuccessModal(true)
+            setNoticeTitle('Success!')
+            setNoticeMessage('Successfully marked consultation appointment as paid.')
+            setNoticeModal(true)
         }
         else if(window.location.href.split('/')[5]== '?error'){
-            setErrorMessage('Failed to mark as paid')
-            setErrorModal(true)
+            setNoticeTitle('Notice!')
+            setNoticeMessage('Failed to mark as paid')
+            setNoticeModal(true)
         }
 
     }, [])
@@ -196,6 +205,30 @@ const Consultations = () => {
                 <button className="btnCancel" onClick={toggleErrorModal}>OK</button>
                 </ModalFooter>
             </Modal> 
+             {/** NOTICE MODAL */}
+            <Modal centered backdrop="static" size="md" isOpen={noticeModal}>
+                <ModalHeader>
+                    {noticeTitle}
+                </ModalHeader>
+                <ModalBody>
+                    {noticeMessage}
+                </ModalBody>
+                <ModalFooter>
+                <button className="btnAdd" onClick={handleOkNewTab}>OK</button>
+                </ModalFooter>
+            </Modal>
+            {/** ADVISE TO ADMIN MODAL */}
+            <Modal centered backdrop="static" size="md" isOpen={adviseModal}>
+                <ModalHeader>
+                    Notice!
+                </ModalHeader>
+                <ModalBody>
+                    Confirming Payment .....
+                </ModalBody>
+                <ModalFooter>
+                    <button className="btnAdd" hidden={confirming == 0} onClick={toggleAdviseModal}>Confirm</button>
+                </ModalFooter>
+            </Modal>
              {/** CONFIRMATION MODAL */}
             <Modal centered backdrop="static" size="md" isOpen={confirmationModal}>
                 <ModalHeader>

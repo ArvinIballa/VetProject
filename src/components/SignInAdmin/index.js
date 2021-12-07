@@ -112,7 +112,7 @@ const Signin = () => {
         .then(res => {
             console.log(res)
             if(res.token){
-                sessionStorage.setItem('token', res.token)
+                localStorage.setItem('token', res.token)
                 setRedirect(1)
                 setIsLoading(true)
                 resetState()
