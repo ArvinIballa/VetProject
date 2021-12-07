@@ -72,7 +72,7 @@ const Consultations = () => {
     }
 
     const handleOkNewTab = () => {
-        setConfirming(1)
+        console.log(confirming)
         window.close()
     }
 
@@ -164,6 +164,7 @@ const Consultations = () => {
         if(window.location.href.split('/')[5]== '?success#'){
             console.log(window.location.href)
             getConsultations()
+            setConfirming(1)
             setNoticeTitle('Success!')
             setNoticeMessage('Successfully marked consultation appointment as paid.')
             setNoticeModal(true)
