@@ -37,7 +37,6 @@
     background-color: white;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.20);
     border-radius: 5px 5px 0 0;
-    margin-bottom: 100px;
 }
 
 table{
@@ -51,6 +50,7 @@ table, th, td {
     text-align: left;
     padding: 12px 20px;
     white-space: nowrap;
+    text-transform: capitalize;
 }
 
 .tableHead{

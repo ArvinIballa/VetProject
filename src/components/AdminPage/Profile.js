@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import docpic from '../../images/doctor2.jpg'
+import Admin from '../../images/adminAnimal.jpg'
 import AdminNavbar from './Navbar'
 
 import{
@@ -316,12 +316,6 @@ const Profile = () => {
                         onChange={e=> setPhoneNumber(e.target.value)}
                     />
                     <br/>
-                    <input 
-                        style={{marginLeft: '22px'}} 
-                        type='file'
-                        onChange={e=> setProfilePicture(e.target.value)}
-                    >              
-                    </input>
                 </ModalBody>
                 <ModalFooter>
                     <CircularProgress hidden={confirmLoading}/>
@@ -334,7 +328,7 @@ const Profile = () => {
                     <div className="row">
                         <div className="col-md-4">
                         <Skeleton hidden={isLoading} sx={{ height: 490, width: 350, borderRadius: 20 }} animation="wave" variant="rectangular" />
-                            <img hidden={!isLoading} className="profilePic" src={docpic}/>
+                            <img hidden={!isLoading} className="profilePic" src={Admin}/>
                         </div>
                         <div className="col-md-6">
                             <div className='profile-head'>

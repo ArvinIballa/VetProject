@@ -122,7 +122,7 @@ const Profile = () => {
         formdata.append('last_name', last_name)
         formdata.append('phonenumber', phonenumber)
         formdata.append('email', email)
-        formdata.append('profile_picture', profile_picture ? profile_picture : "")
+        formdata.append('profile_picture', profile_picture ? profile_picture : null)
         
         if(first_name == "" || last_name == "" || phonenumber == "" || email == ""){
             setErrorMessage('All fields are required')
@@ -319,7 +319,7 @@ const Profile = () => {
                     <input 
                         style={{marginLeft: '22px'}} 
                         type='file'
-                        onChange={e=> setProfilePicture(e.target.value)}
+                        onChange={e=> setProfilePicture(e.target.files[0])}
                     >              
                     </input>
                 </ModalBody>
@@ -334,7 +334,7 @@ const Profile = () => {
                     <div className="row">
                         <div className="col-md-4">
                         <Skeleton hidden={isLoading} sx={{ height: 490, width: 350, borderRadius: 20 }} animation="wave" variant="rectangular" />
-                            <img hidden={!isLoading} className="profilePic" src={docpic}/>
+                            <img hidden={!isLoading} className="profilePic" src={profileData.ProfilePicture}/>
                         </div>
                         <div className="col-md-6">
                             <div className='profile-head'>

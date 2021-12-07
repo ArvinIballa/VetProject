@@ -12,7 +12,7 @@ import Backdrop from '@mui/material/Backdrop'
 import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
 import FormControl from '@mui/material/FormControl';
-import { CircularProgress } from '@mui/material';
+import { CircularProgress, Skeleton } from '@mui/material';
 
 import {
     Modal, 
@@ -62,11 +62,13 @@ const MyPets = () => {
     const [prev_vacc, setPrevVacc] = useState('')
     const [isLoading, setIsLoading] = useState(true)
     const [MyPetsData, setMyPetsData] = useState([])
+    const [medicalData, setMedicalData] = useState([])
 
     const [errorModal, setErrorModal] = useState(false)
     const [successModal, setSuccessModal] = useState(false)
     const [errorMessage, setErrorMessage] = useState("")
     const [successMessage, setSuccessMessage] = useState("")
+
 
     const getMyPets = () => {
         api.get('Pets/list', {headers: {Authorization: `Bearer ${getToken}`}})
@@ -127,6 +129,10 @@ const MyPets = () => {
                 setErrorMessage(res.message)
                 return false
             }
+            else{
+                setModalMedicalRecords(true)
+                setMedicalData(res.body[0])
+            }
         })
         .catch(err => {
             console.log(err.response)
@@ -186,20 +192,6 @@ const MyPets = () => {
                             onChange={e=> setBreed(e.target.value)}
                         />
                         <br/>
-                        <TextField
-                            label='Age'
-                            variant='outlined'
-                            style={{ width: "90%", justifyContent: "center", display: "flex", margin: "auto" }}
-                            onChange={e=> setAge(e.target.value)}
-                        />
-                        <br/>
-                        <TextField
-                            label='Previous Vaccine'
-                            variant='outlined'
-                            style={{ width: "90%", justifyContent: "center", display: "flex", margin: "auto" }}
-                            onChange={e=> setPrevVacc(e.target.value)}
-                        />
-                        <br/>
                         <FormControl variant="outlined" style={{width: '100%', height: '10%'}}>
                             <InputLabel style={{marginLeft: '30px'}} >Gender</InputLabel>
                             <Select
@@ -214,10 +206,21 @@ const MyPets = () => {
         
                             </Select>
                         </FormControl>
+                        <br/><br/>
+                        <TextField
+                            label='Age'
+                            variant='outlined'
+                            style={{ width: "90%", justifyContent: "center", display: "flex", margin: "auto" }}
+                            onChange={e=> setAge(e.target.value)}
+                        />
                         <br/>
-                        <label style={{margin:'10px 20px'}}>Picture</label>
-                        <br/>
-                        <input style={{marginLeft:'20px'}} type='file'></input>
+                        <TextField
+                            label='Previous Vaccine'
+                            variant='outlined'
+                            style={{ width: "90%", justifyContent: "center", display: "flex", margin: "auto" }}
+                            onChange={e=> setPrevVacc(e.target.value)}
+                        />
+                        <br/>                      
                     </div>
                 </ModalBody>
                 <ModalFooter>
@@ -232,41 +235,55 @@ const MyPets = () => {
                     <h2>Medical Records</h2>
                 </ModalHeader>
                 <ModalBody>
-                <div>
-                    <TextField
-                        InputLabelProps={{
-                            shrink: true,
-                        }}
-                        disabled
-                        label='Person'
-                        variant='outlined'
-                        style={{ width: "90%", justifyContent: "center", display: "flex", margin: "auto" }}
-                    />
-                    <br/>
-                    <TextField
-                        InputLabelProps={{
-                        shrink: true,
-                        }}
-                        disabled
-                        label='Subject'
-                        variant='outlined'
-                        style={{ width: "90%", justifyContent: "center", display: "flex", margin: "auto" }}
-                    />
-                    <br/>
-                    <TextField
-                        InputLabelProps={{
-                            shrink: true,
-                        }}
-                        disabled
-                        multiline
-                        rows={3}
-                        label='Remarks'
-                        variant='outlined'
-                        style={{ width: "90%", justifyContent: "center", display: "flex", margin: "auto" }}
-                    />
-                    <br/>
-                    <label style={{marginLeft: '20px'}}>Attachment:</label>&nbsp;
-                    <a href={Cat} target='_blank' download><label className='link'>Cat.png</label></a>
+                <div className="row">
+                    <div className = "col-md-6">
+                        <Skeleton hidden={isLoading} animation="wave" height={10} width="25%" />
+                        <label hidden={!isLoading} className="labelTitle">Subject</label>
+                    </div>
+                    <div className = "col-md-6">
+                        <Skeleton hidden={isLoading} animation="wave" height={10} width="25%" />
+                        <label hidden={!isLoading} className="labelContext">{medicalData.Subject}</label>
+                    </div>
+                </div>
+                <div className="row">
+                    <div className = "col-md-6">
+                        <Skeleton hidden={isLoading} animation="wave" height={10} width="25%" />
+                        <label hidden={!isLoading} className="labelTitle">Date</label>
+                    </div>
+                    <div className = "col-md-6">
+                        <Skeleton hidden={isLoading} animation="wave" height={10} width="25%" />
+                        <label hidden={!isLoading} className="labelContext">{medicalData.Date}</label>
+                    </div>
+                </div>
+                <div className="row">
+                    <div className = "col-md-6">
+                        <Skeleton hidden={isLoading} animation="wave" height={10} width="25%" />
+                        <label hidden={!isLoading} className="labelTitle">Doctor's Name</label>
+                    </div>
+                    <div className = "col-md-6">
+                        <Skeleton hidden={isLoading} animation="wave" height={10} width="25%" />
+                        <label hidden={!isLoading} className="labelContext">{medicalData.DoctorName}</label>
+                    </div>
+                </div>
+                <div className="row">
+                    <div className = "col-md-6">
+                        <Skeleton hidden={isLoading} animation="wave" height={10} width="25%" />
+                        <label hidden={!isLoading} className="labelTitle">Pet's Name</label>
+                    </div>
+                    <div className = "col-md-6">
+                        <Skeleton hidden={isLoading} animation="wave" height={10} width="25%" />
+                        <label hidden={!isLoading} className="labelContext">{medicalData.PetName}</label>
+                    </div>
+                </div>
+                <div className="row">
+                    <div className = "col-md-6">
+                        <Skeleton hidden={isLoading} animation="wave" height={10} width="25%" />
+                        <label hidden={!isLoading} className="labelTitle">Remarks</label>
+                    </div>
+                    <div className = "col-md-6">
+                        <Skeleton hidden={isLoading} animation="wave" height={10} width="25%" />
+                        <label hidden={!isLoading} className="labelContext">{medicalData.Remarks}</label>
+                    </div>
                 </div>
                 </ModalBody>
                 <ModalFooter>
@@ -284,7 +301,6 @@ const MyPets = () => {
                         <tr>
                             <th scope="col">Name</th>
                             <th scope="col">Breed</th>
-                            <th scope="col">Picture</th>
                             <th scope="col">Gender</th>
                             <th scope="col">Age</th>
                             <th scope="col">Action</th>
@@ -293,8 +309,7 @@ const MyPets = () => {
                             return(
                                 <tr>
                                     <td scope="row">{item.Name}</td>
-                                    <td>{item.Breed}</td>
-                                    <td><img className="tableImg" src={Dog}></img></td>
+                                    <td>{item.Breed}</td>                           
                                     <td>{item.Gender}</td>
                                     <td>{item.Age}</td>
                                     <td>

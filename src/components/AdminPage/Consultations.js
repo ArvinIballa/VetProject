@@ -154,6 +154,17 @@ const Consultations = () => {
 
     useEffect(() => {
         getConsultations()
+        if(window.location.href.split('/')[5]== '?success#'){
+            console.log(window.location.href)
+            getConsultations()
+            setSuccessMessage('Successfully marked consultation appointment as paid.')
+            setSuccessModal(true)
+        }
+        else if(window.location.href.split('/')[5]== '?error'){
+            setErrorMessage('Failed to mark as paid')
+            setErrorModal(true)
+        }
+
     }, [])
 
     return (

@@ -4,6 +4,7 @@ import AdminNavbar from './Navbar'
 import api from '../../api/api'
 import Moment from 'moment'
 import Profile from '../../images/profile.png'
+import { Skeleton, LinearProgress } from '@mui/material'
 
 import {
     Modal, 
@@ -26,10 +27,22 @@ const PetOwner = () => {
     const [errorMessage, setErrorMessage] = useState("")
     const [errorModal, setErrorModal] = useState(false)
     const [search, setSearch] = useState('')
+    const [isLoading, setIsLoading] = useState(true)
+    const [modalMedicalRecords, setModalMedicalRecords] = useState(false)
+    const [medicalData, setMedicalData] = useState([])
+    const [loadingModal, setLoadingModal] = useState(false)
 
     const toggleOwnerModal = () => {
         setOwnerModal(!ownerModal)
         
+    }
+
+    const toggleLoadingModal = () => {
+        setLoadingModal(!loadingModal)
+    }
+
+    const toggleModalMedicalRecords = () => {
+        setModalMedicalRecords(!modalMedicalRecords)
     }
 
     const toggleErrorModal = () => {
@@ -41,6 +54,7 @@ const PetOwner = () => {
         setOwnerModal(false)
         setMessage('')
         setSpecificOwnerData([])
+        toggleLoadingModal()
     }
 
     const getPetOwners = () => {
@@ -57,6 +71,7 @@ const PetOwner = () => {
     }
     const [firstname, setFirstName] = useState('')
     const getSpecificOwner = (owner_id, firstname) => {
+        toggleLoadingModal()
         console.log(owner_id)
         setFirstName(firstname)
         api.get(`Pets/list_pet_owner/${owner_id}`, {headers: {Authorization: `Bearer ${getToken}`}})
@@ -65,10 +80,12 @@ const PetOwner = () => {
             if(res.body){
                 setSpecificOwnerData(res.body)
                 toggleOwnerModal()
+                toggleLoadingModal()
             }
             else{
                 toggleOwnerModal()
                 setMessage(res.message)
+                toggleLoadingModal()
             }
         })
         .catch(err => {
@@ -88,6 +105,10 @@ const PetOwner = () => {
                 setErrorModal(true)
                 setErrorMessage(res.message)
                 return false
+            }
+            else{
+                setModalMedicalRecords(true)
+                setMedicalData(res.body[0])
             }
         })
         .catch(err => {
@@ -116,6 +137,18 @@ const PetOwner = () => {
                 <button className="btnCancel" onClick={toggleErrorModal}>OK</button>
                 </ModalFooter>
             </Modal>
+             {/** LOADING MODAL */}
+            <Modal centered backdrop="static" size="md" isOpen={loadingModal}>
+                <ModalHeader>
+                    Loading
+                </ModalHeader>
+                <ModalBody>
+                    <div style={{justifyContent: 'center', alignItems:'center'}}>
+                    <LinearProgress />
+                    </div>
+                </ModalBody>
+            </Modal>
+            
             {/** OWNER MODAL */}
             <Modal centered backdrop="static" size="xl" isOpen={ownerModal}>
                 <ModalBody>   
@@ -152,6 +185,67 @@ const PetOwner = () => {
                     <button className="btnCancel" onClick={handleOk}>Close</button>
                 </ModalFooter>
             </Modal>
+            {/** MODAL VIEW MEDICAL RESULTS */}
+            <Modal centered backdrop='static' size='md' isOpen={modalMedicalRecords}>
+                <ModalHeader>
+                    <h2>Medical Records</h2>
+                </ModalHeader>
+                <ModalBody>
+                <div className="row">
+                    <div className = "col-md-6">
+                        <Skeleton hidden={isLoading} animation="wave" height={10} width="25%" />
+                        <label hidden={!isLoading} className="labelTitle">Subject</label>
+                    </div>
+                    <div className = "col-md-6">
+                        <Skeleton hidden={isLoading} animation="wave" height={10} width="25%" />
+                        <label hidden={!isLoading} className="labelContext">{medicalData.Subject}</label>
+                    </div>
+                </div>
+                <div className="row">
+                    <div className = "col-md-6">
+                        <Skeleton hidden={isLoading} animation="wave" height={10} width="25%" />
+                        <label hidden={!isLoading} className="labelTitle">Date</label>
+                    </div>
+                    <div className = "col-md-6">
+                        <Skeleton hidden={isLoading} animation="wave" height={10} width="25%" />
+                        <label hidden={!isLoading} className="labelContext">{medicalData.Date}</label>
+                    </div>
+                </div>
+                <div className="row">
+                    <div className = "col-md-6">
+                        <Skeleton hidden={isLoading} animation="wave" height={10} width="25%" />
+                        <label hidden={!isLoading} className="labelTitle">Doctor's Name</label>
+                    </div>
+                    <div className = "col-md-6">
+                        <Skeleton hidden={isLoading} animation="wave" height={10} width="25%" />
+                        <label hidden={!isLoading} className="labelContext">{medicalData.DoctorName}</label>
+                    </div>
+                </div>
+                <div className="row">
+                    <div className = "col-md-6">
+                        <Skeleton hidden={isLoading} animation="wave" height={10} width="25%" />
+                        <label hidden={!isLoading} className="labelTitle">Pet's Name</label>
+                    </div>
+                    <div className = "col-md-6">
+                        <Skeleton hidden={isLoading} animation="wave" height={10} width="25%" />
+                        <label hidden={!isLoading} className="labelContext">{medicalData.PetName}</label>
+                    </div>
+                </div>
+                <div className="row">
+                    <div className = "col-md-6">
+                        <Skeleton hidden={isLoading} animation="wave" height={10} width="25%" />
+                        <label hidden={!isLoading} className="labelTitle">Remarks</label>
+                    </div>
+                    <div className = "col-md-6">
+                        <Skeleton hidden={isLoading} animation="wave" height={10} width="25%" />
+                        <label hidden={!isLoading} className="labelContext">{medicalData.Remarks}</label>
+                    </div>
+                </div>
+                </ModalBody>
+                <ModalFooter>
+                    <button onClick={toggleModalMedicalRecords} className='btnClose'>CLOSE</button>
+                </ModalFooter>
+            </Modal>
             <div className='h2-wrapper'>  
                         <h2>Pet Owners<input
                             className='searchPatient'
@@ -186,7 +280,7 @@ const PetOwner = () => {
                                         <td>{item.ContactNumber}</td>
                                         <td>{item.EmailAddress}</td>                                
                                         <td>
-                                            <button className="btnView" onClick={()=>getSpecificOwner(item.OwnerID, item.FirstName)}>View Pet</button>
+                                            <button hidden={!isLoading} className="btnView" onClick={()=>getSpecificOwner(item.OwnerID, item.FirstName)}>View Pet</button>
                                         </td>
                                     </tr>
                                 )

@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react'
-import docpic from '../../images/doctor3.jpg'
 import VetNavbar from './Navbar'
 import './Profile.css'
 
@@ -23,7 +22,7 @@ const Profile = () => {
         "9:00 AM",
         "10:00 AM",
         "11:00 AM",
-        "12:00 NN",
+        "12:00 PM",
         "1:00 PM",
         "2:00 PM",
         "3:00 PM",
@@ -143,8 +142,8 @@ const Profile = () => {
                 setFirstName(res.body[0].FirstName)
                 setLastName(res.body[0].LastName)
                 setDescription(res.body[0].Description)
+                setAvailableDays(res.body[0].AvailableDays)
                 setConsFee(res.body[0].ConsultationFee)
-                setConsFee(res.body[0].AvailableDays)
                 setIsLoading(true)
                 setOldEmail(res.body[0].EmailAddress)
                 sessionStorage.setItem('ID', res.body[0].DoctorID)
@@ -243,7 +242,7 @@ const Profile = () => {
         formdata.append('description', description)
         formdata.append('cons_fee', cons_fee)
         formdata.append('available_days', available_days)
-        formdata.append('profile_picture', profile_picture ? profile_picture : "")
+        formdata.append('profile_picture', profile_picture ? profile_picture : null)
         
         if(first_name == "" || last_name == "" || phonenumber == "" || email == ""){
             setErrorMessage('All fields are required')
@@ -483,7 +482,7 @@ const Profile = () => {
                     <input 
                         style={{marginLeft: '22px'}} 
                         type='file'
-                        onChange={e=> setProfilePicture(e.target.value)}
+                        onChange={e=> setProfilePicture(e.target.files[0])}
                     >       
                     </input> 
                 </ModalBody>
@@ -527,7 +526,7 @@ const Profile = () => {
                     <div className="row">
                         <div className="col-md-4">
                         <Skeleton hidden={isLoading} sx={{ height: 490, width: 350, borderRadius: 20 }} animation="wave" variant="rectangular" />
-                            <img hidden={!isLoading} className="profilePic" src={docpic}/>
+                            <img hidden={!isLoading} className="profilePic" src={profileData.ProfilePicture}/>
                         </div>
                         <div className="col-md-6">
                             <div className='profile-head'>
@@ -679,6 +678,7 @@ const Profile = () => {
                         </table>
                     </div>
                 </div>
+                <br/> <br/> <br/>
             </div>
         </>
     )

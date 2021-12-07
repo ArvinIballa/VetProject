@@ -23,9 +23,11 @@ const Booking = () => {
  
     const [errorModal, setErrorModal] = useState(false)
     const [successModal, setSuccessModal] = useState(false)
+    const [deleteModal, setDeleteModal] = useState(false)
     const [confirmationModal, setConfirmationModal] = useState(false)
     const [confirmationMessage, setConfirmationMessage] = useState("")
     const [errorMessage, setErrorMessage] = useState("")
+    const [deleteMessage, setDeleteMessage] = useState("")
     const [successMessage, setSuccessMessage] = useState("")
     const [id, setID] = useState('')
     const [isLoading, setIsLoading] = useState(true)
@@ -44,6 +46,12 @@ const Booking = () => {
         
     }
 
+    const toggleDeleteModal = (id) => {
+        setID(id)
+        setDeleteModal(!deleteModal)
+        setDeleteMessage('Are you sure you want to cancel this appointment?')
+    }
+
     const toggleConfirmationModal = () => {
         setConfirmationModal(!confirmationModal)
         
@@ -53,6 +61,7 @@ const Booking = () => {
         setSuccessModal(false)
         setConfirmationModal(false)
         setModalMessage(false)
+        setDeleteModal(false)
     }
 
     const openModalMarkAsConfirm = (id, statusOfConfirmation) => {
@@ -121,6 +130,23 @@ const Booking = () => {
         })
     }
 
+    const handleDelete = () => {
+        api.get(`Consultations/mark_as_cancelled/${id}`, {headers: {Authorization: `Bearer ${getToken}`}})
+        .then(res => {
+            console.log(res)
+            if(res.message){
+                setSuccessMessage(res.message)
+                setSuccessModal(true) 
+                getBookings()           
+            }
+            else
+                return null
+        })
+        .catch(err=> {
+            console.log(err.response)
+        })
+    }
+
 
     const handleMessage = () => {
         setIsLoading(false)
@@ -174,6 +200,19 @@ const Booking = () => {
                 </ModalBody>
                 <ModalFooter>
                 <button className="btnCancel" onClick={toggleErrorModal}>OK</button>
+                </ModalFooter>
+            </Modal> 
+             {/** DELETE MODAL */}
+            <Modal centered backdrop="static" size="md" isOpen={deleteModal}>
+                <ModalHeader>
+                    Notice!
+                </ModalHeader>
+                <ModalBody>
+                    {deleteMessage}
+                </ModalBody>
+                <ModalFooter>
+                <button className="btnView" onClick={toggleDeleteModal}>Close</button>
+                <button className="btnCancel" onClick={handleDelete}>Cancel</button>
                 </ModalFooter>
             </Modal> 
             {/** CONFIRMATION MODAL */}
@@ -263,6 +302,7 @@ const Booking = () => {
                                         <td>
                                             <button className='btnMessage' onClick={()=>toggleMessageModal(item.ConsultationID)}>Message</button>
                                             <button hidden={item.Status == "RESERVATION PAID" ? false : item.Status == "CONFIRMED" ? false : true} className="btnView" onClick={item.Status=='CONFIRMED' ? ()=>openModalMarkAsConfirm(item.ConsultationID, 1) : ()=>openModalMarkAsConfirm(item.ConsultationID, 0)}><label className="status">{item.Status=='RESERVATION PAID' ? 'Mark as Confirmed' : item.Status=='CONFIRMED' ? 'Mark as Done' : ''}</label></button>
+                                            <button hidden={item.Status == "RESERVATION PAID" ? false : item.Status == "CONFIRMED" ? false : true} onClick={()=>toggleDeleteModal(item.ConsultationID)} className="btnCancel">Cancel</button>
                                         </td>
                                 </tr>
                                 )
