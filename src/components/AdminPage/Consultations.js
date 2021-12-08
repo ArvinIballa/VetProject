@@ -66,7 +66,11 @@ const Consultations = () => {
         setConfirmationModal(false)
         setFullyPaidModal(false)
         setModalMessage(false)
+    }
+
+    const handleConfirming = () => {
         setAdviseModal(false)
+        getConsultations()
     }
 
     const toggleAdviseModal = () => {
@@ -77,7 +81,7 @@ const Consultations = () => {
         setTimeout(() => {
             setConfirming(false)
             setConfirmMessage('Successfully paid!')
-        }, 10000);
+        }, 15000);
     }
 
     const handleOkNewTab = () => {
@@ -235,7 +239,7 @@ const Consultations = () => {
                     {confirmMessage}
                 </ModalBody>
                 <ModalFooter>
-                    <button className="btnAdd" hidden={confirming} onClick={handleOk}>Confirm</button>
+                    <button className="btnAdd" hidden={confirming} onClick={handleConfirming}>Ok</button>
                 </ModalFooter>
             </Modal>
              {/** CONFIRMATION MODAL */}
@@ -249,7 +253,7 @@ const Consultations = () => {
                 <ModalFooter>
                     <CircularProgress hidden={isLoading}/>
                     <button hidden={!isLoading} className="btnCancel" onClick={toggleConfirmationModal}>Cancel</button>
-                    <a href={'http://localhost:3000/Admin/Consult/?success#'} target='_blank'><button hidden={!isLoading} onClick={handleConfirm} className="btnAdd">OK</button></a>
+                    <a href={authUrl} target='_blank'><button hidden={!isLoading} onClick={handleConfirm} className="btnAdd">OK</button></a>
                 </ModalFooter>
             </Modal> 
              {/** CONFIRMATION MODAL FOR FULLY PAID */}
