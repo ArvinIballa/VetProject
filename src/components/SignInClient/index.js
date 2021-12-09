@@ -180,8 +180,8 @@ const Signin = () => {
                     <FormContent>
                         <Form>
                             <FormRow>
-                                <FormH1>Sign in to your account</FormH1>
-                                <Img src={ClientIcon}></Img>
+                                <FormH1>Sign in as Pet Owner</FormH1>
+                                <Img src={ClientIcon}></Img>                 
                                 <FormLabel htmlFor='for'>Email</FormLabel>
                                 <FormInput 
                                     onChange={e=> setEmail(e.target.value)} 

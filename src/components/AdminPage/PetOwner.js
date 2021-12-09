@@ -108,7 +108,7 @@ const PetOwner = () => {
             }
             else{
                 setModalMedicalRecords(true)
-                setMedicalData(res.body[0])
+                setMedicalData(res.body)
             }
         })
         .catch(err => {
@@ -186,61 +186,39 @@ const PetOwner = () => {
                 </ModalFooter>
             </Modal>
             {/** MODAL VIEW MEDICAL RESULTS */}
-            <Modal centered backdrop='static' size='md' isOpen={modalMedicalRecords}>
+            <Modal centered backdrop='static' size='xl' isOpen={modalMedicalRecords}>
                 <ModalHeader>
                     <h2>Medical Records</h2>
                 </ModalHeader>
                 <ModalBody>
-                <div className="row">
-                    <div className = "col-md-6">
-                        <Skeleton hidden={isLoading} animation="wave" height={10} width="25%" />
-                        <label hidden={!isLoading} className="labelTitle">Subject</label>
-                    </div>
-                    <div className = "col-md-6">
-                        <Skeleton hidden={isLoading} animation="wave" height={10} width="25%" />
-                        <label hidden={!isLoading} className="labelContext">{medicalData.Subject}</label>
-                    </div>
-                </div>
-                <div className="row">
-                    <div className = "col-md-6">
-                        <Skeleton hidden={isLoading} animation="wave" height={10} width="25%" />
-                        <label hidden={!isLoading} className="labelTitle">Date</label>
-                    </div>
-                    <div className = "col-md-6">
-                        <Skeleton hidden={isLoading} animation="wave" height={10} width="25%" />
-                        <label hidden={!isLoading} className="labelContext">{medicalData.Date}</label>
-                    </div>
-                </div>
-                <div className="row">
-                    <div className = "col-md-6">
-                        <Skeleton hidden={isLoading} animation="wave" height={10} width="25%" />
-                        <label hidden={!isLoading} className="labelTitle">Doctor's Name</label>
-                    </div>
-                    <div className = "col-md-6">
-                        <Skeleton hidden={isLoading} animation="wave" height={10} width="25%" />
-                        <label hidden={!isLoading} className="labelContext">{medicalData.DoctorName}</label>
-                    </div>
-                </div>
-                <div className="row">
-                    <div className = "col-md-6">
-                        <Skeleton hidden={isLoading} animation="wave" height={10} width="25%" />
-                        <label hidden={!isLoading} className="labelTitle">Pet's Name</label>
-                    </div>
-                    <div className = "col-md-6">
-                        <Skeleton hidden={isLoading} animation="wave" height={10} width="25%" />
-                        <label hidden={!isLoading} className="labelContext">{medicalData.PetName}</label>
-                    </div>
-                </div>
-                <div className="row">
-                    <div className = "col-md-6">
-                        <Skeleton hidden={isLoading} animation="wave" height={10} width="25%" />
-                        <label hidden={!isLoading} className="labelTitle">Remarks</label>
-                    </div>
-                    <div className = "col-md-6">
-                        <Skeleton hidden={isLoading} animation="wave" height={10} width="25%" />
-                        <label hidden={!isLoading} className="labelContext">{medicalData.Remarks}</label>
-                    </div>
-                </div>
+                    <div className="containerTable">             
+                            <div className="tableWrapper">
+                                <table>
+                                    <tr>
+                                        <th scope="col">Date</th>
+                                        <th scope="col">Doctor Name</th>
+                                        <th scope="col">Pet Name</th>
+                                        <th scope="col">Subject</th>
+                                        <th>Attachment</th>
+                                        <th scope="col">Remarks</th>
+                                    
+                                    </tr>
+                                    {medicalData.map((item)=> {
+                                        return(
+                                            <tr>
+                                                <td scope="row">{item.Date}</td>
+                                                <td>{item.DoctorName}</td>                           
+                                                <td>{item.PetName}</td>
+                                                <td>{item.Subject}</td>
+                                                <td><a href={item.Attachment} target='_blank'>{item.Attachment ? item.Attachment.split('/')[3] : 'None'}</a></td>
+                                                <td style={{whiteSpace:'pre-wrap'}}>{item.Remarks}</td>
+                                                
+                                            </tr>
+                                        )
+                                    })}                   
+                                </table>
+                            </div>
+                        </div>
                 </ModalBody>
                 <ModalFooter>
                     <button onClick={toggleModalMedicalRecords} className='btnClose'>CLOSE</button>

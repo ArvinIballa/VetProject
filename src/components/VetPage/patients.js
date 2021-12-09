@@ -33,6 +33,7 @@ const Patients = () => {
     const [errorMessage, setErrorMessage] = useState("")
     const [successMessage, setSuccessMessage] = useState("")
     const [isLoading, setIsLoading] = useState(true)
+    const [attachment, setAttachment] = useState('')
 
     const toggleOwnerModal = () => {
         setOwnerModal(!ownerModal)
@@ -62,7 +63,8 @@ const Patients = () => {
         formdata.append('pet', petID)
         formdata.append('subject', subject)
         formdata.append('remarks', remarks)
-
+        formdata.append('attachment', attachment ? attachment : null)
+        
         if(subject == "" || remarks == ""){
             setErrorModal(true)
             setErrorMessage('All fields are required')
@@ -219,6 +221,8 @@ const Patients = () => {
                     <TextField
                         error={error == 1 && remarks == ''}
                         label='Remarks'
+                        multiline
+                        rows={4}
                         variant='outlined'
                         style={{ width: "90%", justifyContent: "center", display: "flex", margin: "auto" }}
                         onChange={e=> setRemarks(e.target.value)}
@@ -228,6 +232,7 @@ const Patients = () => {
                     <Input 
                         type='file'
                         style={{width:'90%'}}
+                        onChange={e=> setAttachment(e.target.files[0])}
                     />
                     </div>
                 </ModalBody>

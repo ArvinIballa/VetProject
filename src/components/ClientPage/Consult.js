@@ -53,6 +53,7 @@ const Consult = () => {
     const [fullpayment_reference, setFullpaymentReference] = useState('')
     const [timeData, setTimeData] = useState([])
     const [invalidTime, setInvalidTime] = useState('')
+    const [complaint, setComplaint] = useState('')
 
     const [errorModal, setErrorModal] = useState(false)
     const [successModal, setSuccessModal] = useState(false)
@@ -62,13 +63,12 @@ const Consult = () => {
     const [consultationID, setConsultationID] = useState('')
 
     const resetState = () => {
-        setDoctorID('')
         setPetID('')
         setDate('')
         setTime('')
-        setConsultationFee('')
         setReservationReference('')
         setReservationFee('')
+        setComplaint('')
         setError(0)
     }
 
@@ -104,8 +104,7 @@ const Consult = () => {
         setError(0)
         setModalBook(!modalBook)
         setModalViewProfile(!modalViewProfile)
-        setDate("")
-        setInvalidTime("")
+        resetState()
     }
 
     const handleDate = (e) => {
@@ -207,12 +206,13 @@ const Consult = () => {
         formdata.append('doctor_id', doctor_id)
         formdata.append('date', date)
         formdata.append('time', time)
+        formdata.append('complaint', complaint)
         formdata.append('consultation_fee', consultation_fee)
         formdata.append('reservation_fee', reservation_fee)
         formdata.append('pet_id', pet_id)
         formdata.append('reservation_reference', reservation_reference)    
 
-        if(date == '' || time == '' || reservation_fee == '' || reservation_reference == ''){
+        if(complaint == '' || date == '' || time == '' || reservation_fee == '' || reservation_reference == ''){
             setErrorMessage('All fields are required!')
             setErrorModal(true)
             setIsLoading(true)
@@ -580,11 +580,21 @@ const Consult = () => {
                             </Select>
                         </FormControl>
                         <br/><br/>
+                        <TextField
+                            error={error == 1 && complaint == ""}
+                            label="Complaint"
+                            variant='outlined'
+                            style={{ width: "90%", justifyContent: "center", display: "flex", margin: "auto" }}
+                            onChange={e=>setComplaint(e.target.value)}
+                        />
+                        <br/>
                         <div className='imgWrapper'>
                             <img className='modal-img' src = {QR}/>
                             <label style={{marginRight:'22px'}}>Please pay reservation fee of at least Php 150.00 via this Gcash QR code and attach the screenshot of the transaction in the field below.</label>
                         </div>
-                        <br/>
+                        <label style={{marginLeft:'22px', marginRight:'22px', color:'red'}}>Note: In case you don't have a scanner, Please use the number below. </label>
+                        <label style={{marginLeft:'22px', marginRight:'22px', fontWeight:'bold'}}>09171523043</label>
+                        <br/><br/>
                         <TextField
                             error={error == 1 && reservation_fee == ""}
                             label='Reservation Amount'
@@ -609,9 +619,17 @@ const Consult = () => {
             </Modal>
             <Container>
             <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" />
-            <div className='h2-wrapper'>  
-                <h2>Consultation Records <button onClick={toggleModalConsult} className="btnBook">Book a Consultation</button> </h2>
+            <div className='h2-wrapper'> 
+                <h2>Consultation Records  <input
+                            className='searchPatient'
+                            placeholder="Search Pet Name"
+                            onChange={e=> setSearch(e.target.value)}
+                        ></input>   </h2>
+                        <button onClick={toggleModalConsult} className="btnBook">Book a Consultation</button>
+               
             </div>
+            <br/>
+            <br/>
             <div className="containerTable">             
                 <div className="tableWrapper">
                     <table>
@@ -621,6 +639,7 @@ const Consult = () => {
                             <th>Doctor's Name</th>
                             <th>Owner's Name</th>
                             <th>Pet Name</th>
+                            <th>Complaint</th>
                             <th>Meet Link</th>
                             <th>Consultation Fee</th>
                             <th>Reservation Fee</th>
@@ -630,7 +649,14 @@ const Consult = () => {
                             <th>Status</th>
                             <th>Action</th>
                         </tr>
-                        {consultData.map((item)=> {
+                        {consultData.filter((val)=> {
+                             if(search == ""){
+                                return val
+                            }
+                            else if(val.PetName.toLowerCase().includes(search.toLowerCase())){
+                                return val
+                            }
+                        }).map((item)=> {
                             return(
                                 <tr>
                                     <td className='date'>{Moment(item.Date).format('LL')}</td>
@@ -638,7 +664,8 @@ const Consult = () => {
                                     <td>{item.DoctorName}</td>
                                     <td>{item.OwnerName}</td>
                                     <td>{item.PetName}</td>
-                                    <td><a href={item.GoogleMeetLink}>{item.GoogleMeetLink}</a></td>
+                                    <td style={{textTransform:'none'}}>{item.InitialComplaint}</td>
+                                    <td style={{textTransform:'none'}}><a href={item.GoogleMeetLink}>{item.GoogleMeetLink}</a></td>
                                     <td>{item.ConsultationFee}</td>
                                     <td>{item.ReservationFee}</td>
                                     <td style={{textAlign:'center'}}>

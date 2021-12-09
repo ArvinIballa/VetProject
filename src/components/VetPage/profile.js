@@ -636,7 +636,7 @@ const Profile = () => {
 
                     <div className='h2-wrapper'> 
                         <Skeleton hidden={isLoading} animation="wave" height={50} width="20%" /> 
-                        <h2 hidden={!isLoading}>My Available Days <button hidden={!isLoading} className='btnAdd' onClick={toggleAddTime}>
+                        <h2 hidden={!isLoading}>My Available Time <button hidden={!isLoading} className='btnAdd' onClick={toggleAddTime}>
                                 + Add Time
                             </button></h2>
                     </div>

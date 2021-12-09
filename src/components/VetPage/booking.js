@@ -33,6 +33,7 @@ const Booking = () => {
     const [isLoading, setIsLoading] = useState(true)
     const [statusOfConfirmation, setStatusOfConfirmation] = useState('')
     const [modalMessage, setModalMessage] = useState(false)
+    const [search, setSearch] = useState('')
     
 
     const toggleErrorModal = () => {
@@ -256,7 +257,8 @@ const Booking = () => {
                 <div className='h2-wrapper'>  
                         <h2>Bookings   <input
                             className='searchPatient'
-                            placeholder='Search'
+                            placeholder='Search Pet Name'
+                            onChange={e=> setSearch(e.target.value)}
                         ></input></h2>
                 </div>
                 <div className="containerTable">             
@@ -278,7 +280,14 @@ const Booking = () => {
                                 <th>Action</th>
                             </tr>
                             <h5 hidden={invalidText == ""} className='info'>{invalidText}</h5>
-                            {consultData.map((item)=> {
+                            {consultData.filter((val)=> {
+                                 if(search == ""){
+                                    return val
+                                }
+                                else if(val.PetName.toLowerCase().includes(search.toLowerCase())){
+                                    return val
+                                }
+                            }).map((item)=> {
                                 return (
                                     <tr>
                                         <td className='date'>{Moment(item.date).format('LL')}</td>
@@ -286,7 +295,7 @@ const Booking = () => {
                                         <td>{item.DoctorName}</td>
                                         <td>{item.OwnerName}</td>
                                         <td>{item.PetName}</td>
-                                        <td><a href={item.GoogleMeetLink}>{item.GoogleMeetLink}</a></td>
+                                        <td style={{textTransform: 'none'}}><a href={item.GoogleMeetLink}>{item.GoogleMeetLink}</a></td>
                                         <td>{item.ConsultationFee}</td>
                                         <td>{item.ReservationFee}</td>
                                         <td style={{textAlign:'center'}}>

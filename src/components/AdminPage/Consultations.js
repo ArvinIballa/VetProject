@@ -22,11 +22,13 @@ const Consultations = () => {
     const [successModal, setSuccessModal] = useState(false)
     const [noticeModal, setNoticeModal] = useState(false)
     const [adviseModal, setAdviseModal] = useState(false)
+    const [deleteModal, setDeleteModal] = useState(false)
     const [confirmationModal, setConfirmationModal] = useState(false)
     const [confirmationMessage, setConfirmationMessage] = useState("")
     const [errorMessage, setErrorMessage] = useState("")
     const [successMessage, setSuccessMessage] = useState("")
     const [noticeMessage, setNoticeMessage] = useState("")
+    const [deleteMessage, setDeleteMessage] = useState("")
     const [adviseMessage, setAdviseMessage] = useState("")
     const [noticeTitle, setNoticeTitle] = useState("")
     const [authUrl, setAuthUrl] = useState("")
@@ -43,6 +45,12 @@ const Consultations = () => {
         setModalMessage(!modalMessage)
         setID(id)
         
+    }
+
+    const toggleDeleteModal = (id) => {
+        setID(id)
+        setDeleteModal(!deleteModal)
+        setDeleteMessage('Are you sure you want to cancel this appointment?')
     }
 
 
@@ -66,6 +74,7 @@ const Consultations = () => {
         setConfirmationModal(false)
         setFullyPaidModal(false)
         setModalMessage(false)
+        setDeleteModal(false)
     }
 
     const handleConfirming = () => {
@@ -81,7 +90,7 @@ const Consultations = () => {
         setTimeout(() => {
             setConfirming(false)
             setConfirmMessage('Successfully paid!')
-        }, 15000);
+        }, 20000);
     }
 
     const handleOkNewTab = () => {
@@ -148,6 +157,23 @@ const Consultations = () => {
         }
     }
 
+    const handleDelete = () => {
+        api.get(`Consultations/mark_as_cancelled/${id}`, {headers: {Authorization: `Bearer ${getToken}`}})
+        .then(res => {
+            console.log(res)
+            if(res.message){
+                setSuccessMessage(res.message)
+                setSuccessModal(true) 
+                getConsultations()           
+            }
+            else
+                return null
+        })
+        .catch(err=> {
+            console.log(err.response)
+        })
+    }
+
     const handleFullyPaid = () => {
         setIsLoading(false)
         api.get(`Consultations/mark_as_fully_paid/${consultationID}`, {headers: {Authorization: `Bearer ${getToken}`}})
@@ -185,7 +211,6 @@ const Consultations = () => {
             setNoticeMessage('Failed to mark as paid')
             setNoticeModal(true)
         }
-        console.log(confirming)
 
     }, [])
 
@@ -216,6 +241,19 @@ const Consultations = () => {
                 </ModalBody>
                 <ModalFooter>
                 <button className="btnCancel" onClick={toggleErrorModal}>OK</button>
+                </ModalFooter>
+            </Modal> 
+            {/** DELETE MODAL */}
+            <Modal centered backdrop="static" size="md" isOpen={deleteModal}>
+                <ModalHeader>
+                    Notice!
+                </ModalHeader>
+                <ModalBody>
+                    {deleteMessage}
+                </ModalBody>
+                <ModalFooter>
+                <button className="btnView" onClick={toggleDeleteModal}>Close</button>
+                <button className="btnCancel" onClick={handleDelete}>Cancel</button>
                 </ModalFooter>
             </Modal> 
              {/** NOTICE MODAL */}
@@ -336,8 +374,9 @@ const Consultations = () => {
                                         </td> 
                                         <td>{item.Status}</td>                         
                                         <td>
-                                        <button className='btnMessage' onClick={()=>toggleMessageModal(item.ConsultationID)}>Message</button>
+                                            <button className='btnMessage' onClick={()=>toggleMessageModal(item.ConsultationID)}>Message</button>
                                             <button hidden={item.Status == "PENDING" ? false : item.Status == "DONE, FOR FULL PAYMENT" ? false : true } onClick={item.Status =='PENDING' ? ()=>handleMarkAsPaid(item.ConsultationID, 'paid') : ()=>toggleFullyPaidModal(item.ConsultationID, 'fully-paid')} className={item.Status == "PENDING" ? 'btnView' : 'btnInfo'}><label className='status'>{item.Status == "PENDING" ? "Mark as Paid" : item.Status == "DONE, FOR FULL PAYMENT" ? "Mark as Fully Paid" : " "}</label></button>
+                                            <button hidden={item.Status == 'DONE, FULLY PAID' || item.Status == 'CANCELLED'} onClick={()=>toggleDeleteModal(item.ConsultationID)} className="btnCancel">Cancel</button>
                                         </td>
                                     </tr>
                                 )

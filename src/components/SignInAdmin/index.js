@@ -185,7 +185,7 @@ const Signin = () => {
                     <FormContent>
                         <Form>
                             <FormRow>
-                                <FormH1>Sign in to your account</FormH1>
+                                <FormH1>Sign in as Admin</FormH1>
                                 <Img src={AdminIcon}></Img>
                                 <FormLabel htmlFor='for'>Email</FormLabel>
                                 <FormInput 

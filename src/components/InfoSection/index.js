@@ -129,6 +129,12 @@ const InfoSection = ({onclick, lightBg, id, imgStart, topLine, lightText, darkTe
             setIsLoading(true)
             return false
         }
+        else if(email.split('@')[0] != 'gmail.com'){
+            setErrorModal(true)
+            setErrorMessage('We encourage you to use your Gmail account. Thank you')
+            setIsLoading(true)
+            return false
+        }
         else if(password != confirm_password){
             setErrorModal(true)
             setErrorMessage('Password did not match')
@@ -244,6 +250,7 @@ const InfoSection = ({onclick, lightBg, id, imgStart, topLine, lightText, darkTe
                     <br/>
                     <TextField
                         label='Email Address'
+                        helperText='We encourage you to use your Gmail account'
                         type='email'
                         variant='outlined'
                         style={{ width: "100%", justifyContent: "center", display: "flex", margin: "auto" }}
