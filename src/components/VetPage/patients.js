@@ -271,7 +271,7 @@ const Patients = () => {
                                 <tr>
                                 <td>{item.FirstName + ' ' + item.LastName}</td>
                                 <td>
-                                    <img className='tableImg' src={item.ProfilePicture ? item.ProfilePicture : Profile}/>
+                                    <a href={item.ProfilePicture} target='_blank'><img className='tableImg' src={item.ProfilePicture ? item.ProfilePicture : Profile}/></a>
                                 </td>
                                 <td>
                                     <button onClick={()=>getSpecificOwner(item.OwnerID, item.FirstName)} className="btnView">View Pets</button>

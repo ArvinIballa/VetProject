@@ -65,7 +65,7 @@ const Signin = () => {
     }
 
     const handleEnter = (e) => {
-        if (e.keyCode === 13) {
+        if (e.charCode === 13) {
             handleLogin()
         }
     }

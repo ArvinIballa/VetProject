@@ -55,6 +55,7 @@ const InfoSection = ({onclick, lightBg, id, imgStart, topLine, lightText, darkTe
         setConfirmPassword("")
         setPhonenumber("")
         setRegisterAs("")
+        setInvalidEmail("")
         setInvalidSelect(false)
         
     }
@@ -126,12 +127,6 @@ const InfoSection = ({onclick, lightBg, id, imgStart, topLine, lightText, darkTe
         else if(validEmail == false){
             setErrorModal(true)
             setErrorMessage('Please check your email address')
-            setIsLoading(true)
-            return false
-        }
-        else if(email.split('@')[0] != 'gmail.com'){
-            setErrorModal(true)
-            setErrorMessage('We encourage you to use your Gmail account. Thank you')
             setIsLoading(true)
             return false
         }

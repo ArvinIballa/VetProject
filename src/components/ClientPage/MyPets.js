@@ -12,7 +12,7 @@ import Backdrop from '@mui/material/Backdrop'
 import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
 import FormControl from '@mui/material/FormControl';
-import { CircularProgress, Skeleton } from '@mui/material';
+import { CircularProgress, Skeleton, LinearProgress } from '@mui/material';
 
 import {
     Modal, 
@@ -31,6 +31,7 @@ const MyPets = () => {
 
     const toggleModalMedicalRecords = () => {
         setModalMedicalRecords(!modalMedicalRecords)
+        setLoadingModal(false)
     }
 
     const toggleModalAddPet = () => {
@@ -53,6 +54,7 @@ const MyPets = () => {
     const handleOk = () => {
         setSuccessModal(false)
         setModalAddPet(false)
+        setLoadingModal(false)
     }
 
     const [pet_name, setPetName] = useState('')
@@ -68,6 +70,11 @@ const MyPets = () => {
     const [successModal, setSuccessModal] = useState(false)
     const [errorMessage, setErrorMessage] = useState("")
     const [successMessage, setSuccessMessage] = useState("")
+    const [loadingModal, setLoadingModal] = useState(false)
+
+    const toggleLoadingModal = () => {
+        setLoadingModal(!loadingModal)
+    }
 
 
     const getMyPets = () => {
@@ -117,13 +124,14 @@ const MyPets = () => {
     }
 
     const getMedicalRecords = (pet_id) => {
-
+        toggleLoadingModal()
         const medicalPayload = {
             pet_id
         }
         api.post('MedRecords/list', medicalPayload ,{headers: {Authorization: `Bearer ${getToken}`}})
         .then(res => {
             console.log(res)
+            setLoadingModal(false)
             if(res.message == 'No pet medical records yet.'){
                 setErrorModal(true)
                 setErrorMessage(res.message)
@@ -171,12 +179,23 @@ const MyPets = () => {
                 <button className="btnCancel" onClick={toggleErrorModal}>OK</button>
                 </ModalFooter>
             </Modal>
+            {/** LOADING MODAL */}
+            <Modal centered backdrop="static" size="md" isOpen={loadingModal}>
+                <ModalHeader>
+                    Loading
+                </ModalHeader>
+                <ModalBody>
+                    <div style={{justifyContent: 'center', alignItems:'center'}}>
+                    <LinearProgress />
+                    </div>
+                </ModalBody>
+            </Modal>
             {/** MODAL ADD PETS */}
             <Modal centered backdrop="static" size="md" isOpen={modalAddPet}>
                 <ModalHeader>
                     <h2>Add Pet</h2>
                 </ModalHeader>
-                <ModalBody>
+            <ModalBody>
                     <div>
                         <TextField
                             label='Name'
@@ -255,7 +274,7 @@ const MyPets = () => {
                                             <td>{item.DoctorName}</td>                           
                                             <td>{item.PetName}</td>
                                             <td>{item.Subject}</td>
-                                            <td>{item.Attachment ? item.Attachment : "None"}</td>
+                                            <td><a href={item.Attachment} target='_blank'>{item.Attachment ? item.Attachment.split('/')[3] : 'None'}</a></td>
                                             <td style={{whiteSpace:'pre-wrap'}}>{item.Remarks}</td>
                                             
                                         </tr>

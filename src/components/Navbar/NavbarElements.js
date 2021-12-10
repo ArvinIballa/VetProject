@@ -103,6 +103,21 @@ export const NavBtn = styled.nav`
         display: none
     }
 `
+export const LabelWrapper = styled.div`
+    display: flex;
+    justify-content: center;
+    color: #00b8d4;
+`
+export const TextTitle = styled.label`
+    margin-bottom: 10px;
+    transition: 250ms;
+    font-weight: bold;
+
+    @media screen and (max-width: 700px) {
+        font-size: 12px;
+        transition: 250ms;
+    }
+`
 
 export const ImgLink = styled(LinkR)`
     
@@ -140,7 +155,7 @@ export const Img = styled.img`
     width: 100%;
     border-radius: 10px;
     margin-bottom: 10px;
-    margin-top: 15px;
+    margin-top: 10px;
     cursor: pointer;
     transition: all 0.2s ease-in-out;
     

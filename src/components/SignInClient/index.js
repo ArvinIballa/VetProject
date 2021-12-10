@@ -48,6 +48,12 @@ const Signin = () => {
         setErrorModal(!errorModal)
     }
 
+    const handleEnter = (e) => {
+        if(e.charCode === 13){
+            handleLogin()
+        }
+    }
+
     const resetState = () => {
         setEmail("")
         setPassword("")
@@ -181,23 +187,25 @@ const Signin = () => {
                         <Form>
                             <FormRow>
                                 <FormH1>Sign in as Pet Owner</FormH1>
-                                <Img src={ClientIcon}></Img>                 
+                                <Img src={ClientIcon}></Img>  
                                 <FormLabel htmlFor='for'>Email</FormLabel>
                                 <FormInput 
                                     onChange={e=> setEmail(e.target.value)} 
                                     type='email' 
+                                    onKeyPress={handleEnter}
                                     required>                      
                                 </FormInput>
                                 <FormLabel htmlFor='for'>Password</FormLabel>
                                 <FormInput 
                                     type='password' 
                                     onChange={e=> setPassword(e.target.value)}
+                                    onKeyPress={handleEnter}
                                     required>
                                 </FormInput>
                                 <div hidden={isLoading} style={{display:'flex', justifyContent:'center', alignItems:'center'}}>
                                 <CircularProgress />
                                 </div>
-                                <FormButton hidden={!isLoading} type='submit' onClick={handleLogin}>Log In</FormButton>
+                                <FormButton hidden={!isLoading} onClick={handleLogin}>Log In</FormButton>
                                 <Text onClick={toggleModalForgotPassword}>Forgot Password?</Text>
                             </FormRow>
                         </Form>

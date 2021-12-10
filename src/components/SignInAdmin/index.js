@@ -45,7 +45,7 @@ const Signin = () => {
     const [successMessage, setSuccessMessage] = useState("")
 
     const handleEnter = (e) => {
-        if (e.keyCode === 13) {
+        if (e.charCode === 13) {
             handleLogin()
         }
     }
@@ -192,12 +192,14 @@ const Signin = () => {
                                     onChange={e=> setEmail(e.target.value)} 
                                     type='email'
                                     value={email} 
+                                    onKeyPress={handleEnter}
                                     required>                      
                                 </FormInput>
                                 <FormLabel htmlFor='for'>Password</FormLabel>
                                 <FormInput 
                                     type='password' 
                                     onChange={e=> setPassword(e.target.value)}
+                                    onKeyPress={handleEnter}
                                     required>
                                 </FormInput>
                                 <div hidden={isLoading} style={{display:'flex', justifyContent:'center', alignItems:'center'}}>

@@ -34,6 +34,8 @@ const Booking = () => {
     const [statusOfConfirmation, setStatusOfConfirmation] = useState('')
     const [modalMessage, setModalMessage] = useState(false)
     const [search, setSearch] = useState('')
+    const [modalComplaint, setModalComplaint] = useState(false)
+    const [complaintMessage, setComplaintMessage] = useState("")
     
 
     const toggleErrorModal = () => {
@@ -58,11 +60,17 @@ const Booking = () => {
         
     }
 
+    const toggleModalComplaint = (InitialComplaint) => {
+        setModalComplaint(!modalComplaint)
+        setComplaintMessage(InitialComplaint)
+    }
+
     const handleOk = () => {
         setSuccessModal(false)
         setConfirmationModal(false)
         setModalMessage(false)
         setDeleteModal(false)
+        setModalComplaint(false)
     }
 
     const openModalMarkAsConfirm = (id, statusOfConfirmation) => {
@@ -230,7 +238,18 @@ const Booking = () => {
                     <button hidden={!isLoading} className="btnAdd" onClick={handleConfirm}>OK</button>
                 </ModalFooter>
             </Modal> 
-
+             {/** COMPLAINT MODAL */}
+             <Modal centered backdrop="static" size="md" isOpen={modalComplaint}>
+                <ModalHeader>
+                    Complaint
+                </ModalHeader>
+                <ModalBody>
+                   {complaintMessage}
+                </ModalBody>
+                <ModalFooter>
+                    <button className="btnAdd" onClick={handleOk}>Ok</button>
+                </ModalFooter>
+            </Modal>
             {/** MESSAGE MODAL */}
             <Modal centered backdrop="static" size="md" isOpen={modalMessage}>
                 <ModalHeader>
@@ -270,6 +289,7 @@ const Booking = () => {
                                 <th>Doctor's Name</th>
                                 <th>Owner's Name</th>
                                 <th>Pet Name</th>
+                                <th>Complaint</th>
                                 <th>Meet Link</th>
                                 <th>Consultation Fee</th>
                                 <th>Reservation Fee</th>
@@ -290,11 +310,12 @@ const Booking = () => {
                             }).map((item)=> {
                                 return (
                                     <tr>
-                                        <td className='date'>{Moment(item.date).format('LL')}</td>
+                                        <td className='date'>{Moment(item.Date).format('LL')}</td>
                                         <td>{item.Time}</td>
                                         <td>{item.DoctorName}</td>
                                         <td>{item.OwnerName}</td>
                                         <td>{item.PetName}</td>
+                                        <td onClick={ item.InitialComplaint ? ()=> toggleModalComplaint(item.InitialComplaint) : null} style={item.InitialComplaint ? {fontWeight:'bold', color:'#00b8d4', cursor:'pointer'}:null}>{item.InitialComplaint ? 'View Complaint' : 'No Complaint'}</td>
                                         <td style={{textTransform: 'none'}}><a href={item.GoogleMeetLink}>{item.GoogleMeetLink}</a></td>
                                         <td>{item.ConsultationFee}</td>
                                         <td>{item.ReservationFee}</td>

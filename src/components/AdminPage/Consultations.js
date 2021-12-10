@@ -40,6 +40,9 @@ const Consultations = () => {
     const [id, setID] = useState('')
     const [confirming, setConfirming] = useState(true)
     const [confirmMessage, setConfirmMessage] = useState("")
+    const [search, setSearch] = useState("")
+    const [modalComplaint, setModalComplaint] = useState(false)
+    const [complaintMessage, setComplaintMessage] = useState("")
 
     const toggleMessageModal = (id) => {
         setModalMessage(!modalMessage)
@@ -75,11 +78,17 @@ const Consultations = () => {
         setFullyPaidModal(false)
         setModalMessage(false)
         setDeleteModal(false)
+        setModalComplaint(false)
     }
 
     const handleConfirming = () => {
         setAdviseModal(false)
         getConsultations()
+    }
+
+    const toggleModalComplaint = (InitialComplaint) => {
+        setModalComplaint(!modalComplaint)
+        setComplaintMessage(InitialComplaint)
     }
 
     const toggleAdviseModal = () => {
@@ -199,7 +208,7 @@ const Consultations = () => {
 
     useEffect(() => {
         getConsultations()
-        if(window.location.href.split('/')[5]== '?success#'){
+        if(window.location.href.split('/')[5]== '?success'){
             console.log(window.location.href)
             getConsultations()
             setNoticeTitle('Success!')
@@ -294,6 +303,18 @@ const Consultations = () => {
                     <a href={authUrl} target='_blank'><button hidden={!isLoading} onClick={handleConfirm} className="btnAdd">OK</button></a>
                 </ModalFooter>
             </Modal> 
+             {/** COMPLAINT MODAL */}
+             <Modal centered backdrop="static" size="md" isOpen={modalComplaint}>
+                <ModalHeader>
+                    Complaint
+                </ModalHeader>
+                <ModalBody>
+                   {complaintMessage}
+                </ModalBody>
+                <ModalFooter>
+                    <button className="btnAdd" onClick={handleOk}>Ok</button>
+                </ModalFooter>
+            </Modal>
              {/** CONFIRMATION MODAL FOR FULLY PAID */}
             <Modal centered backdrop="static" size="md" isOpen={fullyPaidModal}>
                 <ModalHeader>
@@ -333,7 +354,8 @@ const Consultations = () => {
                 <div className='h2-wrapper'>  
                         <h2>Consultations   <input
                             className='searchPatient'
-                            placeholder='Search'
+                            placeholder='Search Pet Name'
+                            onChange={e=> setSearch(e.target.value)}
                         ></input></h2>
                 </div>
                 <div className="table-responsive containerTable">             
@@ -345,6 +367,7 @@ const Consultations = () => {
                                 <th>Doctor's Name</th>
                                 <th>Owner's Name</th>
                                 <th>Pet Name</th>
+                                <th>Complaint</th>
                                 <th>Meet Link</th>
                                 <th>Consultation Fee</th>
                                 <th>Reservation Fee</th>
@@ -354,15 +377,23 @@ const Consultations = () => {
                                 <th>Status</th>
                                 <th>Action</th>
                             </tr>
-                            {consultData.map((item)=> {
+                            {consultData.filter((val)=> {
+                                 if(search == ""){
+                                    return val
+                                }
+                                else if(val.PetName.toLowerCase().includes(search.toLowerCase())){
+                                    return val
+                                }
+                            }).map((item)=> {
                                 return(
                                     <tr>
-                                        <td className='date'>{Moment(item.date).format('LL')}</td>
+                                        <td className='date'>{Moment(item.Date).format('LL')}</td>
                                         <td>{item.Time}</td>
                                         <td>{item.DoctorName}</td>
                                         <td>{item.OwnerName}</td>
                                         <td>{item.PetName}</td>
-                                        <td><a href={item.GoogleMeetLink}>{item.GoogleMeetLink}</a></td>
+                                        <td onClick={ item.InitialComplaint ? ()=> toggleModalComplaint(item.InitialComplaint) : null} style={item.InitialComplaint ? {fontWeight:'bold', color:'#00b8d4', cursor:'pointer'}:null}>{item.InitialComplaint ? 'View Complaint' : 'No Complaint'}</td>
+                                        <td style={{textTransform:'none'}}><a href={item.GoogleMeetLink}>{item.GoogleMeetLink ? item.GoogleMeetLink : "Meet link not available yet."}</a></td>
                                         <td>{item.ConsultationFee}</td>
                                         <td>{item.ReservationFee}</td>
                                         <td style={{textAlign:'center'}}>

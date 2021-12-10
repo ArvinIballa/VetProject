@@ -54,7 +54,9 @@ const Consult = () => {
     const [timeData, setTimeData] = useState([])
     const [invalidTime, setInvalidTime] = useState('')
     const [complaint, setComplaint] = useState('')
-
+    
+    const [modalComplaint, setModalComplaint] = useState(false)
+    const [complaintMessage, setComplaintMessage] = useState("")
     const [errorModal, setErrorModal] = useState(false)
     const [successModal, setSuccessModal] = useState(false)
     const [errorMessage, setErrorMessage] = useState("")
@@ -76,6 +78,7 @@ const Consult = () => {
         setSuccessModal(false)
         setModalBook(false)
         setSettleModal(false)
+        setModalComplaint(false)
     }
 
     const toggleErrorModal = () => {
@@ -87,6 +90,11 @@ const Consult = () => {
         setSettleModal(!settleModal)
         setConsultationID(id)
         
+    }
+    
+    const toggleModalComplaint = (InitialComplaint) => {
+        setModalComplaint(!modalComplaint)
+        setComplaintMessage(InitialComplaint)
     }
 
     console.log(pet_id)
@@ -332,6 +340,19 @@ const Consult = () => {
                 <ModalFooter>
                     <button className="btnCancel" onClick={handleOk}>Close</button>
                     <button className="btnAdd" onClick={handleSettle}>Send Payment</button>
+                </ModalFooter>
+            </Modal>
+
+             {/** COMPLAINT MODAL */}
+             <Modal centered backdrop="static" size="md" isOpen={modalComplaint}>
+                <ModalHeader>
+                    Complaint
+                </ModalHeader>
+                <ModalBody>
+                   {complaintMessage}
+                </ModalBody>
+                <ModalFooter>
+                    <button className="btnAdd" onClick={handleOk}>Ok</button>
                 </ModalFooter>
             </Modal>
             
@@ -583,6 +604,8 @@ const Consult = () => {
                         <TextField
                             error={error == 1 && complaint == ""}
                             label="Complaint"
+                            multiline
+                            rows={3}
                             variant='outlined'
                             style={{ width: "90%", justifyContent: "center", display: "flex", margin: "auto" }}
                             onChange={e=>setComplaint(e.target.value)}
@@ -664,7 +687,7 @@ const Consult = () => {
                                     <td>{item.DoctorName}</td>
                                     <td>{item.OwnerName}</td>
                                     <td>{item.PetName}</td>
-                                    <td style={{textTransform:'none'}}>{item.InitialComplaint}</td>
+                                    <td onClick={ item.InitialComplaint ? ()=> toggleModalComplaint(item.InitialComplaint) : null} style={item.InitialComplaint ? {fontWeight:'bold', color:'#00b8d4', cursor:'pointer'}:null}>{item.InitialComplaint ? 'View Complaint' : 'No Complaint'}</td>
                                     <td style={{textTransform:'none'}}><a href={item.GoogleMeetLink}>{item.GoogleMeetLink}</a></td>
                                     <td>{item.ConsultationFee}</td>
                                     <td>{item.ReservationFee}</td>

@@ -14,7 +14,9 @@ import {
     Button,
     Img,
     Style, 
-    ImgLink
+    ImgLink,
+    TextTitle,
+    LabelWrapper
 } from './NavbarElements'
 
 import Client from '../../images/client.png'
@@ -56,25 +58,28 @@ const Navbar = ({ toggle }) => {
                 <br/>
                 <Grid container spacing={2}>
                     <Grid item xs={4}>
-                        <Tooltip title="Client" placement="bottom">
                             <ImgLink to={'/signinclient'}>
                                 <Img src={Client}></Img>
                             </ImgLink>
-                        </Tooltip>
+                            <LabelWrapper>
+                                <TextTitle className='title'>Client</TextTitle> 
+                            </LabelWrapper>      
                     </Grid>
                     <Grid item xs={4}>
-                        <Tooltip title="Veterinarian" placement="bottom">
                             <ImgLink to={'/signinvet'}>
                                 <Img src={Vet}></Img>
                             </ImgLink>
-                        </Tooltip>
+                            <LabelWrapper>
+                                <TextTitle className='title'>Veterinarian</TextTitle>
+                            </LabelWrapper>
                     </Grid>
                     <Grid item xs={4}>
-                        <Tooltip title="Admin" placement="bottom">
-                            <ImgLink to={'/signinadmin'}>
-                                <Img src={Admin}></Img>
-                            </ImgLink>
-                        </Tooltip>
+                        <ImgLink to={'/signinadmin'}>
+                            <Img src={Admin}></Img>
+                        </ImgLink>
+                        <LabelWrapper>
+                            <TextTitle>Admin</TextTitle>
+                       </LabelWrapper>
                     </Grid>
                 </Grid>
             </Style>
