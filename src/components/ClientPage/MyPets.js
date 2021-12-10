@@ -55,6 +55,7 @@ const MyPets = () => {
         setSuccessModal(false)
         setModalAddPet(false)
         setLoadingModal(false)
+        setModalRemarks(false)
     }
 
     const [pet_name, setPetName] = useState('')
@@ -71,6 +72,8 @@ const MyPets = () => {
     const [errorMessage, setErrorMessage] = useState("")
     const [successMessage, setSuccessMessage] = useState("")
     const [loadingModal, setLoadingModal] = useState(false)
+    const [modalRemarks, setModalRemarks] = useState(false)
+    const [remarkMessage, setRemarkMessage] = useState('')
 
     const toggleLoadingModal = () => {
         setLoadingModal(!loadingModal)
@@ -91,6 +94,11 @@ const MyPets = () => {
         .catch(err => {
             console.log(err.response)
         })
+    }
+
+    const toggleModalRemarks = (remarks) => {
+        setModalRemarks(!modalRemarks)
+        setRemarkMessage(remarks)
     }
 
     const handleAddPet = () => {
@@ -190,6 +198,18 @@ const MyPets = () => {
                     </div>
                 </ModalBody>
             </Modal>
+             {/** REMARKS MODAL */}
+             <Modal centered backdrop="static" size="md" isOpen={modalRemarks}>
+                <ModalHeader>
+                    Remarks
+                </ModalHeader>
+                <ModalBody>
+                    {remarkMessage}
+                </ModalBody>
+                <ModalFooter>
+                    <button className='btnAdd' onClick={handleOk}>Ok</button>
+                </ModalFooter>
+            </Modal>
             {/** MODAL ADD PETS */}
             <Modal centered backdrop="static" size="md" isOpen={modalAddPet}>
                 <ModalHeader>
@@ -275,7 +295,7 @@ const MyPets = () => {
                                             <td>{item.PetName}</td>
                                             <td>{item.Subject}</td>
                                             <td><a href={item.Attachment} target='_blank'>{item.Attachment ? item.Attachment.split('/')[3] : 'None'}</a></td>
-                                            <td style={{whiteSpace:'pre-wrap'}}>{item.Remarks}</td>
+                                            <td style={item.Remarks ? {color: '#00b8d4', fontWeight:'bold', cursor:'pointer'} : null} onClick={item.Remarks ? ()=>toggleModalRemarks(item.Remarks) : null}>{item.Remarks ? "View Remarks" : "No Remarks"}</td>
                                             
                                         </tr>
                                     )

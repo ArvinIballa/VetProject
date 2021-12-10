@@ -31,6 +31,8 @@ const PetOwner = () => {
     const [modalMedicalRecords, setModalMedicalRecords] = useState(false)
     const [medicalData, setMedicalData] = useState([])
     const [loadingModal, setLoadingModal] = useState(false)
+    const [modalRemarks, setModalRemarks] = useState(false)
+    const [remarkMessage, setRemarkMessage] = useState('')
 
     const toggleOwnerModal = () => {
         setOwnerModal(!ownerModal)
@@ -50,11 +52,17 @@ const PetOwner = () => {
         
     }
 
+    const toggleModalRemarks = (remarks) => {
+        setModalRemarks(!modalRemarks)
+        setRemarkMessage(remarks)
+    }
+
     const handleOk = () => {
         setOwnerModal(false)
         setMessage('')
         setSpecificOwnerData([])
         toggleLoadingModal()
+        setModalRemarks(false)
     }
 
     const getPetOwners = () => {
@@ -148,7 +156,18 @@ const PetOwner = () => {
                     </div>
                 </ModalBody>
             </Modal>
-            
+             {/** REMARKS MODAL */}
+             <Modal centered backdrop="static" size="md" isOpen={modalRemarks}>
+                <ModalHeader>
+                    Remarks
+                </ModalHeader>
+                <ModalBody>
+                    {remarkMessage}
+                </ModalBody>
+                <ModalFooter>
+                    <button className='btnAdd' onClick={handleOk}>Ok</button>
+                </ModalFooter>
+            </Modal>
             {/** OWNER MODAL */}
             <Modal centered backdrop="static" size="xl" isOpen={ownerModal}>
                 <ModalBody>   
@@ -211,7 +230,7 @@ const PetOwner = () => {
                                                 <td>{item.PetName}</td>
                                                 <td>{item.Subject}</td>
                                                 <td><a href={item.Attachment} target='_blank'>{item.Attachment ? item.Attachment.split('/')[3] : 'None'}</a></td>
-                                                <td style={{whiteSpace:'pre-wrap'}}>{item.Remarks}</td>
+                                                <td style={item.Remarks ? {color: '#00b8d4', fontWeight:'bold', cursor:'pointer'} : null} onClick={item.Remarks ? ()=>toggleModalRemarks(item.Remarks) : null}>{item.Remarks ? "View Remarks" : "No Remarks"}</td>
                                                 
                                             </tr>
                                         )
