@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import ClientIcon from '../../images/client.png'
 import {Link, Navigate} from "react-router-dom";
 import api from '../../api/api'
@@ -74,7 +74,7 @@ const Signin = () => {
             email
         }
         if(email == ""){
-            setErrorMessage('All fields are required!')
+            setErrorMessage('All fields are required.')
             setErrorModal(true)
             setIsLoadingModal(true)
             setError(1)
@@ -129,6 +129,10 @@ const Signin = () => {
             console.log(err.response)
         })
     }
+
+    useEffect(() => {
+        sessionStorage.clear()
+    }, [])
 
     if(redirect == 1){
         return <Navigate to= "/Client/Profile"/>

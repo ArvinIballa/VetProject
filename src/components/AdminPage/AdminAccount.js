@@ -20,6 +20,7 @@ const AdminAccount = () => {
     const [successModal, setSuccessModal] = useState(false)
     const [errorMessage, setErrorMessage] = useState("")
     const [successMessage, setSuccessMessage] = useState("")
+    const [deleteModal, setDeleteModal] = useState(false)
 
 
     const [adminData, setAdminData] = useState([])
@@ -35,6 +36,7 @@ const AdminAccount = () => {
     const [isLoading, setIsLoading] = useState(true)
     const [error, setError] = useState(0)
     const [passwordError, setPasswordError] = useState(0)
+    const [admin_id, setAdminID] = useState('')
     const resetState = () => {
         setFirstName("")
         setLastName("")
@@ -42,6 +44,11 @@ const AdminAccount = () => {
         setPassword("")
         setConfirmPassword("")
         setPhonenumber("")
+    }
+
+    const toggleDeleteModal = (admin_id) => {
+        setAdminID(admin_id)
+        setDeleteModal(!deleteModal)
     }
 
     const emailRegex = /\S+@\S+\.\S+/;
@@ -70,9 +77,31 @@ const AdminAccount = () => {
         
     }
 
+    const handleDelete = () => {
+        setIsLoading(false)
+        api.delete(`Admins/delete_admin/${admin_id}`, {headers: {Authorization: `Bearer ${getToken}`}})
+        .then(res => {
+            console.log(res)
+            if(res.message){
+                setSuccessModal(true)
+                setSuccessMessage(res.message)
+                setIsLoading(true)
+                setDeleteModal(false)
+                setAdminID('')
+                getAdmins()
+            }
+            else
+                return null
+        })
+        .catch(err => {
+            console.log(err.response)
+        })
+    }
+
     const handleOk = () => {
         setSuccessModal(false)
         setModalAddAdmin(false)
+        setDeleteModal(false)
     }
 
     const getAdmins = () => {
@@ -102,7 +131,7 @@ const AdminAccount = () => {
 
         if(first_name == "" || last_name == "" || email == "" || phonenumber == "" || password == ""){
             setErrorModal(true)
-            setErrorMessage('All fields are required')
+            setErrorMessage('All fields are required.')
             setIsLoading(true)
             setError(1)
             return false
@@ -175,6 +204,20 @@ const AdminAccount = () => {
                 </ModalBody>
                 <ModalFooter>
                 <button className="btnCancel" onClick={toggleErrorModal}>OK</button>
+                </ModalFooter>
+            </Modal>
+            {/** DELETE MODAL */}
+            <Modal centered backdrop="static" size="md" isOpen={deleteModal}>
+                <ModalHeader>
+                    Notice!
+                </ModalHeader>
+                <ModalBody>
+                    Are you sure you want to delete this?
+                </ModalBody>
+                <ModalFooter>
+                    <CircularProgress hidden={isLoading} />
+                    <button hidden={!isLoading} className="btnView" onClick={handleOk}>Cancel</button>
+                    <button hidden={!isLoading} className="btnCancel" onClick={handleDelete}>Delete</button>
                 </ModalFooter>
             </Modal>
             {/** MODAL ADD PETS */}
@@ -267,13 +310,17 @@ const AdminAccount = () => {
                                 <th>Name</th>
                                 <th>Email Address</th>
                                 <th>Contact Number</th>
+                                <th>Action</th>
                             </tr>
                             {adminData.map((item)=> {
                                 return(
                                     <tr>
                                     <td>{item.FirstName + ' ' + item.LastName}</td>
-                                    <td>{item.EmailAddress}</td>
-                                    <td>{item.ContactNumber}</td>                    
+                                    <td style={{textTransform:'none'}}>{item.EmailAddress}</td>
+                                    <td>{item.ContactNumber}</td> 
+                                    <td>
+                                        <button onClick={()=> toggleDeleteModal(item.AdminID)} className='btnCancel'>Delete</button>
+                                    </td>                   
                                 </tr>
                                 )
                             })}

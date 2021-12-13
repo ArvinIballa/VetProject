@@ -29,11 +29,11 @@ const HeroSection = () => {
                 <HeroContent>
                     <HeroH1>Welcome to Petra</HeroH1>
                     <HeroP>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+                        In Petra, we bring the vets to you. Schedule an online consultation with some of our verified vets today.
                     </HeroP>
                     <HeroBtnWrapper>
                         <Button 
-                            to="signup" 
+                            to="about"
                             onMouseEnter={onHover} 
                             onMouseLeave={onHover}
                             primary='true'

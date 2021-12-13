@@ -40,8 +40,8 @@ export const DoctorCard = styled.div`
     justify-content: flex-start;
     align-items: center;
     border-radius: 10px;
-    max-height: 600px;
-    padding-bottom: 100px;
+    max-height: 620px;
+    padding-bottom: 110px;
     margin-right: 15px;
     box-shadow: 0 1px 3px rgba(0,0,0,0.5);
     transition: all 0.2s ease-in-out;
@@ -56,7 +56,9 @@ export const DoctorCard = styled.div`
         padding-bottom: 40px;
     }
     @media screen and (max-width: 768px) {
-        padding-bottom: 10px;
+        padding-bottom: 50px;
+        height: 400px;
+        
     }
 `
 
@@ -94,6 +96,13 @@ export const DoctorsP = styled.p`
     text-align: center;
     padding-left: 10px;
     padding-right: 10px;
+    transition: all 0.2s ease-in-out;
+
+    @media screen and (max-width: 768px) {
+        font-size: 0.75rem;
+        transition: all 0.2s ease-in-out;
+        
+    }
 `
 
 

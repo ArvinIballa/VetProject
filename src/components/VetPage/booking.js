@@ -301,7 +301,7 @@ const Booking = () => {
                             </tr>
                             <h5 hidden={invalidText == ""} className='info'>{invalidText}</h5>
                             {consultData.filter((val)=> {
-                                 if(search == ""){
+                                if(search == ""){
                                     return val
                                 }
                                 else if(val.PetName.toLowerCase().includes(search.toLowerCase())){
@@ -316,7 +316,7 @@ const Booking = () => {
                                         <td>{item.OwnerName}</td>
                                         <td>{item.PetName}</td>
                                         <td onClick={ item.InitialComplaint ? ()=> toggleModalComplaint(item.InitialComplaint) : null} style={item.InitialComplaint ? {fontWeight:'bold', color:'#00b8d4', cursor:'pointer'}:null}>{item.InitialComplaint ? 'View Complaint' : 'No Complaint'}</td>
-                                        <td style={{textTransform: 'none'}}><a href={item.GoogleMeetLink}>{item.GoogleMeetLink}</a></td>
+                                        <td style={{textTransform:'none'}}><a href={item.GoogleMeetLink}>{item.GoogleMeetLink ? item.GoogleMeetLink : "Meet link not available yet."}</a></td>
                                         <td>{item.ConsultationFee}</td>
                                         <td>{item.ReservationFee}</td>
                                         <td style={{textAlign:'center'}}>

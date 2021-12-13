@@ -125,7 +125,7 @@ const Profile = () => {
         formdata.append('profile_picture', profile_picture ? profile_picture : null)
         
         if(first_name == "" || last_name == "" || phonenumber == "" || email == ""){
-            setErrorMessage('All fields are required')
+            setErrorMessage('All fields are required.')
             setErrorModal(true)
             setConfirmLoading(true)
             return false
@@ -281,7 +281,7 @@ const Profile = () => {
              {/** MODAL CHANGE PROFILE PICTURE */}
             <Modal centered backdrop='static' size='md' isOpen={modalChangeProfile}>
                 <ModalHeader>
-                    Change Profile Picture
+                    Edit Profile
                 </ModalHeader>
                 <ModalBody>
                     <TextField
@@ -315,7 +315,7 @@ const Profile = () => {
                         style={{ width: "90%", justifyContent: "center", display: "flex", margin: "auto" }}
                         onChange={e=> setPhoneNumber(e.target.value)}
                     />
-                    <br/>
+                    <label style={{marginLeft: '22px', marginTop: '10px'}}>Profile Picture</label>
                     <input 
                         style={{marginLeft: '22px'}} 
                         type='file'
@@ -342,7 +342,7 @@ const Profile = () => {
                                 <h5 hidden={!isLoading}>{profileData.FirstName} {profileData.LastName}</h5>
                                 <br hidden={isLoading}/>
                             <Skeleton hidden={isLoading} animation="wave" height={10} width="15%" />  
-                                <h6 hidden ={!isLoading}>Owner</h6>
+                                <h6 hidden ={!isLoading}>Pet Owner</h6>
                                 <div className="col -md-8 pl-5">
                             <div className="tab-content profile-tab">
                                 <div className="tab-panel">

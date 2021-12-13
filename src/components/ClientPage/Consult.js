@@ -25,7 +25,7 @@ import './Consult.css'
 import api from '../../api/api'
 import * as IoIcons from 'react-icons/io5'
 import QR from '../../images/QR-Gcash.PNG'
-import Moment from 'moment'
+import Moment, { invalid } from 'moment'
 
 
 const Consult = () => {
@@ -71,6 +71,7 @@ const Consult = () => {
         setReservationReference('')
         setReservationFee('')
         setComplaint('')
+        setInvalidTime('')
         setError(0)
     }
 
@@ -97,7 +98,6 @@ const Consult = () => {
         setComplaintMessage(InitialComplaint)
     }
 
-    console.log(pet_id)
 
     const toggleModalConsult = () => {
         setModalConsult(!modalConsult)
@@ -131,7 +131,7 @@ const Consult = () => {
                 setTimeData(res.body)
             }
             else if(res.message){
-                setInvalidTime('Fullybooked')
+                setInvalidTime(res.message)
             }
             else
                 return null
@@ -271,11 +271,19 @@ const Consult = () => {
     const handleSettle = () => {
         setIsLoading(false)
         let formdata = new FormData()
-        formdata.append('fullpayment_reference', fullpayment_reference)
+        if(fullpayment_reference != null){
+            formdata.append('fullpayment_reference', fullpayment_reference)
+        }console.log(formdata)
         api.post(`Consultations/settle_balance/${consultationID}`, formdata, {headers: {Authorization: `Bearer ${getToken}`}})
         .then(res => {
-            console.log(res)
-            if(res.message){
+            console.log(fullpayment_reference)
+            if(res.message == 'An error occured. Please upload screenshot of transaction.'){
+                setErrorModal(true)
+                setErrorMessage(res.message)
+                setIsLoading(true)
+                return false
+            }
+            else if(res.message){
                 setSuccessMessage(res.message)
                 setSuccessModal(true)
                 setIsLoading(true)
@@ -289,6 +297,7 @@ const Consult = () => {
             console.log(err.response)
         })
     }
+    console.log(doctor_id)
 
     useEffect(() => {
         getVets()
@@ -338,8 +347,9 @@ const Consult = () => {
                     />
                 </ModalBody>
                 <ModalFooter>
-                    <button className="btnCancel" onClick={handleOk}>Close</button>
-                    <button className="btnAdd" onClick={handleSettle}>Send Payment</button>
+                    <CircularProgress hidden={isLoading} />
+                    <button hidden={!isLoading} className="btnCancel" onClick={handleOk}>Close</button>
+                    <button hidden={!isLoading} className="btnAdd" onClick={handleSettle}>Send Payment</button>
                 </ModalFooter>
             </Modal>
 
@@ -395,9 +405,9 @@ const Consult = () => {
                                         <td>
                                             <img className='tableImg' src={item.ProfilePicture ? item.ProfilePicture : Profile}/>
                                         </td>
-                                        <td>{item.AvailableDays}</td>
+                                        <td>{item.AvailableDays ? item.AvailableDays : "No Available Days"}</td>
                                         <td>{item.ContactNumber}</td>
-                                        <td>{item.EmailAddress}</td>
+                                        <td style={{textTransform:"none"}}>{item.EmailAddress}</td>
                                         <td>
                                             <button onClick={()=>handleViewProfile(item.FirstName)} className="btnView">View Profile</button>
                                         </td>
@@ -570,10 +580,9 @@ const Consult = () => {
                             focused
                             disabled
                         />
-                        <br/>
+                        <label style={{marginLeft: '22px', marginTop:'10px'}}>Date</label>
                         <Input
                             invalid={error == 1 && date == ""}
-                            label='Date'
                             //variant='outlined'
                             style={{padding:'15px',width: "90%", justifyContent: "center", display: "flex", margin: "auto" }}
                             type='date'
@@ -637,7 +646,7 @@ const Consult = () => {
                 <ModalFooter>
                     <CircularProgress hidden={isLoading}/>
                     <button hidden={!isLoading} onClick={toggleModalBook} className='btnCancel'><IoIcons.IoReturnUpBackOutline/> Back</button>
-                    <button hidden={!isLoading} onClick={handleBook} className='btnAdd'>Book</button>
+                    <button disabled={invalidTime} hidden={!isLoading} onClick={handleBook} className={invalidTime ? 'btnDisable' : 'btnAdd'}>Book</button>
                 </ModalFooter>
             </Modal>
             <Container>
@@ -702,7 +711,7 @@ const Consult = () => {
                                         <label>{item.Status}</label>
                                     </td>                         
                                     <td>
-                                        <button hidden={item.Status != "DONE, FOR FULL PAYMENT"} onClick={()=>toggleSettleModal(item.ConsultationFee)} className="btnView">{item.Status == "DONE, FOR FULL PAYMENT" ? "Settle Remaining Balance" : " "}</button>
+                                        <button hidden={item.Status != "DONE, FOR FULL PAYMENT"} onClick={()=>toggleSettleModal(item.ConsultationID)} className="btnView">{item.Status == "DONE, FOR FULL PAYMENT" ? "Settle Remaining Balance" : " "}</button>
                                     </td>
                                 </tr>
                             )

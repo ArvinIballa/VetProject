@@ -378,7 +378,7 @@ const Consultations = () => {
                                 <th>Action</th>
                             </tr>
                             {consultData.filter((val)=> {
-                                 if(search == ""){
+                                if(search == ""){
                                     return val
                                 }
                                 else if(val.PetName.toLowerCase().includes(search.toLowerCase())){

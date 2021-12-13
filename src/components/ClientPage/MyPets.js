@@ -44,11 +44,12 @@ const MyPets = () => {
     }
 
     const resetState = () => {
-        setPetName()
-        setBreed()
-        setAge()
-        setGender()
-        setPrevVacc()
+        setPetName('')
+        setBreed('')
+        setAge('')
+        setGender('')
+        setPrevVacc('')
+        setPetID('')
     }
 
     const handleOk = () => {
@@ -56,6 +57,9 @@ const MyPets = () => {
         setModalAddPet(false)
         setLoadingModal(false)
         setModalRemarks(false)
+        setEditModal(false)
+        setDeleteModal(false)
+        resetState()
     }
 
     const [pet_name, setPetName] = useState('')
@@ -66,6 +70,7 @@ const MyPets = () => {
     const [isLoading, setIsLoading] = useState(true)
     const [MyPetsData, setMyPetsData] = useState([])
     const [medicalData, setMedicalData] = useState([])
+    const [pet_id, setPetID] = useState('')
 
     const [errorModal, setErrorModal] = useState(false)
     const [successModal, setSuccessModal] = useState(false)
@@ -74,11 +79,28 @@ const MyPets = () => {
     const [loadingModal, setLoadingModal] = useState(false)
     const [modalRemarks, setModalRemarks] = useState(false)
     const [remarkMessage, setRemarkMessage] = useState('')
+    const [editModal, setEditModal] = useState(false)
+    const [deleteModal, setDeleteModal] = useState(false)
+    
 
     const toggleLoadingModal = () => {
         setLoadingModal(!loadingModal)
     }
 
+    const toggleEditModal = (pet_id, age, breed, gender, name, vac) => {
+        setPetID(pet_id)
+        setAge(age)
+        setGender(gender)
+        setBreed(breed)
+        setPetName(name)
+        setPrevVacc(vac)
+        setEditModal(!editModal)
+    }
+
+    const toggleDeleteModal = (pet_id) => {
+        setPetID(pet_id)
+        setDeleteModal(!deleteModal)
+    }
 
     const getMyPets = () => {
         api.get('Pets/list', {headers: {Authorization: `Bearer ${getToken}`}})
@@ -101,6 +123,67 @@ const MyPets = () => {
         setRemarkMessage(remarks)
     }
 
+    const handleDelete = () => {
+        api.delete(`Pets/delete_pet/${pet_id}`, {headers: {Authorization: `Bearer ${getToken}`}})
+        .then(res => {
+            console.log(res)
+            if(res.message){
+                setSuccessMessage(res.message)
+                setSuccessModal(true)
+                setIsLoading(true)
+                setDeleteModal(false)
+                getMyPets()
+                resetState()
+            }
+            else{
+                setErrorMessage('Someting went wrong')
+                setErrorModal(true)
+                setIsLoading(true)
+            }
+        })
+        .catch(err => {
+            console.log(err.response)
+        })
+    }
+
+    const handleEdit = () => {
+        const editPayload = {
+            pet_name,
+            breed,
+            age,
+            gender,
+            prev_vacc
+        }
+
+        if(pet_name == "" || breed == "" || age == "" || gender == "" || prev_vacc == ""){
+            setErrorMessage('All fields are required.')
+            setErrorModal(true)
+            setIsLoading(true)
+            return false
+        }
+
+        api.post(`Pets/update/${pet_id}`, editPayload, {headers: {Authorization: `Bearer ${getToken}`}})
+        .then(res => {
+            console.log(res)
+            if(res.message){
+                setSuccessMessage(res.message)
+                setSuccessModal(true)
+                setIsLoading(true)
+                setEditModal(false)
+                getMyPets()
+                resetState()
+            }
+            else{
+                setErrorMessage('Someting went wrong')
+                setErrorModal(true)
+                setIsLoading(true)
+            }
+        })
+        .catch(err => {
+            console.log(err.response)
+        })
+    }
+
     const handleAddPet = () => {
         setIsLoading(false)
         const AddPetPayload = {
@@ -110,6 +193,14 @@ const MyPets = () => {
             gender,
             prev_vacc
         }
+        
+        if(pet_name == "" || breed == "" || age == "" || gender == "" || prev_vacc == ""){
+            setErrorMessage('All fields are required.')
+            setErrorModal(true)
+            setIsLoading(true)
+            return false
+        }
+
         api.post('Pets', AddPetPayload, {headers: {Authorization: `Bearer ${getToken}`}})
         .then(res => {
             console.log(res)
@@ -117,6 +208,7 @@ const MyPets = () => {
                 setSuccessMessage(res.message)
                 setSuccessModal(true)
                 setIsLoading(true)
+                setModalAddPet(false)
                 getMyPets()
                 resetState()
             }
@@ -154,6 +246,8 @@ const MyPets = () => {
             console.log(err.response)
         })
     }
+
+
 
     useEffect(() => {
         getMyPets()
@@ -199,7 +293,7 @@ const MyPets = () => {
                 </ModalBody>
             </Modal>
              {/** REMARKS MODAL */}
-             <Modal centered backdrop="static" size="md" isOpen={modalRemarks}>
+            <Modal centered backdrop="static" size="md" isOpen={modalRemarks}>
                 <ModalHeader>
                     Remarks
                 </ModalHeader>
@@ -208,6 +302,81 @@ const MyPets = () => {
                 </ModalBody>
                 <ModalFooter>
                     <button className='btnAdd' onClick={handleOk}>Ok</button>
+                </ModalFooter>
+            </Modal>
+             {/** DELETE MODAL */}
+            <Modal centered backdrop="static" size="md" isOpen={deleteModal}>
+                <ModalHeader>
+                    Notice!
+                </ModalHeader>
+                <ModalBody>
+                    Are you sure you want to delete this?
+                </ModalBody>
+                <ModalFooter>
+                    <button className='btnView' onClick={handleOk}>Close</button>
+                    <button className='btnCancel' onClick={handleDelete}>Delete</button>
+                </ModalFooter>
+            </Modal>
+             {/** EDIT MODAL */}
+            <Modal centered backdrop="static" size="md" isOpen={editModal}>
+                <ModalHeader>
+                    Remarks
+                </ModalHeader>
+                <ModalBody>
+                <div>
+                        <TextField
+                            label='Name'
+                            variant='outlined'
+                            style={{ width: "90%", justifyContent: "center", display: "flex", margin: "auto" }}
+                            value={pet_name}
+                            onChange={e=> setPetName(e.target.value)}
+                        />
+                        <br/>
+                        <TextField
+                            label='Breed'
+                            variant='outlined'
+                            style={{ width: "90%", justifyContent: "center", display: "flex", margin: "auto" }}
+                            value={breed}
+                            onChange={e=> setBreed(e.target.value)}
+                        />
+                        <br/>
+                        <FormControl variant="outlined" style={{width: '100%', height: '10%'}}>
+                            <InputLabel style={{marginLeft: '30px'}} >Gender</InputLabel>
+                            <Select
+                                native
+                                style={{ width: "90%", justifyContent: "center", display: "flex", margin: "auto" }}
+                                label="Verify Status"
+                                onChange={e=> setGender(e.target.value)}
+                                value={gender}
+                            >
+                            <option selected disabled>Select</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+        
+                            </Select>
+                        </FormControl>
+                        <br/><br/>
+                        <TextField
+                            label='Age'
+                            variant='outlined'
+                            style={{ width: "90%", justifyContent: "center", display: "flex", margin: "auto" }}
+                            onChange={e=> setAge(e.target.value)}
+                            value={age}
+                        />
+                        <br/>
+                        <TextField
+                            label='Previous Vaccine'
+                            variant='outlined'
+                            style={{ width: "90%", justifyContent: "center", display: "flex", margin: "auto" }}
+                            value={prev_vacc}
+                            onChange={e=> setPrevVacc(e.target.value)}
+                        />
+                        <br/>                      
+                    </div>
+                </ModalBody>
+                <ModalFooter>
+                    <button className='btnCancel' onClick={handleOk}>Cancel</button>
+                    <button className='btnAdd' onClick={handleEdit}>Edit</button>
                 </ModalFooter>
             </Modal>
             {/** MODAL ADD PETS */}
@@ -285,7 +454,6 @@ const MyPets = () => {
                                     <th scope="col">Subject</th>
                                     <th>Attachment</th>
                                     <th scope="col">Remarks</th>
-                                   
                                 </tr>
                                 {medicalData.map((item)=> {
                                     return(
@@ -332,6 +500,9 @@ const MyPets = () => {
                                     <td>{item.Age}</td>
                                     <td>
                                         <button onClick={()=> getMedicalRecords(item.PetID)} className="btnView">View Medical Records</button>
+                                        <button onClick={()=> toggleEditModal(item.PetID, item.Age, item.Breed, item.Gender, item.Name, item.PreviousVaccinations)} className="btnEdit">Edit</button>
+                                        <button onClick={()=> toggleDeleteModal(item.PetID)} className="btnCancel">Delete</button>
+                                    
                                     </td>
                                 </tr>
                             )

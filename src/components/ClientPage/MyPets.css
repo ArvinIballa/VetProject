@@ -17,6 +17,47 @@
     transition: 450ms;
 }
 
+.btnDisable {
+    margin-right: 5px;
+    border-radius: 15px;
+    background: gray;
+    white-space: nowrap;
+    padding: 8px 22px;
+    color: #fff;
+    font-weight: bold;
+    font-size: 16px;
+    outline: none;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    text-decoration: none;
+    transition: 450ms;
+}
+
+.btnEdit {
+    margin-right: 5px;
+    border-radius: 15px;
+    background: #1569C7;
+    white-space: nowrap;
+    padding: 8px 22px;
+    color: #fff;
+    font-weight: bold;
+    font-size: 16px;
+    outline: none;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    text-decoration: none;
+    transition: 450ms;
+}
+
+
+.btnEdit:hover {
+    background: #034897;
+    transition: 450ms;
+    color: #FFF;
+}
+
 .btnInfo{
     margin-right: 5px;
     border-radius: 15px;

@@ -115,12 +115,15 @@ const InfoSection = ({onclick, lightBg, id, imgStart, topLine, lightText, darkTe
         }
         console.log(RegisterPayload, registerAs)
         if(registerAs == ""){
-            setInvalidSelect(!invalidSelect)
+            setInvalidSelect(true)
+            setErrorModal(true)
+            setErrorMessage('All fields are required.')
+            setIsLoading(true)
             return false
         }
         else if(first_name == "" || last_name == "" || email == "" || phonenumber == "" || password == ""){
             setErrorModal(true)
-            setErrorMessage('All fields are required')
+            setErrorMessage('All fields are required.')
             setIsLoading(true)
             return false
         }
@@ -305,7 +308,7 @@ const InfoSection = ({onclick, lightBg, id, imgStart, topLine, lightText, darkTe
                                 <Subtitle darkText={darkText}>{description}</Subtitle>
                                 <BtnWrap>
                                     <Button 
-                                        to='home'
+                                        to='register'
                                         duration={500}
                                         spy={true}
                                         smooth={true}

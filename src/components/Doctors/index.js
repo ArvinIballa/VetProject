@@ -20,23 +20,24 @@ const doctors = () => {
                 <DoctorWrapper>
                     <DoctorCard>
                         <DoctorsIcon src={Icon1}/>
-                        <DoctorsH2>Loren Ipsum</DoctorsH2>
+                        <DoctorsH2>Sarah Jones</DoctorsH2>
                         <DoctorsP>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+                        With over 10 years of experience in Dog care, Sarah is a reliable veterinarian who will treat your dog with the utmost care and attention.
                         </DoctorsP>
+                        <br/><br/>
                     </DoctorCard>
                     <DoctorCard>
                         <DoctorsIcon src={Icon2}/>
-                        <DoctorsH2>Loren Ipsum</DoctorsH2>
+                        <DoctorsH2>Jake Smith</DoctorsH2>
                         <DoctorsP>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+                        A veterinarian specializing in the care of cats and dogs. Having been in practice for over eight years, Jake’s long experience and familiarity with the business allow to properly take care of your pet no matter the condition.
                         </DoctorsP>
                     </DoctorCard>
                     <DoctorCard>
                         <DoctorsIcon src={Icon3}/>
-                        <DoctorsH2>Loren Ipsum</DoctorsH2>
+                        <DoctorsH2>Marcus Erricson</DoctorsH2>
                         <DoctorsP>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+                        A herp veterinarian specializing in the treatment of turtles, lizards, or other reptilian pets. Marcus’ numerous years of experience will allow him to recognize and treat your reptile pets and assure their health and good condition.
                         </DoctorsP>
                     </DoctorCard>
                 </DoctorWrapper>

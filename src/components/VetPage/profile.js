@@ -245,7 +245,7 @@ const Profile = () => {
         formdata.append('profile_picture', profile_picture ? profile_picture : null)
         
         if(first_name == "" || last_name == "" || phonenumber == "" || email == ""){
-            setErrorMessage('All fields are required')
+            setErrorMessage('All fields are required.')
             setErrorModal(true)
             setConfirmLoading(true)
             return false
@@ -417,7 +417,7 @@ const Profile = () => {
              {/** MODAL CHANGE PROFILE PICTURE */}
             <Modal centered backdrop='static' size='md' isOpen={modalChangeProfile}>
                 <ModalHeader>
-                    Change Profile Picture
+                    Edit Profile
                 </ModalHeader>
                 <ModalBody>
                     <TextField
@@ -478,7 +478,7 @@ const Profile = () => {
                         style={{ width: "90%", justifyContent: "center", display: "flex", margin: "auto" }}
                         onChange={e=> setDescription(e.target.value)}
                     />
-                    <br/>
+                    <label style={{marginLeft: '22px', marginTop: '10px'}}>Profile Picture</label>
                     <input 
                         style={{marginLeft: '22px'}} 
                         type='file'
