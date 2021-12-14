@@ -25,7 +25,7 @@ import './Consult.css'
 import api from '../../api/api'
 import * as IoIcons from 'react-icons/io5'
 import QR from '../../images/QR-Gcash.PNG'
-import Moment, { invalid } from 'moment'
+import Moment from 'moment'
 
 
 const Consult = () => {
@@ -52,6 +52,7 @@ const Consult = () => {
     const [consultData, setConsultData] = useState([])
     const [fullpayment_reference, setFullpaymentReference] = useState('')
     const [timeData, setTimeData] = useState([])
+    const [availableTimeData, setAvailableTimeData] = useState([])
     const [invalidTime, setInvalidTime] = useState('')
     const [complaint, setComplaint] = useState('')
     
@@ -120,26 +121,43 @@ const Consult = () => {
         setInvalidTime("")
         let selectedDate = e.target.value
         setDate(selectedDate)
+        handleTime(selectedDate)
+        
+    }
+
+    const handleTime = (date) => {
         const datePayload = {
-            date: selectedDate
+            date: date
         }
-        console.log(selectedDate)
         api.post(`Consultations/get_available_time/${doctor_id}`, datePayload, {headers: {Authorization: `Bearer ${getToken}`}})
         .then(res => {
             console.log(res)
-            if(res.body){
-                setTimeData(res.body)
-            }
-            else if(res.message){
+            if(res.message){
                 setInvalidTime(res.message)
             }
+            else if(res.body){
+                console.log('get')
+                setTimeData(res.body)
+            }
             else
-                return null
+                return false
+            //if(res){
+                //setTimeData(res.body)
+               // console.log(timeData)
+            //}
+           // else if(res.message){
+               // setInvalidTime(res.message)
+            //}
+           // else
+               // return null
         })
         .catch(err => {
             console.log(err.response)
+            return null
         })
     }
+
+    console.log(timeData, 'dataa')
 
     const handleViewProfile = (firstname) => {
         setIsLoading(false)
@@ -583,6 +601,7 @@ const Consult = () => {
                         <label style={{marginLeft: '22px', marginTop:'10px'}}>Date</label>
                         <Input
                             invalid={error == 1 && date == ""}
+                            label='date'
                             //variant='outlined'
                             style={{padding:'15px',width: "90%", justifyContent: "center", display: "flex", margin: "auto" }}
                             type='date'
@@ -604,10 +623,11 @@ const Consult = () => {
                             <option selected disabled>{invalidTime ? invalidTime : "Select"}</option>
                             {timeData.map((item)=> {
                                 return(
-                                    <option hidden={invalidTime} value={invalidTime ? invalidTime : item.Time}>{invalidTime ? invalidTime : item.Time}</option>
+                                    <option>{item.Time}</option>
                                 )
-                            })}                          
+                            })}                        
                             </Select>
+                           {/** <option hidden={invalidTime} value={invalidTime ? invalidTime : item.Time}>{invalidTime ? invalidTime : item.Time}</option> */}
                         </FormControl>
                         <br/><br/>
                         <TextField
@@ -652,13 +672,12 @@ const Consult = () => {
             <Container>
             <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" />
             <div className='h2-wrapper'> 
-                <h2>Consultation Records  <input
-                            className='searchPatient'
+                <h2>Consultation Records</h2>
+                <input
+                            className='searchPatientClient'
                             placeholder="Search Pet Name"
                             onChange={e=> setSearch(e.target.value)}
-                        ></input>   </h2>
-                        <button onClick={toggleModalConsult} className="btnBook">Book a Consultation</button>
-               
+                        ></input>   <button onClick={toggleModalConsult} className="btnBook">Book a Consultation</button>  
             </div>
             <br/>
             <br/>
@@ -682,7 +701,7 @@ const Consult = () => {
                             <th>Action</th>
                         </tr>
                         {consultData.filter((val)=> {
-                             if(search == ""){
+                            if(search == ""){
                                 return val
                             }
                             else if(val.PetName.toLowerCase().includes(search.toLowerCase())){
@@ -711,7 +730,7 @@ const Consult = () => {
                                         <label>{item.Status}</label>
                                     </td>                         
                                     <td>
-                                        <button hidden={item.Status != "DONE, FOR FULL PAYMENT"} onClick={()=>toggleSettleModal(item.ConsultationID)} className="btnView">{item.Status == "DONE, FOR FULL PAYMENT" ? "Settle Remaining Balance" : " "}</button>
+                                        <button hidden={item.Status == 'CANCELLED' || item.Status == 'DONE, FULLY PAID'} disabled={item.Status != "DONE, FOR FULL PAYMENT"} onClick={()=>toggleSettleModal(item.ConsultationID)} className={item.Status == "DONE, FOR FULL PAYMENT" && item.BalanceReference == null ? "btnView" : 'btnDisable'}>{item.Status == "DONE, FOR FULL PAYMENT" && item.BalanceReference == null ? "Settle Remaining Balance" : "Assessment"}</button>
                                     </td>
                                 </tr>
                             )
