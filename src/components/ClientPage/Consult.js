@@ -730,7 +730,7 @@ const Consult = () => {
                                         <label>{item.Status}</label>
                                     </td>                         
                                     <td>
-                                        <button hidden={item.Status == 'CANCELLED' || item.Status == 'DONE, FULLY PAID'} disabled={item.Status != "DONE, FOR FULL PAYMENT"} onClick={()=>toggleSettleModal(item.ConsultationID)} className={item.Status == "DONE, FOR FULL PAYMENT" && item.BalanceReference == null ? "btnView" : 'btnDisable'}>{item.Status == "DONE, FOR FULL PAYMENT" && item.BalanceReference == null ? "Settle Remaining Balance" : "Assessment"}</button>
+                                        <button hidden={item.Status == 'CANCELLED' || item.Status == 'DONE, FULLY PAID'} disabled={item.Status == "DONE, FOR FULL PAYMENT" && item.BalanceReference == null ? false : true} onClick={()=>toggleSettleModal(item.ConsultationID)} className={item.Status == "DONE, FOR FULL PAYMENT" && item.BalanceReference == null ? "btnView" : 'btnDisable'}>{item.Status == "DONE, FOR FULL PAYMENT" && item.BalanceReference == null ? "Settle Remaining Balance" : "Processing ..."}</button>
                                     </td>
                                 </tr>
                             )
