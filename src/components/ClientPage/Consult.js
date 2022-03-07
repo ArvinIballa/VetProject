@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react'
 import ClientNavbar from './Navbar'
 import './MyPets.css'
 import Container from '@mui/material/Container';
-import * as FaIcons from 'react-icons/fa'
+import * as IoIconss from 'react-icons/io'
 import Cat from '../../images/cat.png'
 import Dog from '../../images/dog.png'
 import InputLabel from '@mui/material/InputLabel';
@@ -74,6 +74,13 @@ const Consult = () => {
         setComplaint('')
         setInvalidTime('')
         setError(0)
+    }
+
+    const handleExit = () => {
+        setModalViewProfile(false)
+        setModalBook(false)
+        setModalConsult(false)
+        resetState()
     }
 
     const handleOk = () => {
@@ -385,9 +392,12 @@ const Consult = () => {
             </Modal>
             
             <Modal centered backdrop='static' size='xl' isOpen={modalConsult}>
-                <ModalHeader>
-                    Book A Consultation
-                </ModalHeader>
+            <div class="modal-header">
+                <div class="modal-title">
+                    <h5>Book a Consultation</h5>
+                </div>
+                <IoIconss.IoIosClose className="btnExit" onClick={handleExit}/>
+            </div>
                 <ModalBody>
                     <div>  
                         <h2>List of Vets   <input
@@ -443,9 +453,12 @@ const Consult = () => {
             </Modal>
             {/** VIEW PROFILE */}
             <Modal centered backdrop='static' size='xl' isOpen={modalViewProfile}>
-                <ModalHeader>
-                    Profile
-                </ModalHeader>
+            <div class="modal-header">
+                <div class="modal-title">
+                <h5>Profile</h5>
+                </div>
+                <IoIconss.IoIosClose className="btnExit" onClick={handleExit}/>
+            </div>
                 {profileData.map((item)=> {
                     return(
                         <ModalBody>
@@ -560,9 +573,12 @@ const Consult = () => {
 
             {/** BOOKING  */}
             <Modal centered backdrop='static' size='md' isOpen={modalBook}>
-                <ModalHeader>
-                    Book a Consulatation
-                </ModalHeader>
+            <div class="modal-header">
+                <div class="modal-title">
+                <h5>Book a Consultation</h5>
+                </div>
+                <IoIconss.IoIosClose className="btnExit" onClick={handleExit}/>
+            </div>
                     <ModalBody>
                     <FormControl error={error == 1 && pet_id == ""}variant="outlined" style={{width: '100%', height: '10%'}}>
                             <InputLabel style={{marginLeft: '30px'}} >Pet</InputLabel>

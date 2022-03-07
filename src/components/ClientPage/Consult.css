@@ -38,7 +38,16 @@ h2{
 .content-table tbody tr:last-of-type {
     border-bottom: 2px solid #00b8d4;
 }
-
+.btnExit{
+    font-size: 35px;
+    color: red;
+    transition: 0.2s;
+    cursor: pointer;
+}
+.btnExit:hover{
+    font-size: 40px;
+    transition: 0.2s;
+}
 .btnBook {
     float: right;
     border-radius: 15px;

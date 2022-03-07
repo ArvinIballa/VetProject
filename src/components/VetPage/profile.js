@@ -495,7 +495,7 @@ const Profile = () => {
             {/** ADD AVAILABLE TIME MODAL */}
             <Modal centered backdrop="static" size="md" isOpen={modalAddDays}>
                 <ModalHeader>
-                    Add Available Days
+                    Add Time
                 </ModalHeader>
                 <ModalBody>
                 <FormControl error={error == 1 && time == ""} variant="outlined" style={{width: '100%', height: '10%'}}>
