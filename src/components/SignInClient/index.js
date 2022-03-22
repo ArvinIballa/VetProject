@@ -105,6 +105,12 @@ const Signin = () => {
 
     const handleLogin = () => {
         setIsLoading(false)
+        if(email == "" || password == ""){
+            setErrorModal(true)
+            setErrorMessage('All fields are required!')
+            setIsLoading(true)
+            return false
+        }
         const loginPayload = {
             email,
             password

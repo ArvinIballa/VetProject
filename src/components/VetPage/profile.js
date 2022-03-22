@@ -124,6 +124,7 @@ const Profile = () => {
     const doneLoading = () => {
         getProfile()
         getAvailableTime()
+        setReminder()
         setIsLoading(true)
         sessionStorage.setItem('void-wlcm-loading', true)
     }
@@ -156,6 +157,11 @@ const Profile = () => {
         .catch(err => {
             console.log(err.response)
         })
+    }
+    
+    const setReminder = () => {
+            setErrorModal(true)
+            setErrorMessage('Please update your consultation fee and availability of your time and day.')
     }
 
     const handleRelogin = () => {
@@ -191,9 +197,11 @@ const Profile = () => {
             console.log(res)
             if(res.body){
                 setAvailableTimeData(res.body)
+                
             }
             else{
                 setMessage(res.message)
+                setReminder()
                 return false
             }
                 
@@ -202,7 +210,7 @@ const Profile = () => {
             console.log(err.response)
         })
     }
-
+    console.log(cons_fee, availableTimeData, available_days)
     const handleAddTime = () => {
         setIsLoadingModal(false)
         const timePayload = {

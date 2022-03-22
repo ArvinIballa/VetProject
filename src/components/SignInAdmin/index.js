@@ -94,7 +94,7 @@ const Signin = () => {
         })
         .catch(err => {
             console.log(err.response)
-            setErrorMessage(err.response.data.message + ' Please check your email.')
+            setErrorMessage(err.response.data.message + ' Please check your email provided.')
             setErrorModal(true)
             setIsLoadingModal(true)
             setError(1)
@@ -104,6 +104,12 @@ const Signin = () => {
 
     const handleLogin = () => {
         setIsLoading(false)
+        if(email == "" || password == ""){
+            setErrorModal(true)
+            setErrorMessage('All fields are required!')
+            setIsLoading(true)
+            return false
+        }
         const loginPayload = {
             email,
             password

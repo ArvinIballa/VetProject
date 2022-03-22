@@ -22,9 +22,10 @@ const AdminAccount = () => {
     const [successMessage, setSuccessMessage] = useState("")
     const [deleteModal, setDeleteModal] = useState(false)
 
-
     const [adminData, setAdminData] = useState([])
+    const [individualAdminData, setIndividualAdminData] = useState([])
     const [modalAddAdmin, setModalAddAdmin] = useState(false)
+    const [modalEditAdmin, setModalEditAdmin] = useState(false)
     const [first_name, setFirstName] = useState("")
     const [last_name, setLastName] = useState("")
     const [phonenumber, setPhonenumber] = useState("")
@@ -72,9 +73,68 @@ const AdminAccount = () => {
         setPasswordError(0)
     }
 
+    const toggleCloseEditAdminModal = () => {
+        setModalEditAdmin(!modalEditAdmin)
+        setError(0)
+        setPasswordError(0)
+        
+    }
+
+    const toggleEditAdmin = () => {
+        setModalEditAdmin(!modalEditAdmin)
+        setError(0)
+        setPasswordError(0)
+    }
+
     const toggleErrorModal = () => {
         setErrorModal(!errorModal)
         
+    }
+
+    const handleView = (admin_id) => {
+        setIsLoading(false)
+        api.get(`Admins/details/${admin_id}`, {headers: {Authorization: `Bearer ${getToken}`}})
+        .then(res => {
+            console.log(res)
+            if(res.body){
+                setIndividualAdminData(res.body)
+                setFirstName(res.body[0].FirstName)
+                setLastName(res.body[0].LastName)
+                setEmail(res.body[0].EmailAddress)
+                setPhonenumber(res.body[0].ContactNumber)
+                setAdminID(res.body[0].AdminID)
+                setIsLoading(true)
+                toggleEditAdmin()
+            }
+        })
+        .catch(err => {
+            console.log(err.response)
+        })
+    }
+    
+    const handleEditAdmin = () => {
+        setIsLoading(false)
+        const editAdminPayload = {
+            first_name,
+            last_name,
+            phonenumber,
+            email
+        }
+        api.post(`Admins/edit/${admin_id}`, editAdminPayload, {headers: {Authorization: `Bearer ${getToken}`}})
+        .then(res => {
+            console.log(res)
+            setIsLoading(true)
+            setSuccessMessage(res.message)
+            setSuccessModal(true)
+            setModalEditAdmin(false)
+            resetState()
+            getAdmins()
+        })
+        .catch(err => {
+            console.log(err.response)
+            setErrorModal(true)
+            setErrorMessage(err.response.data)
+        })
     }
 
     const handleDelete = () => {
@@ -100,6 +160,7 @@ const AdminAccount = () => {
 
     const handleOk = () => {
         setSuccessModal(false)
+        setModalEditAdmin(false)
         setModalAddAdmin(false)
         setDeleteModal(false)
     }
@@ -220,10 +281,10 @@ const AdminAccount = () => {
                     <button hidden={!isLoading} className="btnCancel" onClick={handleDelete}>Delete</button>
                 </ModalFooter>
             </Modal>
-            {/** MODAL ADD PETS */}
+            {/** MODAL ADD ADMIN */}
             <Modal centered backdrop="static" size="md" isOpen={modalAddAdmin}>
                 <ModalHeader>
-                    <h2>Add Pet</h2>
+                    <h2>Add Admin</h2>
                 </ModalHeader>
                 <ModalBody>
                 <TextField
@@ -297,6 +358,69 @@ const AdminAccount = () => {
                     <button hidden={!isLoading} onClick={handleAddAdmin} className='btnAdd'>ADD</button>
                 </ModalFooter>
             </Modal>
+              {/** MODAL EDIT ADMIN */}
+              <Modal centered backdrop="static" size="md" isOpen={modalEditAdmin}>
+                <ModalHeader>
+                    <h2>Edit Admin</h2>
+                </ModalHeader>
+                <ModalBody>
+                <TextField
+                        error={error == 1 && first_name == ""}
+                        label='First Name'
+                        variant='outlined'
+                        value={first_name}
+                        style={{ width: "100%", justifyContent: "center", display: "flex", margin: "auto" }}
+                        onChange={e=> setFirstName(e.target.value)}
+                    />
+                    <br/>
+                    <TextField
+                        error={error == 1 && last_name == ""}
+                        label='Last Name'
+                        value={last_name}
+                        variant='outlined'
+                        style={{ width: "100%", justifyContent: "center", display: "flex", margin: "auto" }}
+                        onChange={e=> setLastName(e.target.value)}
+                    />
+                    <br/>
+                    <TextField
+                        error={error == 1 && email == ""}
+                        value={email}
+                        label='Email Address'
+                        type='email'
+                        variant='outlined'
+                        style={{ width: "100%", justifyContent: "center", display: "flex", margin: "auto" }}
+                        onChange={validateEmail}
+                    />
+                    <label style={{color: 'red', marginBottom: '10px'}}>{invalidEmail}</label> 
+                    <br/>      
+                    <TextField
+                        error={error == 1 && phonenumber == ""}
+                        value={phonenumber}
+                        label='Contact Number'
+                        variant='outlined'
+                        style={{ width: "100%", justifyContent: "center", display: "flex", margin: "auto" }}
+                        onChange={e=> setPhonenumber(e.target.value)}
+                        onKeyPress={(event) => {
+                            if (!/[0-9]/.test(event.key)) {
+                                event.preventDefault();
+                            }
+                        }}
+                        onPaste={(e)=>{
+                            e.preventDefault()
+                            return false;
+                        }} 
+                        onCopy={(e)=>{
+                            e.preventDefault()
+                            return false;
+                        }}
+                    />
+                </ModalBody>
+                <ModalFooter>
+                    <CircularProgress hidden={isLoading}/>
+                    <button hidden={!isLoading} onClick={toggleCloseEditAdminModal} className='btnCancel'>CLOSE</button>
+                    <button hidden={!isLoading} onClick={handleEditAdmin} className='btnAdd'>EDIT</button>
+                </ModalFooter>
+            </Modal>
             <Container>
                 <div className='h2-wrapper'>  
                         <h2>Admin Accounts 
@@ -319,6 +443,7 @@ const AdminAccount = () => {
                                     <td style={{textTransform:'none'}}>{item.EmailAddress}</td>
                                     <td>{item.ContactNumber}</td> 
                                     <td>
+                                        <button className='btnView' onClick={()=> handleView(item.AdminID)}>View</button>
                                         <button onClick={()=> toggleDeleteModal(item.AdminID)} className='btnCancel'>Delete</button>
                                     </td>                   
                                 </tr>

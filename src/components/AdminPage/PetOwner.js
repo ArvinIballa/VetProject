@@ -1,10 +1,11 @@
 import React, {useState, useEffect} from 'react'
 import { Container } from 'reactstrap'
 import AdminNavbar from './Navbar'
+import * as IoIcons from 'react-icons/io5'
 import api from '../../api/api'
 import Moment from 'moment'
 import Profile from '../../images/profile.png'
-import { Skeleton, LinearProgress } from '@mui/material'
+import { Skeleton, LinearProgress, CircularProgress, TextField, FormControl, InputLabel, Select } from '@mui/material'
 
 import {
     Modal, 
@@ -23,9 +24,6 @@ const PetOwner = () => {
     const [ownerData, setOwnerData] = useState([])
     const [specificOwnerData, setSpecificOwnerData] = useState([])
     const [message, setMessage] = useState('')
-    const [ownerModal, setOwnerModal] = useState('')
-    const [errorMessage, setErrorMessage] = useState("")
-    const [errorModal, setErrorModal] = useState(false)
     const [search, setSearch] = useState('')
     const [isLoading, setIsLoading] = useState(true)
     const [modalMedicalRecords, setModalMedicalRecords] = useState(false)
@@ -33,6 +31,30 @@ const PetOwner = () => {
     const [loadingModal, setLoadingModal] = useState(false)
     const [modalRemarks, setModalRemarks] = useState(false)
     const [remarkMessage, setRemarkMessage] = useState('')
+    const [owner_id, setOwnerID] = useState('')
+    const [pet_id, setPetID] = useState('')
+    const [name, setName] = useState('')
+    const [gender, setGender] = useState('')
+    const [breed, setBreed] = useState('')
+    const [age, setAge] = useState('')
+    const [prev_vacc, setPrevVacc] = useState('')
+ 
+    const [successModal, setSuccessModal] = useState(false)
+    const [successMessage, setSuccessMessage] = useState("")
+    const [deleteModal, setDeleteModal] = useState(false)
+    const [deletePetModal, setDeletePetModal] = useState(false)
+    const [errorMessage, setErrorMessage] = useState("")
+    const [errorModal, setErrorModal] = useState(false)
+    const [ownerModal, setOwnerModal] = useState(false)
+    const [petEditModal, setPetEditModal] = useState(false)
+
+    const resetState = () => {
+        setName('')
+        setBreed('')
+        setAge('')
+        setGender('')
+        setPrevVacc('')
+    }
 
     const toggleOwnerModal = () => {
         setOwnerModal(!ownerModal)
@@ -57,14 +79,118 @@ const PetOwner = () => {
         setRemarkMessage(remarks)
     }
 
+    const toggleCloseModal = () => {
+        setPetEditModal(false)
+        setOwnerModal(true)
+    }
+
+    const toggleCancelDeletePet = () => {
+        setDeletePetModal(false)
+        setOwnerModal(true)
+    }
+
+    const closeModal = () => {
+        setDeleteModal(false)
+        setSuccessModal(false)
+        setPetEditModal(false)
+    }
+
+    const openDeleteModal = (owner_id) => {
+        setDeleteModal(true)
+        setOwnerID(owner_id)
+    }
+
+    const openModalDeletePet = (pet_id) => {
+        setOwnerModal(false)
+        setDeletePetModal(true)
+        setLoadingModal(false)
+        setPetID(pet_id)
+    }
+
+    const openModalEditPet = (pet_id, name, breed, age, gender, prev_vacc) => {
+        setPetID(pet_id)
+        setName(name)
+        setBreed(breed)
+        setAge(age)
+        setGender(gender)
+        setPrevVacc(prev_vacc)
+        setPetEditModal(true)
+        setOwnerModal(false)
+        toggleLoadingModal()
+    }   
+
     const handleOk = () => {
         setOwnerModal(false)
         setMessage('')
         setSpecificOwnerData([])
-        toggleLoadingModal()
+        setLoadingModal(false)
         setModalRemarks(false)
     }
 
+    const handleDeletePet = () => {
+        setIsLoading(false)
+        api.delete(`Pets/delete_pet/${pet_id}`, {headers: {Authorization: `Bearer ${getToken}`}})
+        .then(res => {
+            console.log(res)
+            if(res.message){
+                setSuccessModal(true)
+                setSuccessMessage(res.message)
+                setIsLoading(true)
+                setDeletePetModal(false)
+                setPetID('')
+                
+            }
+        })
+        .catch(err => {
+            console.log(err.response)
+            setErrorMessage(err.response.data)
+            setErrorModal(true)
+        })
+    }
+
+    const handleDelete = () => {
+        setIsLoading(false)
+        api.delete(`Owners/delete_owner/${owner_id}`, {headers: {Authorization: `Bearer ${getToken}`}})
+        .then(res => {
+            console.log(res)
+            if(res.message){
+                setSuccessModal(true)
+                setSuccessMessage(res.message)
+                setIsLoading(true)
+                setDeleteModal(false)
+                setOwnerID('')
+                getPetOwners()
+            }
+        })
+        .catch(err => {
+            console.log(err.response)
+            setErrorMessage(err.response.data)
+            setErrorModal(true)
+        })
+    }
+
+    const handleEdit = () => {
+        setIsLoading(false)
+        const PetPayload = {
+            pet_name: name,
+            breed,
+            age,
+            gender,
+            prev_vacc
+        }
+        api.post(`Pets/update/${pet_id}`, PetPayload, {headers: {Authorization: `Bearer ${getToken}`}})
+        .then(res => {
+            console.log(res)
+            if(res.message)
+            setSuccessMessage(res.message)
+            setSuccessModal(true)
+            setIsLoading(true)
+            setPetEditModal(false)
+            setIsLoading(true)
+            resetState()
+        })
+
+    }
     const getPetOwners = () => {
         api.get('Owners/list', {headers: {Authorization: `Bearer ${getToken}`}})
         .then(res => {
@@ -88,12 +214,12 @@ const PetOwner = () => {
             if(res.body){
                 setSpecificOwnerData(res.body)
                 toggleOwnerModal()
-                toggleLoadingModal()
+                setLoadingModal(false)
             }
             else{
                 toggleOwnerModal()
                 setMessage(res.message)
-                toggleLoadingModal()
+                setLoadingModal(false)
             }
         })
         .catch(err => {
@@ -131,6 +257,58 @@ const PetOwner = () => {
     return (
         <>
             <AdminNavbar/>
+            {/** SUCCESS MODAL */}
+            <Modal centered backdrop="static" size="md" isOpen={successModal}>
+                <ModalHeader>
+                    Success!
+                </ModalHeader>
+                <ModalBody>
+                    {successMessage}
+                </ModalBody>
+                <ModalFooter>
+                <button className="btnAdd" onClick={closeModal}>OK</button>
+                </ModalFooter>
+            </Modal>
+            {/** ERROR MODAL */}
+            <Modal centered backdrop="static" size="md" isOpen={errorModal}>
+                <ModalHeader>
+                    Notice!
+                </ModalHeader>
+                <ModalBody>
+                    {errorMessage}
+                </ModalBody>
+                <ModalFooter>
+                <button className="btnCancel" onClick={toggleErrorModal}>OK</button>
+                </ModalFooter>
+            </Modal>
+            {/** DELETE MODAL */}
+            <Modal centered backdrop="static" size="md" isOpen={deleteModal}>
+                <ModalHeader>
+                    Notice!
+                </ModalHeader>
+                <ModalBody>
+                    Are you sure you want to delete this?
+                </ModalBody>
+                <ModalFooter>
+                    <CircularProgress hidden={isLoading} />
+                    <button hidden={!isLoading} className="btnView" onClick={closeModal}>Cancel</button>
+                    <button hidden={!isLoading} className="btnCancel" onClick={handleDelete}>Delete</button>
+                </ModalFooter>
+            </Modal>
+            {/** DELETE PET MODAL */}
+            <Modal centered backdrop="static" size="md" isOpen={deletePetModal}>
+                <ModalHeader>
+                    Notice!
+                </ModalHeader>
+                <ModalBody>
+                    Are you sure you want to delete this?
+                </ModalBody>
+                <ModalFooter>
+                    <CircularProgress hidden={isLoading} />
+                    <button hidden={!isLoading} className="btnView" onClick={toggleCancelDeletePet}>Cancel</button>
+                    <button hidden={!isLoading} className="btnCancel" onClick={handleDeletePet}>Delete</button>
+                </ModalFooter>
+            </Modal>
             <Container>
             <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" />
             {/** ERROR MODAL */}
@@ -168,6 +346,69 @@ const PetOwner = () => {
                     <button className='btnAdd' onClick={handleOk}>Ok</button>
                 </ModalFooter>
             </Modal>
+            {/** MODAL EDIT PETS */}
+            <Modal centered backdrop="static" size="md" isOpen={petEditModal}>
+                <ModalHeader>
+                    <h2>Edit Pet</h2>
+                </ModalHeader>
+            <ModalBody>
+                    <div>
+                        <TextField
+                            label='Name'
+                            value={name}
+                            variant='outlined'
+                            style={{ width: "90%", justifyContent: "center", display: "flex", margin: "auto" }}
+                            onChange={e=> setName(e.target.value)}
+                        />
+                        <br/>
+                        <TextField
+                            label='Breed'
+                            value={breed}
+                            variant='outlined'
+                            style={{ width: "90%", justifyContent: "center", display: "flex", margin: "auto" }}
+                            onChange={e=> setBreed(e.target.value)}
+                        />
+                        <br/>
+                        <FormControl variant="outlined" style={{width: '100%', height: '10%'}}>
+                            <InputLabel style={{marginLeft: '30px'}} >Gender</InputLabel>
+                            <Select
+                                native
+                                value={gender}
+                                style={{ width: "90%", justifyContent: "center", display: "flex", margin: "auto" }}
+                                label="Verify Status"
+                                onChange={e=> setGender(e.target.value)}
+                            >
+                            <option selected disabled>Select</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+        
+                            </Select>
+                        </FormControl>
+                        <br/><br/>
+                        <TextField
+                            label='Age'
+                            value={age}
+                            variant='outlined'
+                            style={{ width: "90%", justifyContent: "center", display: "flex", margin: "auto" }}
+                            onChange={e=> setAge(e.target.value)}
+                        />
+                        <br/>
+                        <TextField
+                            label='Previous Vaccine'
+                            variant='outlined'
+                            value={prev_vacc}
+                            style={{ width: "90%", justifyContent: "center", display: "flex", margin: "auto" }}
+                            onChange={e=> setPrevVacc(e.target.value)}
+                        />
+                        <br/>                      
+                    </div>
+                </ModalBody>
+                <ModalFooter>
+                    <CircularProgress hidden={isLoading}/>
+                    <button hidden={!isLoading} onClick={toggleCloseModal} className='btnCancel'><IoIcons.IoReturnUpBackOutline style={{fontSize:'20px'}}/> BACK</button>
+                    <button hidden={!isLoading} onClick={handleEdit} className='btnEdit'>EDIT</button>
+                </ModalFooter>
+            </Modal>
             {/** OWNER MODAL */}
             <Modal centered backdrop="static" size="xl" isOpen={ownerModal}>
                 <ModalBody>   
@@ -192,6 +433,8 @@ const PetOwner = () => {
                                             <td>{item.Age}</td>                                
                                             <td>
                                                 <button className="btnView" onClick={()=>getMedicalRecords(item.PetID)}>View Medical Records</button>
+                                                <button className='btnEdit' onClick={()=> openModalEditPet(item.PetID, item.Name, item.Breed, item.Age, item.Gender, item.PreviousVaccinations)}>Edit</button>
+                                                <button className='btnCancel' onClick={()=> openModalDeletePet(item.PetID)}>Delete</button>
                                             </td>
                                         </tr>
                                     )
@@ -275,9 +518,10 @@ const PetOwner = () => {
                                             <a href={item.ProfilePicture} target='_blank'><img className='tableImg' src={item.ProfilePicture ? item.ProfilePicture : Profile}/></a>
                                         </td>
                                         <td>{item.ContactNumber}</td>
-                                        <td>{item.EmailAddress}</td>                                
+                                        <td style={{textTransform:'none'}}>{item.EmailAddress}</td>                                
                                         <td>
                                             <button hidden={!isLoading} className="btnView" onClick={()=>getSpecificOwner(item.OwnerID, item.FirstName)}>View Pet</button>
+                                            <button className='btnCancel' onClick={()=>openDeleteModal(item.OwnerID)}>Delete</button>
                                         </td>
                                     </tr>
                                 )
