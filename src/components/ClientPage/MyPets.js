@@ -73,6 +73,7 @@ const MyPets = () => {
     const [pet_id, setPetID] = useState('')
 
     const [errorModal, setErrorModal] = useState(false)
+    const [hideMessage, setHideMessage] = useState(false)
     const [successModal, setSuccessModal] = useState(false)
     const [errorMessage, setErrorMessage] = useState("")
     const [successMessage, setSuccessMessage] = useState("")
@@ -108,9 +109,12 @@ const MyPets = () => {
             console.log(res)
             if(res.body){
                 setMyPetsData(res.body)
+                setHideMessage(true)
             }
             else{
-                return null
+                setErrorMessage(res.message)
+                setHideMessage(false)
+                setMyPetsData([])
             }
         })
         .catch(err => {
@@ -506,7 +510,8 @@ const MyPets = () => {
                                     </td>
                                 </tr>
                             )
-                        })}                   
+                        })}    
+                        <h5 hidden={hideMessage} className='info'>{errorMessage}</h5>               
                     </table>
                 </div>
             </div>

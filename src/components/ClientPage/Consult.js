@@ -55,7 +55,8 @@ const Consult = () => {
     const [availableTimeData, setAvailableTimeData] = useState([])
     const [invalidTime, setInvalidTime] = useState('')
     const [complaint, setComplaint] = useState('')
-    
+
+    const [hideMessage, setHideMessage] = useState(true)
     const [modalComplaint, setModalComplaint] = useState(false)
     const [complaintMessage, setComplaintMessage] = useState("")
     const [errorModal, setErrorModal] = useState(false)
@@ -226,6 +227,11 @@ const Consult = () => {
             console.log(res)
             if(res.body){
                 setConsultData(res.body)
+                setHideMessage(true)
+            }
+            else{
+                setErrorMessage(res.message)
+                setHideMessage(false)
             }
         })
         .catch(err => {
@@ -750,7 +756,8 @@ const Consult = () => {
                                     </td>
                                 </tr>
                             )
-                        })}             
+                        })}
+                        <h5 hidden={hideMessage} className='info'>{errorMessage}</h5>
                     </table>
                 </div>
             </div>
