@@ -166,12 +166,12 @@ const Consult = () => {
 
     console.log(timeData, 'dataa')
 
-    const handleViewProfile = (firstname) => {
+    const handleViewProfile = (doctor_id) => {
         setIsLoading(false)
         setModalViewProfile(!modalViewProfile)
         setModalConsult(!modalConsult)
 
-        api.get(`Vets/search/${firstname}`, {headers: {Authorization: `Bearer ${getToken}`}})
+        api.get(`Vets/details/${doctor_id}`, {headers: {Authorization: `Bearer ${getToken}`}})
         .then(res => {
             console.log(res)
             if(res.body){
@@ -437,7 +437,7 @@ const Consult = () => {
                                         <td>{item.ContactNumber}</td>
                                         <td style={{textTransform:"none"}}>{item.EmailAddress}</td>
                                         <td>
-                                            <button onClick={()=>handleViewProfile(item.FirstName)} className="btnView">View Profile</button>
+                                            <button onClick={()=>handleViewProfile(item.DoctorID)} className="btnView">View Profile</button>
                                         </td>
                                     </tr>
                                     )
