@@ -24,13 +24,13 @@ export const SidebarData = [
     {
         title: 'Consultations',
         path: '/Admin/Consult',
-        icon: <IoIcons.IoListOutline/>,
+        icon: <FaIcons.FaTeamspeak/>,
         className: 'nav-text'
     },
 
     {
         title: 'Pet Owners',
-        path: '/Admin/MyPets',
+        path: '/Admin/PetOwner',
         icon: <SiIcons.SiDatadog/>,
         className: 'nav-text'
     },

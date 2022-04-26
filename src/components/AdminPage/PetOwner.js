@@ -38,6 +38,8 @@ const PetOwner = () => {
     const [breed, setBreed] = useState('')
     const [age, setAge] = useState('')
     const [prev_vacc, setPrevVacc] = useState('')
+    const [petName, setPetName] = useState('')
+    const [petGalleryData, setPetGalleryData] = useState([])
  
     const [successModal, setSuccessModal] = useState(false)
     const [successMessage, setSuccessMessage] = useState("")
@@ -47,6 +49,7 @@ const PetOwner = () => {
     const [errorModal, setErrorModal] = useState(false)
     const [ownerModal, setOwnerModal] = useState(false)
     const [petEditModal, setPetEditModal] = useState(false)
+    const [petGallery, setPetGallery] = useState(false)
 
     const resetState = () => {
         setName('')
@@ -82,6 +85,7 @@ const PetOwner = () => {
     const toggleCloseModal = () => {
         setPetEditModal(false)
         setOwnerModal(true)
+        setPetGallery(false)
     }
 
     const toggleCancelDeletePet = () => {
@@ -89,10 +93,16 @@ const PetOwner = () => {
         setOwnerModal(true)
     }
 
+    const handleClose = () => {
+        setPetGallery(false)
+        setOwnerModal(true)
+    }
+
     const closeModal = () => {
         setDeleteModal(false)
         setSuccessModal(false)
         setPetEditModal(false)
+        setLoadingModal(false)
     }
 
     const openDeleteModal = (owner_id) => {
@@ -138,6 +148,7 @@ const PetOwner = () => {
                 setIsLoading(true)
                 setDeletePetModal(false)
                 setPetID('')
+
                 
             }
         })
@@ -145,6 +156,19 @@ const PetOwner = () => {
             console.log(err.response)
             setErrorMessage(err.response.data)
             setErrorModal(true)
+        })
+    }
+
+    const handleDeletePetPicture = (PictureID, pet_id) => {
+        console.log(PictureID)
+        api.delete(`Pets/delete_pet_picture/${PictureID}`, {headers: {Authorization: `Bearer ${getToken}`}})
+        .then(res =>{
+            console.log(res)
+            if(res.message){
+                setSuccessMessage(res.message)
+                setSuccessModal(true)
+                getPetPhotos(pet_id)
+            }
         })
     }
 
@@ -186,7 +210,6 @@ const PetOwner = () => {
             setSuccessModal(true)
             setIsLoading(true)
             setPetEditModal(false)
-            setIsLoading(true)
             resetState()
         })
 
@@ -247,6 +270,24 @@ const PetOwner = () => {
         })
         .catch(err => {
             console.log(err.response)
+        })
+    }
+
+    const getPetPhotos = (pet_id, petName) => {
+        setPetName(petName)
+        api.get(`Pets/list_pet_pictures/${pet_id}`, {headers: {Authorization: `Bearer ${getToken}`}})
+        .then(res => {
+            console.log(res)
+            if(res.message == 'No pet pictures uploaded yet.'){
+                setErrorModal(true)
+                setErrorMessage(res.message)
+                return false
+            }
+            else{
+                setPetGalleryData(res.body)
+                setPetGallery(true)
+                setOwnerModal(false)
+            }
         })
     }
 
@@ -433,6 +474,7 @@ const PetOwner = () => {
                                             <td>{item.Age}</td>                                
                                             <td>
                                                 <button className="btnView" onClick={()=>getMedicalRecords(item.PetID)}>View Medical Records</button>
+                                                <button className="btnMessage" onClick={()=>getPetPhotos(item.PetID, item.Name)}>View Photos</button>
                                                 <button className='btnEdit' onClick={()=> openModalEditPet(item.PetID, item.Name, item.Breed, item.Age, item.Gender, item.PreviousVaccinations)}>Edit</button>
                                                 <button className='btnCancel' onClick={()=> openModalDeletePet(item.PetID)}>Delete</button>
                                             </td>
@@ -445,6 +487,30 @@ const PetOwner = () => {
                 </ModalBody>
                 <ModalFooter>
                     <button className="btnCancel" onClick={handleOk}>Close</button>
+                </ModalFooter>
+            </Modal>
+             {/** PET GALLERY MODAL */}
+            <Modal centered backdrop="static" size="xl" isOpen={petGallery}>
+                <ModalHeader>
+                    Gallery
+                </ModalHeader>
+                <ModalBody className='modalPetGallery'> 
+                    <div className='gallery'>
+                            {petGalleryData.map((item, index)=> {
+                                return(
+                                    <div className='pics' key={index}>
+                                        <img style={{width:'100%'}} src={item.Picture}/>
+                                        <div className='image_overlay'>
+                                            <button onClick={()=>handleDeletePetPicture(item.PictureID, item.PetID)} className='btnClose'>Delete</button>
+                                        </div>
+                                        
+                                    </div>
+                            )
+                        })}
+                    </div>
+                </ModalBody>
+                <ModalFooter>
+                <button className="btnCancel" onClick={handleClose}>Close</button>
                 </ModalFooter>
             </Modal>
             {/** MODAL VIEW MEDICAL RESULTS */}

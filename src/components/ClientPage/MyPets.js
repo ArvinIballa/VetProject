@@ -50,6 +50,7 @@ const MyPets = () => {
         setGender('')
         setPrevVacc('')
         setPetID('')
+        setPetPicture('')
     }
 
     const handleOk = () => {
@@ -59,7 +60,12 @@ const MyPets = () => {
         setModalRemarks(false)
         setEditModal(false)
         setDeleteModal(false)
+        setUploadModal(false)
         resetState()
+    }
+
+    const handleClose = () => {
+        setPetGallery(false)
     }
 
     const [pet_name, setPetName] = useState('')
@@ -71,6 +77,9 @@ const MyPets = () => {
     const [MyPetsData, setMyPetsData] = useState([])
     const [medicalData, setMedicalData] = useState([])
     const [pet_id, setPetID] = useState('')
+    const [petPicture, setPetPicture] = useState('')
+    const [petGalleryData, setPetGalleryData] = useState([])
+    const [name, setName] = useState('')
 
     const [errorModal, setErrorModal] = useState(false)
     const [hideMessage, setHideMessage] = useState(false)
@@ -82,7 +91,8 @@ const MyPets = () => {
     const [remarkMessage, setRemarkMessage] = useState('')
     const [editModal, setEditModal] = useState(false)
     const [deleteModal, setDeleteModal] = useState(false)
-    
+    const [uploadModal, setUploadModal] = useState(false)
+    const [petGallery, setPetGallery] = useState(false)
 
     const toggleLoadingModal = () => {
         setLoadingModal(!loadingModal)
@@ -122,9 +132,36 @@ const MyPets = () => {
         })
     }
 
+    const getPetPhotos = (pet_id, petName) => {
+        setName(petName)
+        api.get(`Pets/list_pet_pictures/${pet_id}`, {headers: {Authorization: `Bearer ${getToken}`}})
+        .then(res => {
+            console.log(res)
+            if(res.message == 'No pet pictures uploaded yet.'){
+                setErrorModal(true)
+                setErrorMessage(res.message)
+                return false
+            }
+            else{
+                setPetGallery(true)
+                setPetGalleryData(res.body)
+            }
+        })
+        .catch(err => {
+            console.log(err.response)
+            setErrorMessage('Something went wrong. Please try again.')
+            setErrorModal(true)
+        })
+    }
+
     const toggleModalRemarks = (remarks) => {
         setModalRemarks(!modalRemarks)
         setRemarkMessage(remarks)
+    }
+
+    const toggleUploadPetPhoto = (pet_id) => {
+        setPetID(pet_id)
+        setUploadModal(!uploadModal)
     }
 
     const handleDelete = () => {
@@ -185,6 +222,38 @@ const MyPets = () => {
         })
         .catch(err => {
             console.log(err.response)
+        })
+    }
+
+    const handleUpload = () => {
+        setIsLoading(false)
+        let formdata = new FormData()
+        formdata.append('pet_id', pet_id)
+        formdata.append('pet_picture', petPicture)
+
+        if(petPicture == ""){
+            setErrorMessage('All fields are required.')
+            setErrorModal(true)
+            setIsLoading(true)
+            return false
+        }
+
+        api.post('Pets/upload_pet_picture', formdata, {headers: {Authorization: `Bearer ${getToken}`}})
+        .then(res => {
+            console.log(res)
+            if(res.message){
+                setSuccessMessage(res.message)
+                setSuccessModal(true)
+                setIsLoading(true)
+                setUploadModal(false)
+                resetState()
+            }
+        })
+        .catch(err => {
+            console.log(err.response)
+            setErrorMessage('Something went wrong. Please try again.')
+            setErrorModal(true)
+            setIsLoading(true)
         })
     }
 
@@ -251,7 +320,18 @@ const MyPets = () => {
         })
     }
 
-
+    const handleDeletePetPicture = (PictureID, pet_id) => {
+        console.log(PictureID)
+        api.delete(`Pets/delete_pet_picture/${PictureID}`, {headers: {Authorization: `Bearer ${getToken}`}})
+        .then(res =>{
+            console.log(res)
+            if(res.message){
+                setSuccessMessage(res.message)
+                setSuccessModal(true)
+                getPetPhotos(pet_id)
+            }
+        })
+    }
 
     useEffect(() => {
         getMyPets()
@@ -317,8 +397,52 @@ const MyPets = () => {
                     Are you sure you want to delete this?
                 </ModalBody>
                 <ModalFooter>
-                    <button className='btnView' onClick={handleOk}>Close</button>
-                    <button className='btnCancel' onClick={handleDelete}>Delete</button>
+                    <CircularProgress hidden={isLoading}/>
+                    <button hidden={!isLoading} className='btnView' onClick={handleOk}>Close</button>
+                    <button hidden={!isLoading} className='btnCancel' onClick={handleDelete}>Delete</button>
+                </ModalFooter>
+            </Modal>
+             {/** UPLOAD MODAL */}
+            <Modal centered backdrop="static" size="md" isOpen={uploadModal}>
+                <ModalHeader>
+                    Upload Photo
+                </ModalHeader>
+                <ModalBody>
+                    <input 
+                        style={{marginLeft: '22px'}} 
+                        type='file'
+                        onChange={e=> setPetPicture(e.target.files[0])}
+                    >              
+                    </input>
+                </ModalBody>
+                <ModalFooter>
+                    <CircularProgress hidden={isLoading}/>
+                    <button hidden={!isLoading} className='btnCancel' onClick={handleOk}>Close</button>
+                    <button hidden={!isLoading} className='btnAdd' onClick={handleUpload}>Upload</button>
+                </ModalFooter>
+            </Modal>
+             {/** PET GALLERY MODAL */}
+            <Modal centered backdrop="static" size="xl" isOpen={petGallery}>
+                <ModalHeader>
+                    Gallery
+                </ModalHeader>
+                <ModalBody className='modalPetGallery'> 
+                    <div className='gallery'>
+                            {petGalleryData.map((item, index)=> {
+                                return(
+                                    <div className='pics' key={index}>
+                                        <img style={{width:'100%'}} src={item.Picture}/>
+                                        <div className='image_overlay'>
+                                            <button onClick={()=>handleDeletePetPicture(item.PictureID, item.PetID)} className='btnClose'>Delete</button>
+                                        </div>
+                                        
+                                    </div>
+                            )
+                        })}
+                    </div>
+                </ModalBody>
+                <ModalFooter>
+                <button className="btnCancel" onClick={handleClose}>Close</button>
                 </ModalFooter>
             </Modal>
              {/** EDIT MODAL */}
@@ -504,6 +628,8 @@ const MyPets = () => {
                                     <td>{item.Age}</td>
                                     <td>
                                         <button onClick={()=> getMedicalRecords(item.PetID)} className="btnView">View Medical Records</button>
+                                        <button onClick={()=> getPetPhotos(item.PetID, item.Name)} className="btnViewPet">View Photos</button>
+                                        <button onClick={()=> toggleUploadPetPhoto(item.PetID)} className="btnMessage">Upload Pet Photo</button>
                                         <button onClick={()=> toggleEditModal(item.PetID, item.Age, item.Breed, item.Gender, item.Name, item.PreviousVaccinations)} className="btnEdit">Edit</button>
                                         <button onClick={()=> toggleDeleteModal(item.PetID)} className="btnCancel">Delete</button>
                                     

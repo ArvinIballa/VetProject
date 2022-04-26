@@ -145,6 +145,13 @@ const Vets = () => {
         })
     }
 
+    const getTime = (doctor_id) => {
+        api.get(`Schedules/list`, {headers: {Authorization: `Bearer ${getToken}`}})
+        .then(res => {
+            console.log(res)
+        })
+    }
+
     useEffect(() => {
         getVets()
     }, [])
@@ -288,6 +295,7 @@ const Vets = () => {
                                         <td>{item.ContactNumber}</td>
                                         <td style={{textTransform:'none'}}>{item.EmailAddress}</td>
                                         <td>
+                                            <button className='btnViewPet' onClick={()=>getTime(item.DoctorID)}>Manage</button>
                                             <button className='btnView' onClick={()=> openEditVetModal(item.DoctorID, item.FirstName, item.LastName, item.ContactNumber, item.EmailAddress, item.Description, item.ConsultationFee, item.AvailableDays)}>View</button>
                                             <button onClick={()=> toggleDeleteModal(item.DoctorID)} className='btnCancel'>Delete</button>
                                         </td>                                  

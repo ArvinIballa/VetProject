@@ -37,7 +37,7 @@ function App() {
           <Route path='/Admin/Profile' element={<AdminProfile/>} />
           <Route path='/Admin/Accounts' element={<AdminAccount/>} />
           <Route path='/Admin/Consult' element={<AdminConsultation/>} />
-          <Route path='/Admin/MyPets' element={<AdminPetOwner/>} />
+          <Route path='/Admin/PetOwner' element={<AdminPetOwner/>} />
           <Route path='/Admin/Vets' element={<AdminVets/>} />
       </Routes>
     </Router>
