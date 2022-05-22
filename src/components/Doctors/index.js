@@ -1,7 +1,7 @@
 import React from 'react'
-import Icon1 from '../../images/doctor1.jpg'
-import Icon2 from '../../images/doctor2.jpg'
-import Icon3 from '../../images/doctor3.jpg'
+import Icon1 from '../../images/sidney.jpg'
+import Icon2 from '../../images/lala.jpg'
+import Icon3 from '../../images/judge.jpg'
 import { 
     DoctorsContainer,
     DoctorH1, 
@@ -16,28 +16,28 @@ const doctors = () => {
     return (
         <>
             <DoctorsContainer id="doctors">
-                <DoctorH1>Meet the Team</DoctorH1>
+                <DoctorH1>Meet our Vets</DoctorH1>
                 <DoctorWrapper>
                     <DoctorCard>
                         <DoctorsIcon src={Icon1}/>
-                        <DoctorsH2>Sarah Jones</DoctorsH2>
+                        <DoctorsH2>Sidney Lyndon Dolores</DoctorsH2>
                         <DoctorsP>
-                        With over 10 years of experience in Dog care, Sarah is a reliable veterinarian who will treat your dog with the utmost care and attention.
+                        Licensed Veterinarian, focusing on small animal (dogs and cats) practice. Currently honing my skills in livestock practice (cattle, goats, poultry, swine).
                         </DoctorsP>
                         <br/><br/>
                     </DoctorCard>
                     <DoctorCard>
                         <DoctorsIcon src={Icon2}/>
-                        <DoctorsH2>Jake Smith</DoctorsH2>
+                        <DoctorsH2>Lala Ramchandani</DoctorsH2>
                         <DoctorsP>
-                        A veterinarian specializing in the care of cats and dogs. Having been in practice for over eight years, Jake’s long experience and familiarity with the business allow to properly take care of your pet no matter the condition.
+                        I'm a companion animal medicine practitioner/veterinarian. I have been practicing for 3 years and have expertise ranging from basic wellness to small animal surgery and emergency medicine.
                         </DoctorsP>
                     </DoctorCard>
                     <DoctorCard>
                         <DoctorsIcon src={Icon3}/>
-                        <DoctorsH2>Marcus Erricson</DoctorsH2>
+                        <DoctorsH2>Judge Pera</DoctorsH2>
                         <DoctorsP>
-                        A herp veterinarian specializing in the treatment of turtles, lizards, or other reptilian pets. Marcus’ numerous years of experience will allow him to recognize and treat your reptile pets and assure their health and good condition.
+                        Home vaccination visits on weekends, e-consults weekdays after 3 pm.
                         </DoctorsP>
                     </DoctorCard>
                 </DoctorWrapper>
